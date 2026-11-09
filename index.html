@@ -1597,11 +1597,29 @@ COURSES.push({
     }
     showCode = false; render();
   }
+  // Inside the Claude viewer, files are saved through its "downloads" capability;
+  // anywhere else (GitHub Pages, local file) a normal browser download is used.
+  const inClaude = !!(window.claude && typeof window.claude.use === "function");
+  let downloads = null;
+  if (inClaude) window.claude.use("downloads").then(d => { downloads = d; }, () => {});
   function downloadBackup(){
+    const filename = `eksamensquiz-backup-${today()}.json`;
+    if (inClaude){
+      if (!downloads){ backupOk = false; backupMsg = "Downloading is not available here. Use “Copy backup code” instead."; render(); return; }
+      downloads.save({ filename, data: backupText() }).then(
+        () => { backupOk = true; backupMsg = "Backup file saved. Keep it somewhere safe, e.g. your Downloads folder or cloud storage."; render(); },
+        err => { const code = err && err.code;
+          backupOk = false;
+          backupMsg = code === "declined" ? "Download cancelled. Nothing was saved."
+            : code === "rate_limited" ? "A save prompt is already open. Finish it, then try again."
+            : "Downloading is not available here. Use “Copy backup code” instead.";
+          render(); });
+      return;
+    }
     try {
       const blob = new Blob([backupText()], { type:"application/json" });
       const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob); a.download = `eksamensquiz-backup-${today()}.json`;
+      a.href = URL.createObjectURL(blob); a.download = filename;
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 2000);
       backupOk = true; backupMsg = "Backup file saved to your Downloads folder. If no file appeared, use “Copy backup code” instead.";
