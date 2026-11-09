@@ -102,6 +102,8 @@ textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:
 .rev{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;font-size:.93rem}
 .rev .ans{color:var(--ok);font-weight:600}
 .empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:20px;color:var(--muted)}
+.backup textarea{min-height:72px;font-family:var(--f-mono);font-size:.8rem}
+.backup h3{margin-top:6px}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.9rem}
 .note{font-size:.85rem;color:var(--muted)}
 footer{font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px}
@@ -1578,6 +1580,59 @@ COURSES.push({
   }
   function mistakes(c){ const ids = store.miss[c.code] || []; return c.questions.filter(q => ids.includes(q.id)); }
 
+  /* ---------- backup (export / import) ---------- */
+  let backupMsg = "", backupOk = true, showCode = false;
+  function backupText(){ return JSON.stringify({ app:"eksamensquiz", version:1, saved:new Date().toISOString(), progress:store }); }
+  function today(){ const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+  function restore(text){
+    try {
+      const d = JSON.parse(String(text).trim());
+      const p = d && d.progress ? d.progress : d;
+      if (!p || typeof p.ans !== "object" || typeof p.miss !== "object") throw new Error("format");
+      store = Object.assign({ ans:{}, miss:{}, shuffle:true }, p); save();
+      const n = Object.keys(store.ans).length;
+      backupOk = true; backupMsg = `Progress restored: ${n} answered question${n===1?"":"s"}` + (d.saved ? ` (backup from ${new Date(d.saved).toLocaleDateString("en-GB")}).` : ".");
+    } catch(e){
+      backupOk = false; backupMsg = "That is not a backup from this site. Make sure you chose the right file or pasted the whole code.";
+    }
+    showCode = false; render();
+  }
+  function downloadBackup(){
+    try {
+      const blob = new Blob([backupText()], { type:"application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = `eksamensquiz-backup-${today()}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      backupOk = true; backupMsg = "Backup file saved to your Downloads folder. If no file appeared, use “Copy backup code” instead.";
+    } catch(e){ backupOk = false; backupMsg = "The download was blocked here. Use “Copy backup code” instead."; }
+    render();
+  }
+  function copyBackup(){
+    const txt = backupText();
+    const fail = () => { showCode = true; backupOk = false; backupMsg = "Copying was blocked. Select the code in the box below and copy it yourself."; render();
+      const out = document.getElementById("backup-out"); if (out){ out.focus(); out.select(); } };
+    if (!navigator.clipboard || !navigator.clipboard.writeText) return fail();
+    navigator.clipboard.writeText(txt).then(() => { showCode = false; backupOk = true; backupMsg = "Backup code copied. Paste it somewhere safe, for example a note or an email to yourself."; render(); }, fail);
+  }
+  function backupSection(){
+    const n = Object.keys(store.ans).length;
+    return `<section class="card backup">
+      <h2>Back up your progress</h2>
+      <p class="note">Your progress (${n} answered question${n===1?"":"s"}) is saved in this browser. Save a backup to keep it safe or to move it to another browser or device.</p>
+      <div class="btnrow"><button class="btn" data-backup="download">Download backup file</button><button class="btn alt" data-backup="copy">Copy backup code</button></div>
+      ${showCode ? `<label class="note" for="backup-out">Your backup code:</label><textarea id="backup-out" readonly>${esc(backupText())}</textarea>` : ""}
+      <h3>Restore a backup</h3>
+      <p class="note">Restoring replaces the progress in this browser.</p>
+      <div class="btnrow"><button class="btn alt" data-backup="file">Choose backup file</button></div>
+      <input type="file" id="backup-file" accept=".json,application/json,text/plain" hidden>
+      <label class="note" for="backup-code">Or paste a backup code:</label>
+      <textarea id="backup-code" placeholder='{"app":"eksamensquiz", …}'></textarea>
+      <div class="btnrow"><button class="btn alt" data-backup="paste">Restore from code</button></div>
+      ${backupMsg ? `<div class="feedback ${backupOk?"ok":"bad"}" role="status"><p>${esc(backupMsg)}</p></div>` : ""}
+    </section>`;
+  }
+
   /* ---------- dates ---------- */
   function daysLeft(iso){
     const [y,m,d] = iso.split("-").map(Number);
@@ -1635,7 +1690,8 @@ COURSES.push({
         <h1>Skole Exam Trainer</h1>
         <p class="muted">${total} questions from former exams, slides and notes. ${next ? `Next up: <b>${esc(next.code)}</b> on ${esc(fmtDate(next.exam))}.` : ""}</p></header>
       <section class="grid">${cards}</section>
-      <footer>Progress is saved in this browser only. ⭐ = based on a former exam question.</footer>`;
+      ${backupSection()}
+      <footer>Progress is saved in this browser. Keep a backup to be safe. ⭐ = based on a former exam question.</footer>`;
   }
 
   /* ---------- COURSE ---------- */
@@ -1833,6 +1889,14 @@ COURSES.push({
     const el = e.target.closest("button, a"); if (!el) return;
     const d = el.dataset;
     if (d.go !== undefined){ e.preventDefault(); go(d.go); return; }
+    if (d.backup){
+      if (d.backup === "download") downloadBackup();
+      else if (d.backup === "copy") copyBackup();
+      else if (d.backup === "file") document.getElementById("backup-file").click();
+      else if (d.backup === "paste"){ const v = document.getElementById("backup-code").value;
+        if (!v.trim()){ backupOk = false; backupMsg = "Paste a backup code into the box first."; render(); } else restore(v); }
+      return;
+    }
     const { c, t } = currentCourse();
     if (d.start){
       // from a result screen, "miss" means mistakes in the same scope (topic or course)
@@ -1852,7 +1916,15 @@ COURSES.push({
     if (d.know !== undefined){ const q = session.list[session.i], ok = d.know === "1"; record(q, ok); session.results.push({ q, ok }); advance(); return; }
     if (d.act === "again"){ const list = store.shuffle ? shuffle(session.list) : session.list; Object.assign(session, { list, i:0, results:[], done:false }); prepQuestion(); render(); window.scrollTo(0,0); return; }
   });
-  app.addEventListener("change", e => { if (e.target.id === "shuffle-toggle"){ store.shuffle = e.target.checked; save(); } });
+  app.addEventListener("change", e => {
+    if (e.target.id === "shuffle-toggle"){ store.shuffle = e.target.checked; save(); }
+    if (e.target.id === "backup-file" && e.target.files[0]){
+      const r = new FileReader();
+      r.onload = () => restore(r.result);
+      r.onerror = () => { backupOk = false; backupMsg = "Could not read that file. Try again or paste the code instead."; render(); };
+      r.readAsText(e.target.files[0]);
+    }
+  });
   app.addEventListener("input", e => { if (e.target.id === "essay-draft" && session) session.draft = e.target.value; });
   document.addEventListener("keydown", e => {
     if (!session || session.done || session.mode !== "quiz" || e.target.tagName === "TEXTAREA") return;

@@ -18,6 +18,7 @@ Open `index.html` in a browser. Everything is in one file; no build step.
 - Essay questions (IMT4115) with key points and model answer
 - Shuffle, score at the end of each round, works on phone and computer
 - Progress is saved in the browser (localStorage)
+- Back up progress: download a backup file or copy a backup code, and restore it in any browser (home page)
 
 ## Structure of `index.html`
 1. `<head>` – design (CSS tokens, one colour per course)
