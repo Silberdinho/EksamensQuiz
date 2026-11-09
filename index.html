@@ -1,0 +1,1868 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Skole Exam Trainer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: single centred study column (max 880px); cards in an auto-fill grid; each course tints its pages with its own hue. */
+:root{
+  --bg:#f5f6f4; --surface:#ffffff; --surface-2:#eceeea; --fg:#1b201d; --muted:#5c655f; --line:#d9ddd7;
+  --ok:#1f7a45; --ok-bg:#e3f3e8; --bad:#b3261e; --bad-bg:#fbe7e5; --warn:#8a5a00; --warn-bg:#fff1d6;
+  --teal:#0e6f68; --teal-soft:#dff0ee;
+  --amber:#a8510a; --amber-soft:#fbeadb;
+  --indigo:#3f46b8; --indigo-soft:#e6e7fa;
+  --slate:#5f6b73; --slate-soft:#e7eaec;
+  --c:var(--teal); --c-soft:var(--teal-soft);
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Instrument Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#121614; --surface:#1a201d; --surface-2:#232a26; --fg:#e7ece8; --muted:#9aa59e; --line:#2f3833;
+  --ok:#5fcf8b; --ok-bg:#163223; --bad:#ff8a80; --bad-bg:#3a1a18; --warn:#f1c063; --warn-bg:#352a12;
+  --teal:#4fc7bc; --teal-soft:#153331; --amber:#f0a35c; --amber-soft:#3a2614;
+  --indigo:#9ea4ff; --indigo-soft:#232650; --slate:#a7b2b9; --slate-soft:#262d31; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#121614; --surface:#1a201d; --surface-2:#232a26; --fg:#e7ece8; --muted:#9aa59e; --line:#2f3833;
+  --ok:#5fcf8b; --ok-bg:#163223; --bad:#ff8a80; --bad-bg:#3a1a18; --warn:#f1c063; --warn-bg:#352a12;
+  --teal:#4fc7bc; --teal-soft:#153331; --amber:#f0a35c; --amber-soft:#3a2614;
+  --indigo:#9ea4ff; --indigo-soft:#232650; --slate:#a7b2b9; --slate-soft:#262d31; color-scheme:dark }
+.c-teal{--c:var(--teal);--c-soft:var(--teal-soft)} .c-amber{--c:var(--amber);--c-soft:var(--amber-soft)}
+.c-indigo{--c:var(--indigo);--c-soft:var(--indigo-soft)} .c-slate{--c:var(--slate);--c-soft:var(--slate-soft)}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 48px}
+#app{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:700} h2{font-size:1.3rem;font-weight:700} h3{font-size:1.05rem;font-weight:700}
+p{margin:0} .muted{color:var(--muted)} .mono{font-family:var(--f-mono);font-size:.82em;letter-spacing:.02em}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--c);outline-offset:2px}
+.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.back{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:6px 14px;font-size:.9rem}
+.crumbs{display:flex;flex-wrap:wrap;gap:6px;font-size:.88rem;color:var(--muted);min-width:0}
+.crumbs a{color:var(--c);text-decoration:none} .crumbs a:hover{text-decoration:underline}
+.crumbs span.sep{opacity:.5}
+.hero{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--c)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:10px;text-align:left;color:var(--fg);min-width:0}
+button.card{transition:border-color .15s, transform .15s}
+button.card:hover{border-color:var(--c);transform:translateY(-1px)}
+.course-card{border-top:5px solid var(--c)}
+.course-card .code{font-family:var(--f-mono);font-size:.85rem;color:var(--c)}
+.countdown{display:flex;align-items:baseline;gap:6px}
+.countdown b{font-family:var(--f-display);font-size:2rem;line-height:1;color:var(--c);font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .ok{background:var(--ok)} .bar .bad{background:var(--bad)}
+.stat{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.soon{opacity:.75;border-style:dashed;border-top-style:solid}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;padding:2px 9px;border-radius:99px;background:var(--c-soft);color:var(--c);font-weight:600;white-space:nowrap}
+.pill.star{background:var(--warn-bg);color:var(--warn)} .pill.chk{background:var(--bad-bg);color:var(--bad)}
+.pill.ghost{background:var(--surface-2);color:var(--muted)}
+.card > .pill{align-self:flex-start}
+.topic-card .num{font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
+.topic-card .file{font-size:.8rem;color:var(--muted);overflow-wrap:anywhere}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.mode{background:var(--c-soft);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--c);background:var(--c);color:var(--surface);border-radius:999px;padding:8px 16px;font-weight:600;font-size:.92rem}
+.btn.alt{background:transparent;color:var(--c)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.toggle{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+.toggle input{accent-color:var(--c);width:18px;height:18px}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px;border-left:5px solid var(--c)}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.qtext{font-size:1.1rem;font-weight:500;line-height:1.5}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{border:1.5px solid var(--line);background:var(--bg);color:var(--fg);border-radius:10px;padding:11px 14px;text-align:left;display:flex;gap:10px;align-items:flex-start;line-height:1.4}
+.opt:hover:not(:disabled){border-color:var(--c)}
+.opt .key{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);padding-top:2px;flex:none}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)} .opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default}
+.feedback{border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.feedback.ok{background:var(--ok-bg)} .feedback.bad{background:var(--bad-bg)} .feedback.neutral{background:var(--surface-2)}
+.feedback strong{font-family:var(--f-display)}
+.progress{display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.progress .bar{flex:1}
+.progress .bar i{background:var(--c)}
+textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);padding:10px;font:inherit;resize:vertical}
+.kp{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.model{background:var(--surface-2);border-radius:10px;padding:14px;font-size:.95rem}
+.flash{min-height:240px;cursor:pointer;justify-content:center}
+.flash .side{font-size:.75rem;font-family:var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.score{font-family:var(--f-display);font-size:3rem;color:var(--c);line-height:1;font-variant-numeric:tabular-nums}
+.list{display:flex;flex-direction:column;gap:10px}
+.rev{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;font-size:.93rem}
+.rev .ans{color:var(--ok);font-weight:600}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:20px;color:var(--muted)}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.9rem}
+.note{font-size:.85rem;color:var(--muted)}
+footer{font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+<div id="app" aria-live="polite"></div>
+
+<!-- =====================================================================
+     QUESTION DATA  (one block per course, separate from design and logic)
+     Format of each course:
+       code, name, exam (YYYY-MM-DD), examInfo, color (teal|amber|indigo|slate),
+       status ("active" | "soon"), topics:[{id,title,file}], questions:[...]
+     Format of each question:
+       t   = topic id            k = "mc" | "def" | "case" | "tf" | "essay"
+       q   = question text       o = options (not for essay)   a = index of correct option
+       e   = short explanation   x = former exam tag (gives the ⭐ mark), optional
+       chk = true → shown as "Needs checking"
+       essay only: kp = key points to include, m = model answer
+     To add a course: push one more object with the same format.
+     ===================================================================== -->
+<script>const COURSES = [];</script>
+<script>
+/* ================================================================
+   COURSE: IMT4110 – Scientific Methodology and Communication
+   Sources: former exam sets (Examples, Additional, Ord-23, SPSS, Lit),
+   IMT4110 slides (9 decks), Eksamensnotater, Terminology notes.
+   Exam tags: Ex-# = "Examples of exam questions", Add-# = "Additional
+   examples", Ord-23 = ordinary exam 2023, SPSS/Lit = former exam tasks.
+   ================================================================ */
+COURSES.push({
+  code: "IMT4110",
+  name: "Scientific Methodology and Communication",
+  exam: "2026-11-26",
+  examInfo: "School exam · 4 h · no aids",
+  color: "teal",
+  status: "active",
+  topics: [
+    { id: "intro", title: "Introduction to research", file: "Introduction-short" },
+    { id: "var", title: "Variables and operationalisation", file: "Variables and operationalisation" },
+    { id: "cause", title: "Causality and third variables", file: "Causality and 3. variables" },
+    { id: "relval", title: "Reliability and validity", file: "Reliability and Validity" },
+    { id: "survey", title: "Surveys and representativity", file: "Surveys and the representativity of populations" },
+    { id: "scales", title: "Scales of measurement", file: "Scales of measurements" },
+    { id: "exp", title: "Experiments", file: "experiment_short" },
+    { id: "hyp", title: "Hypothesis testing", file: "Hypothesis testing_short" },
+    { id: "ethics", title: "Research ethics", file: "Ethics_short" }
+  ],
+  questions: [
+    /* ---------- Introduction ---------- */
+    { t:"intro", k:"mc", x:"Ex-4",
+      q:"A master's student builds a password manager app. What turns this project into scientific research?",
+      o:["The app uses modern encryption","The app is evaluated systematically with data to answer a clear research question, and the method is documented so others can replicate it","The app is published on an app store","The student writes a long user manual"],
+      a:1, e:"Building a product is development. It becomes research when it answers a research question, is evaluated systematically with data, produces new knowledge and is documented for replication." },
+    { t:"intro", k:"mc", x:"Add-1",
+      q:"Why is the process of scientific inquiry described as cyclical (or helical)?",
+      o:["Because every study must be repeated twice","Because the answer to one research problem usually reveals new problems and questions","Because data collection happens before the question is defined","Because the literature review is done at the end"],
+      a:1, e:"Research starts with a question and ends by raising new questions, so the process loops back on itself." },
+    { t:"intro", k:"def",
+      q:"Which term matches: 'Based on observation or measured data, not only on opinion or logic'?",
+      o:["Empirical","Deductive","Theoretical","Normative"], a:0,
+      e:"Empirical research tests ideas against observations or data, for example a survey of 500 students." },
+    { t:"intro", k:"mc", x:"Add-2",
+      q:"According to Popper's falsifiability principle, what is true about a scientific hypothesis?",
+      o:["It can be proven true with enough data","It must be possible to prove it wrong","It must come from inductive reasoning","It must be accepted by peer review first"],
+      a:1, e:"We can never prove a hypothesis true, only fail to disprove it. One black swan disproves 'all swans are white'." },
+    { t:"intro", k:"def",
+      q:"Which term matches: 'Reasoning from a general theory to a specific, testable prediction (top-down)'?",
+      o:["Inductive reasoning","Deductive reasoning","Abductive reasoning","Triangulation"], a:1,
+      e:"Deduction goes from theory to prediction, for example 'stress lowers performance' → 'stressed students will score lower'. Induction goes from observations to a general conclusion." },
+    { t:"intro", k:"mc",
+      q:"Which research aim is described as 'seeking to understand experiences and the meaning people give them'?",
+      o:["Empirical (positivist) research","Constructivist research","Advocacy research","Pragmatic research"], a:1,
+      e:"Constructivism sees reality as built by people's experiences and meanings, and usually uses qualitative methods." },
+    { t:"intro", k:"mc", x:"Lit (former exam)",
+      q:"Why is a literature search important before you start a study?",
+      o:["It replaces the need for data collection","It shows what is already known, avoids repeating old studies, and reveals useful methods and theory","It guarantees the hypothesis will be supported","It is only needed for qualitative studies"],
+      a:1, e:"The literature review shows what is known and missing, prevents repeating work, and gives you methods, instruments and theory for hypotheses." },
+    { t:"intro", k:"mc", x:"Add-6, Lit",
+      q:"Which is the strongest quality indicator when judging a research article?",
+      o:["It agrees with what you already believe","It is published in a peer-reviewed journal, follows IMRaD and reports its method and limitations clearly","It appears first on Google","It has many images"],
+      a:1, e:"Peer review, a clear replicable method, honest limitations and a known publisher indicate quality. Agreeing with your view is confirmation bias." },
+    { t:"intro", k:"def",
+      q:"Which term matches: 'The standard structure of a research article: Introduction, Method, Results, and Discussion'?",
+      o:["IMRaD","PICO","NOIR","APA"], a:0,
+      e:"IMRaD is the standard article structure. Results present data without interpretation; the Discussion interprets them." },
+    { t:"intro", k:"def",
+      q:"Which term matches: 'Searching only for sources that support what you already believe'?",
+      o:["Publication bias","Confirmation bias","Selection bias","Social desirability bias"], a:1,
+      e:"Confirmation bias skews a literature search. Avoid it by also looking for counter-evidence." },
+
+    /* ---------- Variables and operationalisation ---------- */
+    { t:"var", k:"case",
+      q:"Study: 'Does an information-security training course improve employees' ability to identify phishing emails?' What is the independent variable?",
+      o:["The number of phishing emails identified correctly","Whether the employee received the training","The employees' age","The type of email client"], a:1,
+      e:"The IV is the factor that may cause the change (training yes/no). The DV is the measured outcome (phishing emails identified)." },
+    { t:"var", k:"def",
+      q:"Which term matches: 'Turning an abstract concept into something specific that can be observed or measured'?",
+      o:["Operationalisation","Triangulation","Randomisation","Generalisation"], a:0,
+      e:"Example: 'security awareness' → percentage of phishing emails correctly identified in a short test." },
+    { t:"var", k:"mc",
+      q:"Which research question is best: clear, focused and empirically testable?",
+      o:["Does technology affect people?","Is the internet good?","Does smartphone use during lectures lower exam scores among NTNU students?","What is the meaning of security?"], a:2,
+      e:"A good research question names a relationship between measurable variables in a specific population." },
+    { t:"var", k:"def",
+      q:"Which variable explains HOW the independent variable affects the dependent variable (IV → ? → DV)?",
+      o:["Moderating variable","Mediating variable","Confounding variable","Control variable"], a:1,
+      e:"A mediator sits between IV and DV, e.g. phone use → less attention → lower score. A moderator changes the strength of the relationship." },
+    { t:"var", k:"def",
+      q:"Phone use hurts exam scores more for first-year students than for master's students. Year of study is a…",
+      o:["Mediating variable","Moderating variable","Dependent variable","Third variable"], a:1,
+      e:"A moderator changes the strength or direction of the IV–DV relationship." },
+    { t:"var", k:"mc",
+      q:"What is the difference between delimitations and limitations of a study?",
+      o:["They mean the same thing","Delimitations are what the study deliberately does not cover; limitations are weaknesses the researcher could not avoid","Limitations are chosen by the researcher; delimitations are caused by bad luck","Delimitations are only used in qualitative research"], a:1,
+      e:"Delimitations = chosen boundaries. Limitations = unavoidable weaknesses, reported honestly." },
+
+    /* ---------- Causality and third variables ---------- */
+    { t:"cause", k:"mc", x:"Ex-1",
+      q:"A study finds a clear correlation between two variables. Why can't we conclude that one causes the other?",
+      o:["Because correlations are always weak","Because of the direction problem, possible third variables, and chance","Because correlations only work with nominal data","Because a correlation proves the opposite"], a:1,
+      e:"A relationship may run B → A (direction problem), be caused by a third variable affecting both, or appear by chance." },
+    { t:"cause", k:"mc", x:"Ex-1",
+      q:"Which three conditions together support a causal conclusion?",
+      o:["Large sample, high p-value, online survey","Covariation, temporal order (cause before effect), and no alternative explanation","Correlation, peer review, and replication only","Random sampling, interviews, and a pilot study"], a:1,
+      e:"Variables must covary, the cause must come first, and third variables must be ruled out, best through a controlled experiment." },
+    { t:"cause", k:"case", x:"Ex-1",
+      q:"Ice-cream sales and drowning accidents are correlated. Hot weather increases both. Hot weather is a…",
+      o:["Mediating variable","Confounding (third) variable","Dependent variable","Moderating variable"], a:1,
+      e:"A confounding variable affects both variables and creates a false relationship between them." },
+    { t:"cause", k:"case",
+      q:"Do violent games cause aggression, or do aggressive people choose violent games? This is the…",
+      o:["Third-variable problem","Direction problem (reverse causality)","Regression to the mean","Hawthorne effect"], a:1,
+      e:"The direction problem: even if A and B are related, we may not know whether A → B or B → A." },
+    { t:"cause", k:"case", x:"Add-11",
+      q:"During a security-training study a big data breach is all over the news, and post-test scores rise. Which threat to internal validity is this?",
+      o:["Maturation","History","Testing effect","Instrumentation"], a:1,
+      e:"History: an outside event during the study may explain the change. A control group exposed to the same event helps rule it out." },
+    { t:"cause", k:"case",
+      q:"Participants remember the pre-test questions and do better on the post-test. Which threat is this?",
+      o:["Testing effect","History","Mortality","Selection"], a:0,
+      e:"Taking the first test affects the second result. The Solomon four-group design measures this effect." },
+    { t:"cause", k:"case",
+      q:"Students selected because they had the lowest scores improve on a re-test without any treatment. This is…",
+      o:["Maturation","Regression to the mean","Instrumentation","Experimenter bias"], a:1,
+      e:"Unusually high or low results tend to move toward the average when measured again." },
+    { t:"cause", k:"def",
+      q:"Which threat matches: 'Participants change naturally over time (e.g. children read better just by growing older)'?",
+      o:["Maturation","History","Attrition","Testing"], a:0,
+      e:"Maturation is natural change in participants during the study period." },
+    { t:"cause", k:"mc", x:"Add-3",
+      q:"Why can researchers never be 100% sure that a group difference was caused by the hypothesised reason?",
+      o:["Because statistics give probabilities, not proof, and uncontrolled third variables may explain the result","Because researchers always make arithmetic errors","Because p-values are always above 0.05","Because only qualitative studies can prove cause"], a:0,
+      e:"Reduce the risk with random assignment, control groups, a strict significance level, and replication." },
+
+    /* ---------- Reliability and validity ---------- */
+    { t:"relval", k:"def", x:"Ex-12",
+      q:"Which term matches: 'The measure gives consistent results under the same conditions'?",
+      o:["Validity","Reliability","Generalisability","Significance"], a:1,
+      e:"Reliability = consistency. Validity = measuring what you intend to measure." },
+    { t:"relval", k:"mc", x:"Ex-12",
+      q:"What do we mean when we say that reliability is a prerequisite for validity?",
+      o:["A reliable measure is always valid","A measure with random, inconsistent results cannot be accurate, but a reliable measure can still be consistently wrong","Validity must be measured before reliability","Reliability and validity are the same"], a:1,
+      e:"Valid ⇒ reliable, but reliable ≠ valid. A scale that always shows 2 kg too much is reliable but not valid." },
+    { t:"relval", k:"case",
+      q:"Two observers score the same recorded interviews and reach very similar scores. Which type of reliability does this show?",
+      o:["Test–retest reliability","Inter-rater reliability","Internal consistency","Face validity"], a:1,
+      e:"Inter-rater reliability: different people assessing the same thing agree." },
+    { t:"relval", k:"def",
+      q:"Which statistic is commonly used for internal consistency among questionnaire items measuring the same concept?",
+      o:["Cohen's d","Cronbach's alpha","Levene's test","Chi-square"], a:1,
+      e:"Cronbach's alpha above about 0.7 is usually acceptable." },
+    { t:"relval", k:"case",
+      q:"A security-awareness test covers phishing, passwords AND physical security, so it covers all important parts of the concept. Which validity is this?",
+      o:["Face validity","Content validity","Predictive validity","External validity"], a:1,
+      e:"Content validity: the measure covers all important parts of the concept." },
+    { t:"relval", k:"def",
+      q:"Which validity matches: 'The measure correlates with or predicts an outside standard, e.g. an entrance test that predicts later grades'?",
+      o:["Construct validity","Criterion (predictive) validity","Face validity","Internal validity"], a:1,
+      e:"Criterion validity: predictive (future outcome) or concurrent (matches an existing measure now)." },
+    { t:"relval", k:"mc", x:"Add-11, Ex-9",
+      q:"Internal validity is about…",
+      o:["How well results apply to other people and settings","How sure we are that the IV, and nothing else, caused the change in the DV","Whether the questionnaire looks right","Whether the sample is large"], a:1,
+      e:"Internal validity = 'did X cause Y?'. External validity = 'does it generalise?'." },
+    { t:"relval", k:"mc", x:"Ex-7",
+      q:"Which is a threat to the EXTERNAL validity of a survey study?",
+      o:["A self-selected, unrepresentative sample","Random assignment","Using a control group","Double-blinding"], a:0,
+      e:"Unrepresentative samples, non-response and artificial settings limit generalisation." },
+    { t:"relval", k:"def",
+      q:"Comparing results from several sources, methods or measures to strengthen validity is called…",
+      o:["Triangulation","Operationalisation","Counterbalancing","Replication"], a:0,
+      e:"The slides call comparing multiple sources triangulation." },
+    { t:"relval", k:"mc",
+      q:"Random measurement error mainly lowers ____; systematic error (bias) mainly lowers ____.",
+      o:["validity; reliability","reliability; validity","power; significance","external validity; internal validity"], a:1,
+      e:"Random noise makes results inconsistent (reliability). A consistent bias makes results wrong (validity)." },
+
+    /* ---------- Surveys and representativity ---------- */
+    { t:"survey", k:"mc", x:"Ex-5, Ex-10",
+      q:"What is the difference between a population and a sample?",
+      o:["They are the same","The population is the whole group you want to draw conclusions about; the sample is the smaller group you actually study","The sample is always larger","The population is the people who answer a survey"], a:1,
+      e:"We study a sample to say something about the population, which only works if the sample is representative." },
+    { t:"survey", k:"mc", x:"Ex-5, Ex-10",
+      q:"Which method gives the best chance of a representative sample?",
+      o:["Asking your classmates","Posting a survey link on social media","Random or stratified random sampling from a complete sampling frame","Interviewing whoever walks by"], a:2,
+      e:"Probability sampling from a complete list makes representativeness most likely and allows generalisation." },
+    { t:"survey", k:"mc",
+      q:"In the 1936 US election example from the slides, a huge poll predicted the wrong winner. What is the lesson?",
+      o:["Large samples are always accurate","A large sample is not automatically representative; a biased sampling method stays biased","Polls should only use telephones","Elections cannot be studied"], a:1,
+      e:"Sampling bias is not fixed by sample size. Representativeness matters more than size." },
+    { t:"survey", k:"def", x:"Ex-10, Ex-6",
+      q:"Which term matches: 'People choose for themselves whether to take part, so the sample over-represents those who are interested or have strong opinions'?",
+      o:["Self-selection bias","Sampling error","Regression to the mean","Inter-rater bias"], a:0,
+      e:"Example: only very angry or very happy customers answer an online feedback form." },
+    { t:"survey", k:"case",
+      q:"You split the student population into bachelor (60%) and master (40%) and randomly sample from each group in those proportions. Which method is this?",
+      o:["Quota sampling","Stratified random sampling","Cluster sampling","Snowball sampling"], a:1,
+      e:"Stratified sampling: divide into strata, then sample randomly from each. Quota sampling fills quotas without randomness." },
+    { t:"survey", k:"case",
+      q:"You want to interview hackers, and each participant helps you recruit other hackers. Which sampling method is this?",
+      o:["Snowball sampling","Systematic sampling","Simple random sampling","Stratified sampling"], a:0,
+      e:"Snowball sampling is a non-probability method useful for hard-to-reach groups, but generalisability is weak." },
+    { t:"survey", k:"mc", x:"Ex-6, Ex-10",
+      q:"Which is a typical PROBLEM with online (internet) surveys?",
+      o:["They are expensive","Low response rate, self-selection bias, unknown who actually answers, and privacy concerns","Data must be typed in manually","They cannot be anonymous"], a:1,
+      e:"Online surveys are cheap, fast and easy to analyse, but representativeness and privacy are common problems." },
+    { t:"survey", k:"def", x:"Ord-23 Q2",
+      q:"'Cocktail waitressing has a bad reputation. How bad is it to work here?' This is an example of a…",
+      o:["Neutral open question","Leading question","Closed question","Double-blind question"], a:1,
+      e:"Leading questions suggest the 'right' answer and bias results toward the researcher's hypothesis. Neutral version: 'What is it like to work here?'" },
+    { t:"survey", k:"def", x:"Ord-23 Q2",
+      q:"Participants guess the purpose of a study and change their behaviour (e.g. to help confirm the hypothesis). This is called…",
+      o:["Demand characteristics","Maturation","Sampling error","Attrition"], a:0,
+      e:"Roles include the good, negative, faithful and apprehensive participant. Blinding helps reduce it." },
+    { t:"survey", k:"def",
+      q:"A respondent says 'I never reuse passwords' to look good, although they do. This is…",
+      o:["Social desirability bias","Regression to the mean","Inter-rater error","Hawthorne effect"], a:0,
+      e:"People answer in the way that makes them look good." },
+    { t:"survey", k:"mc", x:"Ex-8",
+      q:"What is a main difference between qualitative and quantitative methods?",
+      o:["Qualitative uses large random samples; quantitative uses small purposive ones","Quantitative measures and tests with numbers; qualitative explores meaning and experiences in depth with words","Qualitative always uses experiments","There is no difference"], a:1,
+      e:"Quantitative: numbers, hypothesis testing, generalising. Qualitative: words, understanding, exploring, smaller purposive samples." },
+    { t:"survey", k:"case", x:"Ex-8",
+      q:"Which method fits best? 'Why do users ignore security warnings, and how do they experience them?'",
+      o:["Qualitative interviews","A true experiment","A chi-square test","A cross-sectional census"], a:0,
+      e:"'Why' and 'how do people experience' questions are best explored qualitatively (interviews, observation)." },
+    { t:"survey", k:"case",
+      q:"Which method fits best? 'An in-depth study of how one hospital handled a ransomware attack.'",
+      o:["Case study","Factorial experiment","Online survey","Solomon four-group design"], a:0,
+      e:"A case study is an in-depth study of one person, organisation or event." },
+    { t:"survey", k:"case",
+      q:"Which method fits best? 'Describe the security attitudes of all university students in Norway.'",
+      o:["Survey with a stratified random sample","Case study of one student","Ethnography of one class","A factorial experiment"], a:0,
+      e:"Describing attitudes in a population calls for a survey, with probability sampling for generalisability." },
+    { t:"survey", k:"case",
+      q:"Which method fits best? 'Survey 300 users, then interview 10 of them to explain the numbers.'",
+      o:["Mixed methods","Grounded theory only","Pure experiment","Content analysis only"], a:0,
+      e:"Mixed methods combine quantitative and qualitative data in one study." },
+
+    /* ---------- Scales of measurement & descriptive statistics ---------- */
+    { t:"scales", k:"case",
+      q:"Operating system (Windows, macOS, Linux) is measured on which scale?",
+      o:["Nominal","Ordinal","Interval","Ratio"], a:0,
+      e:"Nominal: categories with no order. Use mode and frequencies." },
+    { t:"scales", k:"case",
+      q:"Risk level (low, medium, high) is measured on which scale?",
+      o:["Nominal","Ordinal","Interval","Ratio"], a:1,
+      e:"Ordinal: ordered categories, but the gaps may not be equal. Use median or ranks." },
+    { t:"scales", k:"case",
+      q:"Temperature in °C is measured on which scale?",
+      o:["Nominal","Ordinal","Interval","Ratio"], a:2,
+      e:"Interval: equal gaps but no true zero, so 20°C is not 'twice as hot' as 10°C." },
+    { t:"scales", k:"case",
+      q:"Reaction time in seconds and number of logins are measured on which scale?",
+      o:["Nominal","Ordinal","Interval","Ratio"], a:3,
+      e:"Ratio: equal gaps and a true zero, so ratios are meaningful (20 s is twice 10 s)." },
+    { t:"scales", k:"mc", x:"Add-5",
+      q:"When should you use the median instead of the mean?",
+      o:["For nominal data","For skewed data, data with outliers, or ordinal data","Only when the data is normally distributed","Never"], a:1,
+      e:"The median is not affected by outliers. Income: 300k, 350k, 400k, 450k, 10M → mean ≈ 2.3M (misleading), median 400k." },
+    { t:"scales", k:"mc", x:"Add-5",
+      q:"Which measure of central tendency is the only one usable for nominal data?",
+      o:["Mean","Median","Mode","Standard deviation"], a:2,
+      e:"The mode is the most frequent value, e.g. the most common operating system." },
+    { t:"scales", k:"mc", x:"Add-8",
+      q:"Which is a characteristic of the normal curve?",
+      o:["Mean > median > mode","Symmetric bell shape; about 68% within ±1 SD and 95% within ±2 SD","It has two peaks","It only applies to nominal data"], a:1,
+      e:"Normal curve: symmetric, mean = median = mode, 68–95–99.7 rule." },
+    { t:"scales", k:"mc", x:"SPSS (former exam)",
+      q:"Men in the SPSS exam task had mean 14.60 and SD 5.79. About 68% of men scored between…",
+      o:["8.81 and 20.39","3.02 and 26.18","14.60 and 20.39","0 and 14.60"], a:0,
+      e:"Mean ± 1 SD: 14.60 − 5.79 = 8.81 and 14.60 + 5.79 = 20.39." },
+    { t:"scales", k:"def",
+      q:"Which term matches: 'The typical distance of scores from the mean, in the same units as the data (square root of the variance)'?",
+      o:["Range","Standard deviation","Median","z-score"], a:1,
+      e:"Small SD = values close together; large SD = spread out." },
+    { t:"scales", k:"mc", x:"Add-4",
+      q:"What is the difference between descriptive and inferential statistics?",
+      o:["Descriptive summarises the sample; inferential uses the sample to draw conclusions about a population and assess chance","Descriptive is only for qualitative data","Inferential only describes graphs","There is no difference"], a:0,
+      e:"Descriptive: mean, median, SD, charts. Inferential: t-tests, ANOVA, confidence intervals, p-values." },
+
+    /* ---------- Experiments ---------- */
+    { t:"exp", k:"mc", x:"Ex-9, Add-11",
+      q:"How does a control group help determine the effect of an independent variable?",
+      o:["It receives a stronger treatment","It is equal to the experimental group but gets no treatment, so it shows what would have happened anyway (history, maturation, testing)","It replaces the need for a pre-test","It is always smaller than the experimental group"], a:1,
+      e:"Both groups are exposed to the same threats, so the difference between them reflects the IV." },
+    { t:"exp", k:"mc", x:"Ex-9, Add-11",
+      q:"How can we make the control group as similar as possible to the experimental group?",
+      o:["Let participants choose their group","Random assignment (and matching when needed)","Use the youngest people as controls","Put all volunteers in the treatment group"], a:1,
+      e:"Random assignment makes groups equal on average on all variables, known and unknown, and removes selection bias." },
+    { t:"exp", k:"mc",
+      q:"What is the difference between random SAMPLING and random ASSIGNMENT?",
+      o:["They are the same","Random sampling decides who gets into the study (external validity); random assignment decides which group each person goes to (internal validity)","Random assignment improves external validity","Random sampling is only used in experiments"], a:1,
+      e:"Sampling → generalising. Assignment → causal conclusions." },
+    { t:"exp", k:"case",
+      q:"Which design fits? You can randomly assign employees to phishing training or no training, and measure click rates.",
+      o:["True experiment (randomised control group design)","Quasi-experiment","Case study","Cross-sectional survey"], a:0,
+      e:"Random assignment + control group = true experiment, with the highest internal validity." },
+    { t:"exp", k:"case",
+      q:"Which design fits? You must compare two existing school classes and cannot randomise who is in which class.",
+      o:["True experiment","Quasi-experiment","Solomon four-group","Ethnography"], a:1,
+      e:"A quasi-experiment has a comparison group but no random assignment, so causal claims are weaker." },
+    { t:"exp", k:"mc", x:"Ex-11",
+      q:"What does the Solomon four-group design control for?",
+      o:["The age–cohort effect","The testing effect: whether taking the pre-test itself changes the results or reactions to the treatment","Interaction between two IVs","Self-selection bias"], a:1,
+      e:"Four randomised groups: two with pre-test, two without; half of each get the treatment. Comparing them reveals the pre-test effect." },
+    { t:"exp", k:"case", x:"Ex-11",
+      q:"Which design fits? You worry the pre-test makes participants more sensitive to the security training.",
+      o:["Solomon four-group design","One-shot case study","Cross-sectional study","Snowball sample"], a:0,
+      e:"The Solomon design measures pretest sensitisation." },
+    { t:"exp", k:"mc", x:"Ord-23 Q5",
+      q:"What can a factorial design reveal that a design with only one independent variable cannot?",
+      o:["Regression to the mean","Interaction effects: the effect of one IV depends on the level of another IV","Face validity","Sampling error"], a:1,
+      e:"Factorial designs show main effects AND interactions, are closer to real life, and need one study instead of several (but more participants)." },
+    { t:"exp", k:"case", x:"Ord-23 Q5",
+      q:"Which design fits? Test training (yes/no) × reminder emails (yes/no) on phishing click rate at the same time.",
+      o:["2 × 2 factorial design","Solomon four-group design","Case study","Paired t-test only"], a:0,
+      e:"Two IVs in all combinations = 4 groups. It shows whether training and reminders work better together (interaction)." },
+    { t:"exp", k:"def",
+      q:"In design notation, what do R, O and X mean?",
+      o:["Result, Output, eXit","Random assignment, Observation/measurement, treatment (intervention)","Reliability, Objectivity, eXternal validity","Repeat, Order, eXclude"], a:1,
+      e:"Example true experiment: R O X O (treatment) / R O – O (control)." },
+    { t:"exp", k:"mc",
+      q:"What is a weakness of a one-group pre-test/post-test design (O X O)?",
+      o:["It needs too many participants","Without a control group, changes may be due to history, maturation or testing rather than the treatment","It cannot measure anything","It always uses random assignment"], a:1,
+      e:"Pre-experimental designs cannot rule out alternative explanations." },
+    { t:"exp", k:"mc",
+      q:"A within-subjects (repeated measures) design tests each person in all conditions. What is its main problem, and the fix?",
+      o:["Needs more participants; fix with stratification","Order effects (learning, fatigue); fix with counterbalancing","Low reliability; fix with Cronbach's alpha","No problem"], a:1,
+      e:"Counterbalancing (e.g. Latin square) varies the order of conditions across participants." },
+    { t:"exp", k:"def",
+      q:"Neither the participants nor the person measuring knows who is in which group. This is…",
+      o:["Single-blind","Double-blind","Placebo","Matching"], a:1,
+      e:"Double-blinding reduces expectancy and experimenter bias." },
+    { t:"exp", k:"mc", x:"Add-10",
+      q:"In a cross-sectional design, age and cohort are confounded. What does this mean?",
+      o:["Older people always answer more slowly","Differences between age groups may come from their generation (what they grew up with), not age itself","The sample is too small","Participants drop out"], a:1,
+      e:"Example: 70-year-olds score lower on IT skills because they grew up without computers. Fix: longitudinal or cohort-sequential design." },
+    { t:"exp", k:"case", x:"Add-10",
+      q:"Which design fits? You want to see how the same people's IT skills change as they age.",
+      o:["Longitudinal (or cohort-sequential) design","Cross-sectional design","Case study","Posttest-only design"], a:0,
+      e:"Longitudinal studies show real change in individuals, but are slow, expensive and suffer drop-out." },
+
+    /* ---------- Hypothesis testing ---------- */
+    { t:"hyp", k:"mc", x:"Add-2",
+      q:"What distinguishes the null hypothesis (H0) from the research hypothesis (H1)?",
+      o:["H0 predicts an effect; H1 predicts none","H0 states there is no effect or difference and is what statistics test; H1 predicts an effect based on theory","They are the same","H1 is tested directly"], a:1,
+      e:"We reject or fail to reject H0. We never 'prove' H1." },
+    { t:"hyp", k:"mc", x:"Ex-2",
+      q:"What does 'statistically significant' mean?",
+      o:["The effect is large and important","The result is unlikely to be caused by chance alone (p ≤ α)","The study had a big sample","H0 is proven true"], a:1,
+      e:"Significance does not mean the effect is large or important." },
+    { t:"hyp", k:"def", x:"Ex-2, SPSS",
+      q:"Which error matches: 'Rejecting H0 when it is actually true — claiming an effect that does not exist'?",
+      o:["Type I error (false positive)","Type II error (false negative)","Sampling error","Measurement error"], a:0,
+      e:"Type I = false positive (α). Type II = keeping a false H0, missing a real effect (β)." },
+    { t:"hyp", k:"def", x:"Ex-2",
+      q:"Concluding a vaccine does not work when it actually does is a…",
+      o:["Type I error","Type II error","Correct decision","Confounding error"], a:1,
+      e:"Type II error: failing to reject a false H0 (missing a real effect)." },
+    { t:"hyp", k:"mc", x:"SPSS (former exam)",
+      q:"How can a researcher reduce the risk of a Type I error?",
+      o:["Use a stricter significance level (e.g. 0.01 instead of 0.05), correct for many tests, and replicate","Use a higher α","Remove participants who disagree","Test many hypotheses after seeing the data"], a:0,
+      e:"Trade-off: a lower α increases the risk of a Type II error unless the sample is made larger." },
+    { t:"hyp", k:"mc",
+      q:"What does it mean when we 'fail to reject H0'?",
+      o:["H0 is proven true","The study did not provide enough evidence to reject H0; it does not prove H0","H1 is proven","The study failed"], a:1,
+      e:"Absence of evidence is not evidence of absence." },
+    { t:"hyp", k:"case", x:"SPSS (former exam)",
+      q:"SPSS t-test: Men N=2109, women N=139, p (2-tailed) = .048. With α = 0.05 and α = 0.01, what do you conclude?",
+      o:["Reject H0 at both levels","Reject H0 at 0.05 (barely), keep H0 at 0.01","Keep H0 at both levels","Keep H0 at 0.05, reject at 0.01"], a:1,
+      e:"Reject when p ≤ α. Also comment on the very unequal group sizes: 139 women may not be representative." },
+    { t:"hyp", k:"case", x:"SPSS (former exam)",
+      q:"In the SPSS output, Levene's test has Sig. = .164. What does this mean?",
+      o:["The t-test is significant","Equal variances can be assumed (Sig. > .05), so read the 'equal variances assumed' row","The groups have different means","The data is not normal"], a:1,
+      e:"Levene's test checks the equal-variance assumption of the t-test." },
+    { t:"hyp", k:"mc", x:"SPSS (former exam)",
+      q:"For an independent-samples t-test with groups of 2,109 and 139, the degrees of freedom are…",
+      o:["2,248","2,246","2,247","138"], a:1,
+      e:"df = n1 + n2 − 2 = 2,109 + 139 − 2 = 2,246." },
+    { t:"hyp", k:"mc", x:"Add-9, SPSS",
+      q:"How can a result be statistically significant but not meaningful?",
+      o:["It cannot","With a very large sample, even a tiny difference becomes significant but may not matter in practice","Only if p > 0.05","Only in qualitative studies"], a:1,
+      e:"Example: login time cut by 0.1 s, p < 0.001 with 100,000 users. Report effect size (e.g. Cohen's d)." },
+    { t:"hyp", k:"case",
+      q:"Which test fits? Compare mean scores of THREE independent groups on an interval DV.",
+      o:["Independent t-test","One-way ANOVA","Chi-square","Paired t-test"], a:1,
+      e:"ANOVA compares 3+ groups and avoids running many t-tests, which would inflate Type I error." },
+    { t:"hyp", k:"case",
+      q:"Which test fits? Is gender (male/female) associated with preferred OS (Windows/macOS/Linux)? You have counts.",
+      o:["Chi-square test","Independent t-test","ANOVA","Pearson correlation"], a:0,
+      e:"Chi-square tests association between categorical variables using actual counts. It does not prove cause." },
+    { t:"hyp", k:"case",
+      q:"Which test fits? The same people are measured before and after training (interval scores).",
+      o:["Paired-samples t-test","Independent-samples t-test","Chi-square","One-way ANOVA"], a:0,
+      e:"Paired t-test: two means from the SAME people (within-participants)." },
+    { t:"hyp", k:"def",
+      q:"Which term matches: 'A range of plausible values for an unknown population value'?",
+      o:["Confidence interval","Significance level","Effect size","Standard error of judgement"], a:0,
+      e:"A confidence interval shows more detail than just saying a result is significant or not." },
+    { t:"hyp", k:"def", x:"SPSS",
+      q:"Which term matches: 'The probability of getting a result at least this extreme IF H0 is true'?",
+      o:["p-value","α","Power","Cronbach's alpha"], a:0,
+      e:"Small p means the data is unlikely under H0 → reject H0. α is the threshold chosen before the test." },
+
+    /* ---------- Research ethics ---------- */
+    { t:"ethics", k:"mc", x:"Ex-3",
+      q:"What does informed consent mean?",
+      o:["Participants sign after the study","Participants are told the purpose, procedures, risks, benefits, data use and their rights BEFORE they agree, and agree freely","The ethics committee consents on behalf of participants","Participants must complete the study once started"], a:1,
+      e:"Participation is voluntary and participants can withdraw at any time without penalty." },
+    { t:"ethics", k:"mc", x:"Ex-3",
+      q:"Deceptive research is sometimes necessary. How can it be handled ethically?",
+      o:["Never tell participants the truth","Only when the study has real value, no non-deceptive alternative exists, risk is minimal, it is approved, and participants are debriefed afterwards","Pay participants more","Only use children as participants"], a:1,
+      e:"Example: telling users the study is about 'email usability' while testing if they click phishing links, followed by debriefing." },
+    { t:"ethics", k:"def", x:"Ex-3, Ord-23",
+      q:"Which term matches: 'After participation, the researcher explains the true purpose, corrects any deception and lets participants withdraw their data'?",
+      o:["Debriefing","Informed consent","Blinding","Piloting"], a:0,
+      e:"Debriefing is required whenever participants could not be told everything beforehand." },
+    { t:"ethics", k:"mc",
+      q:"What is the difference between anonymity and confidentiality?",
+      o:["They are the same","Anonymity: nobody, not even the researcher, can link data to a person. Confidentiality: the researcher knows who said what but protects it","Confidentiality means no data is collected","Anonymity means data is encrypted"], a:1,
+      e:"Anonymous web survey vs. coded interview transcripts." },
+    { t:"ethics", k:"case",
+      q:"Interviews are recorded with names, but names are replaced by codes in the report and the key is locked away. Is this anonymity or confidentiality?",
+      o:["Anonymity","Confidentiality","Neither","Privacy by default"], a:1,
+      e:"The researcher can still link data to people, so it is confidentiality, not anonymity." },
+    { t:"ethics", k:"mc", x:"Add-6",
+      q:"Which practice does academic integrity require when reporting results?",
+      o:["Silently exclude participants whose results do not fit","Report all results, including non-significant ones, missing data, exclusions and limitations","Only report results that support H1","Round p-values down to 0.05"], a:1,
+      e:"Hiding results is dishonest and adds to publication bias. Report how many were excluded and why." },
+    { t:"ethics", k:"def",
+      q:"Which term matches: 'The benefits of the research must outweigh the burdens and risks to participants'?",
+      o:["Cost–benefit thinking","Falsifiability","Triangulation","Counterbalancing"], a:0,
+      e:"Researchers weigh possible benefits against burdens or harms to participants." },
+    { t:"ethics", k:"def",
+      q:"In Norway, which body assesses research projects that process personal data?",
+      o:["Sikt (data protection services)","Datatilsynet only","NSM","Politiet"], a:0,
+      e:"Sikt assesses projects with personal data; REK handles health research. GDPR applies." },
+    { t:"ethics", k:"mc", x:"Ord-23 Q2",
+      q:"Why is using leading questions also an ethical problem, not only a methodological one?",
+      o:["It is not","It produces false results and damages trust in research and researchers","It makes interviews longer","It breaks GDPR automatically"], a:1,
+      e:"Researcher bias and trying to 'prove' a hypothesis harms participants' trust and the research community's reputation." }
+  ]
+});
+</script>
+
+<script>
+/* ================================================================
+   COURSE: IMT4115 – Introduction to Information Security Management
+   Sources: essay exams 2020–2023 (+ resits), IMT4115 slides,
+   IMT4115 Terminology notes (Whitman & Mattord).
+   Exam tags: E20 = ordinary 2020, R20 = resit 2020, etc.
+   ================================================================ */
+COURSES.push({
+  code: "IMT4115",
+  name: "Introduction to Information Security Management",
+  exam: "2026-12-11",
+  examInfo: "School exam · 5 h essay (51%) + term paper (49%)",
+  color: "amber",
+  status: "active",
+  topics: [
+    { id: "ch1", title: "Ch 1 · Introduction to InfoSec management", file: "2026_Chap 1" },
+    { id: "ch2", title: "Ch 2 · Law, ethics and GDPR", file: "2026_Chap 2 and GDPR" },
+    { id: "ch3", title: "Ch 3 · Information security strategy", file: "2026_Chapter 3" },
+    { id: "ch4", title: "Ch 4 · Information security policy", file: "2026_Chapter 4" },
+    { id: "rbl", title: "Research based learning", file: "2026_Research based learning" },
+    { id: "ch5", title: "Ch 5 · Security program, people and SETA", file: "2026_Chap 5" },
+    { id: "ch6", title: "Ch 6 · Risk assessment", file: "2026_Chapter 6" },
+    { id: "ch7", title: "Ch 7 · Risk treatment", file: "2026_Chapter 7" },
+    { id: "ch8", title: "Ch 8 · Management models", file: "2026_chap 8" },
+    { id: "ch9", title: "Ch 9 · Management practices", file: "2026_chap 9" },
+    { id: "ch10", title: "Ch 10 · Contingency planning", file: "No slides in folder – built from former exams and notes" },
+    { id: "ch11", title: "Ch 11 · Security maintenance", file: "2026_ Chapter 11" }
+  ],
+  questions: [
+    /* ---------- Ch1 ---------- */
+    { t:"ch1", k:"mc",
+      q:"A ransomware attack encrypts all patient records so staff cannot use them. Which CIA property is mainly attacked?",
+      o:["Confidentiality","Integrity","Availability","Accountability"], a:2,
+      e:"Ransomware blocks access, which hits availability. A leaked register would hit confidentiality." },
+    { t:"ch1", k:"def",
+      q:"Which model has three dimensions: information states × CIA × safeguards (policy, education, technology)?",
+      o:["McCumber Cube","Bull's-eye model","Cyber Kill Chain","PDCA"], a:0,
+      e:"The McCumber Cube shows that security needs policy, education AND technology." },
+    { t:"ch1", k:"mc",
+      q:"Which are the three communities of interest that share responsibility for security?",
+      o:["InfoSec management, IT management, general business management","Police, military, government","Users, hackers, vendors","CISO, CEO, CFO only"], a:0,
+      e:"Security is not only an IT task; business management shares responsibility." },
+    { t:"ch1", k:"mc", x:"E20-Q4",
+      q:"Cybersecurity is often treated as an IT problem rather than an operational one. Which measure helps close this gap?",
+      o:["Let IT handle all incidents alone","Management ownership, cyber in the organisation's risk analysis, joint crisis plans and exercises, and clear response and recovery roles","Buy more firewalls","Outsource all security"], a:1,
+      e:"Incidents must involve top management, crisis teams, communication and legal, not just IT." },
+    { t:"ch1", k:"def",
+      q:"Which list gives the six Ps of InfoSec management?",
+      o:["Planning, Policy, Programs, Protection, People, Project management","Plan, Prepare, Protect, Prevent, Patch, Proceed","People, Process, Product, Price, Place, Promotion","Policy, Procedure, Practice, Principle, Profile, PDCA"], a:0,
+      e:"W&M's six Ps describe the areas InfoSec management must cover." },
+    { t:"ch1", k:"def", x:"R22-Q6",
+      q:"Which writing style starts an email to management with the conclusion and the required action, then gives the background?",
+      o:["BLUF (Bottom Line Up Front)","IMRaD","STRIDE","TLP"], a:0,
+      e:"Example: 'BLUF: Critical vulnerability in the HR system. I recommend taking it offline until patched tonight. Decision needed by 14:00.'" },
+    { t:"ch1", k:"essay", x:"R22-Q6",
+      q:"A critical vulnerability is discovered in one of your organisation's newly implemented systems. As CISO, how would you build a BLUF email to the CTO?",
+      kp:["Bottom line first: what is wrong and the recommended action","Decision needed and deadline","Short background: what happened, which system","Impact/risk (data, operations, legal)","Actions already taken and next steps","Contact person and when the next update comes"],
+      m:"Subject: CRITICAL – vulnerability in new HR system, decision needed by 14:00. BLUF: Outsiders can read employee data in the new HR system. I recommend taking it offline until the vendor patch is applied tonight. I need your approval by 14:00. Background: found during this morning's scan; the flaw is public and actively exploited. Impact: possible GDPR breach and 72-hour notification duty if data was accessed. Done so far: logs secured, access restricted to VPN. Next: patch tonight, verify, report status 08:00 tomorrow. Contact: me, phone 123." },
+
+    /* ---------- Ch2 ---------- */
+    { t:"ch2", k:"mc", x:"E22-Q6, E23-Q4",
+      q:"Whitman & Mattord group the causes of unethical behaviour into three categories. Which?",
+      o:["Ignorance, accident, intent","Greed, fear, revenge","Hackers, insiders, nations","Technical, physical, administrative"], a:0,
+      e:"Prevent ignorance with education and clear policy, accidents with controls, and intent with deterrence." },
+    { t:"ch2", k:"case", x:"E22-Q6, E23-Q4",
+      q:"A new employee installs pirated software, not knowing it is forbidden. Which category, and the best prevention?",
+      o:["Intent – prosecution","Ignorance – SETA and a clear acceptable-use policy","Accident – backups","Accident – job rotation"], a:1,
+      e:"Ignorance is fixed by education, training and clear policy." },
+    { t:"ch2", k:"mc", x:"E22-Q6, E23-Q4",
+      q:"Punishment only deters unethical behaviour when three conditions are present. Which?",
+      o:["Fear of the penalty, high probability of being caught, high probability the penalty is applied","A written policy, a lawyer, and a firewall","Large fines, media coverage, and an apology","Training, monitoring, and rewards"], a:0,
+      e:"Example: log access to patient journals, tell staff, and actually discipline snooping." },
+    { t:"ch2", k:"mc", x:"R20-Q6",
+      q:"What is the difference between due care and due diligence?",
+      o:["They are identical","Due care = taking the reasonable protective measures; due diligence = continuously checking and maintaining that they work","Due care is a law; due diligence is a policy","Due diligence applies only to states"], a:1,
+      e:"Due care = install firewall and patch policy. Due diligence = regular audits that patches are actually applied." },
+    { t:"ch2", k:"essay", x:"R20-Q6",
+      q:"States have a due diligence duty not to let their territory be used for cyber operations against other states. How can this affect a 'normal' organisation's infosec and due care?",
+      kp:["Define due care (reasonable protection) and due diligence (keep checking it works)","State duty raises expectations on organisations in its territory","Organisation must not let its systems be a launch point or transit (botnets, compromised servers)","Practical: patching, hardening IoT/servers, monitoring outbound traffic, incident reporting, cooperation with NSM/CERTs","Liability and reputation if negligent"],
+      m:"Due care means taking the reasonable protective measures a prudent organisation would take; due diligence means continuously checking that they work. If a state must not knowingly allow its territory to be used for cyber operations, it will expect organisations inside it not to let their systems become launch points or transit nodes, for example as botnet zombies or compromised servers. This strengthens the organisation's own due care: patch and harden servers and IoT devices, monitor outbound traffic, report incidents and cooperate with NSM and CERTs. Failing to do so can create legal liability and reputational damage." },
+    { t:"ch2", k:"mc",
+      q:"Within how many hours must a personal data breach normally be reported to the supervisory authority (Datatilsynet) under GDPR?",
+      o:["24 hours","48 hours","72 hours","7 days"], a:2,
+      e:"Report within 72 hours; inform affected persons if the risk to them is high." },
+    { t:"ch2", k:"def",
+      q:"Which GDPR role decides why and how personal data is processed (e.g. the hospital), as opposed to the cloud provider that processes data on its behalf?",
+      o:["Data controller","Data processor","Data protection officer","Data subject"], a:0,
+      e:"Controller decides; processor processes for the controller. A data processing agreement is required." },
+    { t:"ch2", k:"def",
+      q:"Which risk assessment does GDPR require before high-risk processing of personal data?",
+      o:["DPIA (Data Protection Impact Assessment)","BIA","TVA worksheet","FAIR"], a:0,
+      e:"A DPIA assesses privacy risks before processing starts." },
+    { t:"ch2", k:"mc",
+      q:"Which list contains GDPR Art. 5 principles?",
+      o:["Data minimisation, purpose limitation, storage limitation, accountability","Least privilege, need to know, separation of duties","Confidentiality, integrity, availability only","Deterrence, detection, recovery"], a:0,
+      e:"Also: lawfulness/fairness/transparency, accuracy, integrity and confidentiality." },
+    { t:"ch2", k:"mc",
+      q:"How do law, ethics and policy differ?",
+      o:["Law is enforced by the state with penalties; ethics are accepted norms of right and wrong; policies are organisational 'laws' in between","They are the same","Ethics are always laws","Policies override laws"], a:0,
+      e:"Laws set the minimum; ethics describe what you should do; policy must not conflict with law." },
+    { t:"ch2", k:"essay", x:"E22-Q6, E23-Q4",
+      q:"Unethical behaviour can be difficult to deter. What are the general categories of unethical behaviour, and how can they be prevented? Exemplify.",
+      kp:["Three causes: ignorance, accident, intent","Ignorance → education, training, clear policy (e.g. pirated software)","Accident → controls, least privilege, backups, change management (e.g. deleted database)","Intent → deterrence: monitoring, sanctions, legal action (e.g. selling customer data)","Deterrence needs fear of penalty, probability of being caught, penalty actually applied","Codes of ethics (ACM, ISC2) support professional behaviour"],
+      m:"W&M sort causes into three groups. Ignorance: people do not know the rules, e.g. a new hire installs pirated software. Prevent with SETA and a clear acceptable-use policy. Accident: honest mistakes by people with access, e.g. an admin deletes a production database. Prevent with least privilege, backups and change management. Intent: deliberate wrongdoing, e.g. an employee sells customer data. Prevent with deterrence: log access, tell staff it is logged, and actually apply sanctions. Deterrence only works with fear of the penalty, a high chance of being caught and a high chance the penalty is applied." },
+
+    /* ---------- Ch3 Strategy ---------- */
+    { t:"ch3", k:"mc",
+      q:"What is the correct order from top to bottom?",
+      o:["Mission → vision → values → strategy → goals → objectives","Objectives → goals → strategy → vision","Policy → strategy → mission","Goals → mission → procedures"], a:0,
+      e:"Strategy is derived from mission, vision and values, then broken into goals and measurable objectives." },
+    { t:"ch3", k:"mc",
+      q:"Which planning level has a 3–5 year horizon and is owned by the board, CEO and CISO?",
+      o:["Operational","Tactical","Strategic","Contingency"], a:2,
+      e:"Strategic (3–5 years) → tactical (1–3 years, middle managers) → operational (days–months)." },
+    { t:"ch3", k:"mc",
+      q:"Why does top-down implementation of a security strategy usually succeed better than bottom-up?",
+      o:["It is cheaper","It has management authority, funding and ownership","It needs no planning","Technical staff dislike bottom-up"], a:1,
+      e:"Bottom-up efforts often fail due to lack of authority and budget." },
+    { t:"ch3", k:"def",
+      q:"Which term matches: 'The responsibilities and practices of the board and executive management to give strategic direction, ensure objectives are met, manage risk and use resources responsibly'?",
+      o:["Information security governance","Security maintenance","Benchmarking","Incident response"], a:0,
+      e:"GRC links governance, risk management and compliance." },
+    { t:"ch3", k:"mc", x:"E22-Q1, R20-Q1",
+      q:"Norway's National Cyber Security Strategy (2019) is a useful operative example. What is its vision?",
+      o:["Norway shall have the world's largest SOC","In Norway, it is safe to use digital services","All companies shall be ISO 27001 certified","No cyber attacks by 2030"], a:1,
+      e:"It has five strategic goals and principles such as public–private and civil–military cooperation." },
+    { t:"ch3", k:"def",
+      q:"The SecSDLC phases are…",
+      o:["Investigation → analysis → logical design → physical design → implementation → maintenance and change","Identify → protect → detect → respond → recover","Plan → do → check → act","Preparation → detection → containment → recovery"], a:0,
+      e:"SecSDLC is a formal, waterfall-based method to build a security program." },
+    { t:"ch3", k:"essay", x:"R20-Q1 (60%), E22-Q1 (60%)",
+      q:"Elaborate on information security strategy with an operative example. You are responsible for strategy development: propose the overall tasks (e.g. 8 strategy elements) and an implementation plan.",
+      kp:["Define strategy: long-term direction from mission, vision, values (strategic planning)","Operative example: Norway's National Cyber Security Strategy (vision, 5 goals, principles, measures)","8 elements: alignment, governance/roles, risk-based approach, goals/objectives, policy framework, people/culture (SETA), technology/architecture, resilience and follow-up","Planning levels: strategic → tactical → operational","Implementation: top-management approval and budget, gap/maturity analysis, prioritise by risk and cost-benefit, roadmap, owners and deadlines, communicate and train, implement stepwise (SecSDLC), measure with KPIs/balanced scorecard, yearly review (PDCA)","Discuss challenges: culture, resources, top-down support"],
+      m:"A security strategy sets the long-term direction for protecting information assets, derived from the organisation's mission, vision and values. Norway's National Cyber Security Strategy is a good example: its vision is safe use of digital services, it has five goals (secure digitalisation, robust infrastructure, competence, detection and handling, police capability), guiding principles (public–private, civil–military, international) and measures assigned to ministries. For my organisation I would build eight elements: (1) alignment with mission and values, (2) governance and clear roles with a CISO mandate, (3) a risk-based approach with asset classification and gap analysis, (4) strategic goals and SMART objectives, (5) a policy framework (EISP, ISSP, SysSP) aligned with GDPR, Security Act and NIS2, (6) people and culture through SETA, (7) technology and architecture based on ISO 27001/NSM and defence in depth, (8) resilience and follow-up: IR/contingency plans, metrics, maintenance and yearly review. Implementation: get top-management approval and budget; analyse current state; prioritise by risk and cost-benefit; make a short/medium/long-term roadmap; assign owners and deadlines; communicate and train; implement step by step as projects; measure with KPIs or a balanced scorecard and review yearly (PDCA)." },
+    { t:"ch3", k:"essay", x:"R22-Q4",
+      q:"Before working on policy, the information security strategy should be in place. What would be a good implementation plan for the strategy?",
+      kp:["Top-management approval and budget (top-down)","Current-state and gap analysis (maturity, risk)","Prioritise by risk and cost-benefit","Roadmap: short, medium, long term","Owners, resources, deadlines","Communicate and train","Implement stepwise as projects","Measure (KPIs, balanced scorecard) and review yearly"],
+      m:"1) Secure top-management approval and budget. 2) Analyse current state and gaps with a maturity check and risk assessment. 3) Prioritise measures by risk and cost-benefit. 4) Make a roadmap that breaks the strategy into tactical and operational plans. 5) Assign owners, resources and deadlines. 6) Communicate to stakeholders and train staff. 7) Implement step by step as projects. 8) Measure with KPIs or a balanced scorecard and review yearly in a PDCA cycle." },
+
+    /* ---------- Ch4 Policy ---------- */
+    { t:"ch4", k:"mc",
+      q:"Which order goes from most general to most detailed?",
+      o:["Policy → standard → guideline/procedure","Procedure → policy → standard","Standard → policy → procedure","Guideline → policy → standard"], a:0,
+      e:"Policy (what, mandatory) → standard (specific requirement) → guideline (advice) / procedure (step-by-step how)." },
+    { t:"ch4", k:"case",
+      q:"'Passwords must be at least 14 characters.' This is a…",
+      o:["Policy","Standard","Guideline","Practice"], a:1,
+      e:"A standard is a detailed, mandatory requirement that supports a policy." },
+    { t:"ch4", k:"case", x:"E21-Q1",
+      q:"An acceptable-use policy for email and internet is an example of which policy type?",
+      o:["EISP","ISSP","SysSP","ACL"], a:1,
+      e:"ISSP covers one issue or technology and how employees must use it." },
+    { t:"ch4", k:"case", x:"E21-Q1",
+      q:"A firewall rule set for the payroll server is an example of which policy type?",
+      o:["EISP","ISSP","SysSP","Guideline"], a:2,
+      e:"SysSP: managerial guidance plus technical specifications (ACLs, configuration rules) for one system." },
+    { t:"ch4", k:"def", x:"E21-Q1",
+      q:"Which policy is the top-level, organisation-wide policy that sets strategic direction, scope and tone for all security efforts?",
+      o:["EISP","ISSP","SysSP","BCP"], a:0,
+      e:"Enterprise Information Security Policy, also called the general security policy." },
+    { t:"ch4", k:"mc", x:"E20-Q1, R21-Q2",
+      q:"For a policy to be enforceable it must be…",
+      o:["Disseminated, reviewed (read), comprehended, complied with (agreed), and uniformly enforced","Long, technical and secret","Approved by IT only","Written in English"], a:0,
+      e:"W&M's criteria. Example: intranet + onboarding, short quiz, signed agreement, same rules for managers." },
+    { t:"ch4", k:"def",
+      q:"In the bull's-eye model, which layer is the outer foundation that gives direction to all technical controls?",
+      o:["Applications","Systems","Networks","Policy"], a:3,
+      e:"Policy → networks → systems → applications. Without policy, controls have no direction." },
+    { t:"ch4", k:"mc",
+      q:"What is the difference between an ACL and a capability table?",
+      o:["ACL is attached to an object listing which users can access it; a capability table is attached to a user listing which objects they can access","They are identical","ACL lists passwords","Capability tables are only for firewalls"], a:0,
+      e:"Both are part of SysSP technical specifications." },
+    { t:"ch4", k:"essay", x:"E20-Q1 (60%), E21-Q1 (60%), R21-Q2, E22-Q3, R22-Q3",
+      q:"Elaborate on information security policy. You are responsible for the policy in the organisation you are hired in: what are the overall tasks to make a good policy, and how would you implement it?",
+      kp:["Define policy, standard, guideline, procedure; bull's-eye model (policy as foundation)","Three types: EISP, ISSP, SysSP with examples","Tasks: strategy first and risk-based; top-management mandate; team with IT/HR/legal/DPO; map laws (GDPR, Security Act, NIS2) and standards (ISO 27001/27002, NSM); write EISP then ISSPs and SysSPs; short, clear, enforceable; approval; policy owner and review schedule","Enforceability criteria: disseminated, reviewed, comprehended, complied with, uniformly enforced","Implementation: distribute, train and quiz, sign/agree, enforce uniformly, support with procedures, measure (audits, metrics), review yearly and after incidents","Operative example (e.g. a real policy or Østre Toten lessons)"],
+      m:"A policy is a set of management rules for required and forbidden behaviour. It is the foundation in the bull's-eye model, supported by standards, guidelines and procedures. W&M define three types: the EISP (organisation-wide direction), ISSPs (one issue, e.g. acceptable use of email, BYOD, AI tools) and SysSPs (one system, e.g. firewall rules, ACLs). My tasks: make sure the strategy exists and do a risk assessment first; get a top-management mandate; form a team with IT, HR, legal, the DPO and users; map laws (GDPR, Security Act, NIS2) and standards (ISO 27001/27002, NSM basic principles); write the EISP first, then ISSPs and SysSPs; keep them short and enforceable with roles and sanctions; get approval; appoint a policy owner and review schedule. Implementation follows the enforceability criteria: disseminate via intranet and onboarding, make sure people read and understand it (training, quiz), get agreement (sign/click), enforce uniformly including managers, support with procedures and a help desk, measure with audits and metrics, and review yearly and after incidents or new laws." },
+
+    /* ---------- Research based learning ---------- */
+    { t:"rbl", k:"def",
+      q:"In academic writing (RBL slides), 'outlining an argument from what you know, then researching to fill the gaps' is which mode?",
+      o:["Deduction","Induction","Abduction","Triangulation"], a:0,
+      e:"Deduction = finding data to support an argument (active reading). The slides call it the best in practice." },
+    { t:"rbl", k:"def",
+      q:"'Researching the topic first, then forming an argument from the research' is which mode?",
+      o:["Deduction","Induction","Abduction","Delphi"], a:1,
+      e:"Induction is the most common but less effective mode: you risk over-reading and losing your own voice." },
+    { t:"rbl", k:"def",
+      q:"'Making clear the assumptions (warrant) that let you move from data to argument' is which mode?",
+      o:["Deduction","Induction","Abduction","Benchmarking"], a:2,
+      e:"Abduction deepens critique by questioning underlying assumptions." },
+    { t:"rbl", k:"mc",
+      q:"According to the course's review guide, which parts does the examiner read first and use to form an overall impression?",
+      o:["References and appendices","Abstract and conclusions","Figures only","The background section"], a:1,
+      e:"Abstract and conclusions must be written with much more care than the rest." },
+
+    /* ---------- Ch5 Program & people ---------- */
+    { t:"ch5", k:"mc",
+      q:"Why is it often better for the security function to report outside the IT department?",
+      o:["It is cheaper","It reduces conflicts of interest: IT wants speed, security wants control","IT does not understand security","Laws require it"], a:1,
+      e:"Placement options: under CIO, own department under CEO, legal, risk management, admin services." },
+    { t:"ch5", k:"def",
+      q:"In W&M, security staff are grouped as definers, builders and administrators. Who are the definers?",
+      o:["Policy and risk people such as the CISO and managers","Engineers who implement controls","Operators who monitor daily","External auditors"], a:0,
+      e:"Builders design and implement; administrators operate and monitor." },
+    { t:"ch5", k:"mc", x:"R20-Q3, E23-Q3",
+      q:"Match SETA parts to their goal.",
+      o:["Awareness = what (recognise threats); training = how (job skills); education = why (deep understanding)","Awareness = why; training = what; education = how","All three are the same","Education is for all employees"], a:0,
+      e:"Awareness for everyone (posters, phishing tests); training for staff with security tasks; education for security professionals." },
+    { t:"ch5", k:"case",
+      q:"An employee locks the screen because they think it matters, colleagues do it, and it is easy. Which theory explains this?",
+      o:["Theory of Planned Behaviour","General Deterrence Theory","Dynamic capability theory","Chinese Wall"], a:0,
+      e:"TPB: attitude, subjective norms and perceived behavioural control shape intention and behaviour." },
+    { t:"ch5", k:"def",
+      q:"Which theory says people protect themselves when they see a serious, likely threat AND believe they can carry out an effective protective action?",
+      o:["Protection Motivation Theory","General Deterrence Theory","Theory of Planned Behaviour","Schein's culture model"], a:0,
+      e:"PMT: threat appraisal + coping appraisal." },
+    { t:"ch5", k:"mc",
+      q:"Schein describes organisational culture in three levels. Which?",
+      o:["Artifacts, espoused values, basic assumptions","Policy, standard, procedure","Strategic, tactical, operational","Awareness, training, education"], a:0,
+      e:"Basic assumptions are what people really take for granted when nobody is watching." },
+    { t:"ch5", k:"mc", x:"E21-Q6",
+      q:"Which type of trust in information sharing is the highest level, based on shared values and goals?",
+      o:["Calculus-based trust","Knowledge-based trust","Identification-based trust","Contract-based trust"], a:2,
+      e:"Calculus-based (rules, contracts) → knowledge-based (past behaviour) → identification-based (shared values)." },
+    { t:"ch5", k:"def", x:"E21-Q6",
+      q:"Information labelled TLP:AMBER may be shared…",
+      o:["Publicly","With the whole community","Within the recipient's own organisation on a need-to-know basis","Only with the named recipients"], a:2,
+      e:"RED = named recipients, AMBER = own organisation need-to-know, GREEN = community, CLEAR = public." },
+    { t:"ch5", k:"essay", x:"E21-Q6",
+      q:"Trust in information sharing is paramount. Which type of trust is important, why, and how can you generate a higher level of trust?",
+      kp:["Calculus-based (rules, contracts, sanctions) → knowledge-based (past behaviour) → identification-based (shared values, highest)","Why: organisations only share threat information with partners they trust; sharing improves external monitoring and response","Raise trust: clear rules (TLP, NDAs), reciprocity, regular meetings and exercises","Secure platforms (MISP, PGP), published service descriptions (RFC 2350)","Track record of handling shared data well"],
+      m:"Trust grows in three levels: calculus-based trust rests on rules, contracts and sanctions; knowledge-based trust on knowing the partner's past behaviour; identification-based trust on shared values and goals, which is the level that makes sharing easy. It matters because CERTs, partners and sectors only share sensitive threat information if they trust how it will be used. To raise trust I would agree clear rules such as TLP and NDAs, share reciprocally, meet and exercise regularly, use secure platforms like MISP and PGP, publish an RFC 2350 service description, and build a track record of handling shared data well." },
+    { t:"ch5", k:"mc",
+      q:"Why are job rotation and mandatory vacation used in personnel security?",
+      o:["To save money","So fraud or errors become visible when someone else does the job","To reduce training costs","To comply with GDPR"], a:1,
+      e:"They are controls during employment, alongside least privilege and separation of duties." },
+    { t:"ch5", k:"essay", x:"E21-Q3",
+      q:"What information security positions would you as a manager consider important, and how would you argue to get them approved?",
+      kp:["Positions: CISO, security manager, architect, engineer, SOC analyst, incident responder, DPO, awareness coordinator","Roles: definers, builders, administrators; data owner/custodian/user","Business case: risk assessment shows exposure","Cost of likely incident vs salary","Legal requirements (GDPR, NIS2, Security Act)","Benchmarking and past incidents (e.g. Østre Toten)","Clear KPIs the role will deliver"],
+      m:"Key positions: a CISO for strategy, policy and reporting to top management; a security manager for the daily program; architects and engineers who build and maintain controls; SOC analysts and incident responders; a DPO for GDPR; and an awareness coordinator for SETA. To get them approved I would build a business case: show the risk assessment and expected loss (e.g. ALE) compared to the salary cost, point to legal duties such as GDPR, NIS2 and the Security Act, benchmark against similar organisations, use real incidents like Østre Toten 2021, and promise measurable KPIs." },
+    { t:"ch5", k:"essay", x:"R20-Q3, E23-Q3, R21-Q3",
+      q:"Cyber attacks are increasing and more educated security personnel are needed. How would you meet these challenges (SETA / security program) in the organisation you are hired in?",
+      kp:["Assess needs: roles, current skills, risk areas","Awareness for everyone: onboarding, yearly, phishing simulations","Role-based training for IT, developers, managers","Education and certifications for the security team (CISSP, CISM, master's)","Exercises (tabletop, crisis drills) with management","Measure effect (click rates, incidents, quizzes) and adjust","Recruit and retain: career paths, university partnerships","Link to strategy, risk assessment and program placement"],
+      m:"I would start with a needs assessment of roles, skills and risk areas. Then run SETA in three layers: awareness for all employees (onboarding, yearly refreshers, phishing simulations), role-based training for IT, developers and managers, and education and certifications for the security team. Add tabletop and crisis exercises that include top management. Measure the effect through click rates, incident numbers and quizzes, and adjust. Finally, recruit and keep people with career paths and university partnerships, and anchor everything in the strategy and risk assessment." },
+
+    /* ---------- Ch6 Risk assessment ---------- */
+    { t:"ch6", k:"mc",
+      q:"Risk assessment consists of…",
+      o:["Risk identification, risk analysis, risk evaluation","Defence, transference, mitigation","Detection, reaction, recovery","Planning, organising, leading"], a:0,
+      e:"Risk management = context → identify → analyse → evaluate → treat → monitor, with communication throughout." },
+    { t:"ch6", k:"mc", x:"R20-Q2",
+      q:"What is the difference between asset classification and asset categorization?",
+      o:["Classification labels sensitivity (public, internal, confidential, secret); categorization rates impact on C, I, A (low/moderate/high)","They are the same","Categorization labels sensitivity","Classification is only for hardware"], a:0,
+      e:"FIPS 199: overall category = highest of the three CIA ratings." },
+    { t:"ch6", k:"mc", x:"R20-Q2",
+      q:"Which question is one of W&M's asset valuation questions?",
+      o:["Which asset generates the most revenue, or would be most expensive to replace or most embarrassing if revealed?","Which asset is newest?","Which asset is used by the CEO?","Which asset has the longest name?"], a:0,
+      e:"Also: which asset is most critical to the organisation's success?" },
+    { t:"ch6", k:"mc",
+      q:"An asset is worth 200,000 NOK, 50% is damaged per incident, and incidents happen twice per year. What is the ALE?",
+      o:["100,000 NOK","200,000 NOK","400,000 NOK","50,000 NOK"], a:1,
+      e:"SLE = 200,000 × 0.5 = 100,000. ALE = SLE × ARO = 100,000 × 2 = 200,000 NOK/year." },
+    { t:"ch6", k:"def", x:"R20-Q2",
+      q:"Which tool is a likelihood × impact grid, coloured green/yellow/red, used to present risks to management?",
+      o:["Risk matrix (heat map)","TVA worksheet","Attack tree","Balanced scorecard"], a:0,
+      e:"Weighted table analysis helps rank assets; the risk matrix presents the results." },
+    { t:"ch6", k:"def",
+      q:"Which risk method expresses risk in money (loss event frequency × loss magnitude) and is good for board communication?",
+      o:["FAIR","OCTAVE","Delphi","STRIDE"], a:0,
+      e:"FAIR is quantitative. OCTAVE is a qualitative, workshop-based, self-directed method." },
+    { t:"ch6", k:"def",
+      q:"Which method has experts rate risks anonymously in rounds until they agree, useful when there is little data?",
+      o:["Delphi technique","FAIR","ISO 27005","ALE"], a:0,
+      e:"Good for new threats where historic data is missing." },
+    { t:"ch6", k:"case", x:"E20-Q2, R21-Q1, E23-Q5",
+      q:"A municipality uses a general risk and resilience (ROS) template that treats cyber like a power outage. What should it add?",
+      o:["Nothing","An InfoSec-specific method (ISO 27005 or OCTAVE), a socio-technical analysis, threat intelligence (MITRE ATT&CK, NSM/PST), and FAIR for cost","Only more firewalls","A bigger insurance policy"], a:1,
+      e:"Cyber attacks need their own place in the risk register (lesson from Østre Toten)." },
+    { t:"ch6", k:"mc",
+      q:"Which STRIDE threat violates integrity?",
+      o:["Spoofing","Tampering","Repudiation","Denial of service"], a:1,
+      e:"Spoofing–authentication, Tampering–integrity, Repudiation–non-repudiation, Information disclosure–confidentiality, DoS–availability, Elevation–authorisation." },
+    { t:"ch6", k:"mc",
+      q:"Threat, vulnerability and risk — which pairing is correct?",
+      o:["Threat = ransomware gang; vulnerability = no MFA on remote access; risk = likelihood × impact","Threat = no MFA; vulnerability = ransomware gang","Risk = the attacker","Vulnerability = the consequence"], a:0,
+      e:"A threat exploits a vulnerability, causing an incident and consequences." },
+    { t:"ch6", k:"essay", x:"R21-Q1 (60%), E20-Q2, R22-Q2, E22-Q4, E23-Q5",
+      q:"Your organisation's risk management process leaves out several information security issues. Which InfoSec risk analysis method(s) would you use to improve it, and why? Then, why and how would you choose feasible risk treatments?",
+      kp:["Why general ROS templates are incomplete for cyber","Methods: ISO/IEC 27005, NIST SP 800-30, OCTAVE (Allegro), FAIR, Delphi, DSB ROS, socio-technical analysis","When to use each (ISO users, public sector, internal workshops, board communication, little data)","Asset classification/categorisation, TVA, risk matrix","Threat input: MITRE ATT&CK, NSM/PST/ENISA threat assessments","Treatments: defence, transference, mitigation, acceptance, termination with examples","Feasibility: economic (CBA), organisational, operational, technical, political","Residual risk, risk appetite, monitoring"],
+      m:"General ROS templates (like DSB's for municipalities) treat cyber like any other hazard and miss assets, threat actors and human factors. I would add ISO/IEC 27005 (fits an ISO 27001 ISMS) or OCTAVE Allegro (internal, asset-focused workshops), a socio-technical analysis for culture and awareness (Østre Toten had a technical analysis but missed these), MITRE ATT&CK and NSM/PST threat assessments for realistic threats, and FAIR to express risk in money to management. Delphi helps when data is scarce. Start by classifying and categorising assets, build a TVA worksheet and show results in a risk matrix. Then treat the risks, because resources are limited and not all risks can be removed: defence (patching, MFA), transference (insurance, outsourcing), mitigation (IR, DR plans, backups), acceptance (low-value assets) or termination (shut down a legacy service). Check feasibility: cost-benefit (ALE before − ALE after − cost), organisational fit, user acceptance, technical fit and political support. Document residual risk against the risk appetite and monitor continuously." },
+    { t:"ch6", k:"essay", x:"R20-Q2",
+      q:"You are classifying and categorising information assets but do not know their value or how to prioritise. How would you move forward, and which impact and risk matrices would you use to present the result to management?",
+      kp:["Inventory assets with owners","Classification by sensitivity (open, internal, confidential, strictly confidential)","Categorisation by CIA impact (FIPS 199 low/moderate/high, highest wins)","W&M valuation questions (critical, revenue, replacement cost, embarrassment/liability)","Weighted table analysis with weighted criteria","Present with impact table and 5×5 likelihood × impact heat map"],
+      m:"First build an asset inventory with owners. Classify each asset by sensitivity (open, internal, confidential, strictly confidential) and categorise by the impact on confidentiality, integrity and availability (low/moderate/high, overall = highest). Value assets with W&M's questions: which is most critical, earns most, costs most to replace, or would be most embarrassing or create liability if revealed. Rank them in a weighted table analysis (e.g. revenue 30%, reputation 40%, legal 30%). Present to management with an impact table per asset and a 5×5 likelihood × impact heat map in green, yellow and red." },
+
+    /* ---------- Ch7 Risk treatment ---------- */
+    { t:"ch7", k:"case", x:"R21-Q1",
+      q:"Buying cyber insurance is which risk treatment strategy?",
+      o:["Defence","Transference","Mitigation","Acceptance"], a:1,
+      e:"Transference shifts risk to others (insurance, outsourcing)." },
+    { t:"ch7", k:"case", x:"R21-Q1",
+      q:"Having an IR plan, DR plan and backups to reduce damage if an incident happens is which strategy?",
+      o:["Defence","Transference","Mitigation","Termination"], a:2,
+      e:"Mitigation reduces impact. Defence (avoidance) prevents exploitation, e.g. patching and MFA." },
+    { t:"ch7", k:"case",
+      q:"Shutting down an old, unsupported web service is which strategy?",
+      o:["Acceptance","Termination","Transference","Defence"], a:1,
+      e:"Termination removes the risky activity or asset." },
+    { t:"ch7", k:"mc",
+      q:"Cost-benefit analysis: ALE before = 200,000, ALE after = 40,000, annual cost of control = 60,000. What is the CBA?",
+      o:["100,000 NOK – worth it","160,000 NOK","−20,000 NOK – not worth it","300,000 NOK"], a:0,
+      e:"CBA = ALE before − ALE after − annual cost = 200,000 − 40,000 − 60,000 = 100,000." },
+    { t:"ch7", k:"mc", x:"R21-Q1",
+      q:"Which feasibility areas should you check before choosing a control?",
+      o:["Economic (cost-benefit), organisational, operational/behavioural, technical, political","Only cost","Only technical fit","Legal and colour of the product"], a:0,
+      e:"A control that is too expensive, rejected by users or unsupported by management will fail." },
+    { t:"ch7", k:"def",
+      q:"Which term matches: 'The risk that remains after controls are applied'?",
+      o:["Residual risk","Risk appetite","Inherent risk tolerance","ARO"], a:0,
+      e:"Residual risk is compared with the risk appetite (how much risk the organisation will accept)." },
+    { t:"ch7", k:"def",
+      q:"Which model goes: causes → preventive measures → unwanted event → damage-limiting measures → consequences?",
+      o:["Bow-tie model (DSB risk process)","Bull's-eye model","McCumber Cube","Kill chain"], a:0,
+      e:"The slides show the DSB bow-tie with preparedness and crisis plans on the consequence side." },
+
+    /* ---------- Ch8 Models ---------- */
+    { t:"ch8", k:"mc", x:"E23-Q1",
+      q:"Which management framework is certifiable?",
+      o:["ISO/IEC 27001","NIST CSF","NSM Basic Principles","CIS Controls"], a:0,
+      e:"ISO 27001 = ISMS requirements, certifiable. NIST CSF and NSM are voluntary, not certifiable." },
+    { t:"ch8", k:"mc", x:"E23-Q1, E20-Q6",
+      q:"What are the six functions of NIST CSF 2.0?",
+      o:["Govern, Identify, Protect, Detect, Respond, Recover","Plan, Do, Check, Act, Review, Improve","Identify, Protect, Detect, Respond, Recover, Report","Assess, Design, Build, Test, Deploy, Maintain"], a:0,
+      e:"CSF also has implementation tiers (1 Partial → 4 Adaptive) and current/target profiles." },
+    { t:"ch8", k:"mc",
+      q:"NSM's Basic Principles for ICT Security are organised in four categories. Which?",
+      o:["Identify and map → Protect and maintain → Detect → Handle and recover","Govern → Identify → Protect → Recover","Plan → Do → Check → Act","Assess → Treat → Accept → Monitor"], a:0,
+      e:"A Norwegian, practical framework, free and suited for gap analysis." },
+    { t:"ch8", k:"case", x:"E23-Q1",
+      q:"Which architecture model enforces 'no read up, no write down' to protect confidentiality?",
+      o:["Bell-LaPadula","Biba","Clark-Wilson","Brewer-Nash"], a:0,
+      e:"BLP uses classifications and clearances (MAC). Biba is the integrity mirror: no read down, no write up." },
+    { t:"ch8", k:"case", x:"E23-Q1",
+      q:"A consultant working for Bank A must not see Bank B's files. Which model?",
+      o:["Brewer-Nash (Chinese Wall)","Biba","Bell-LaPadula","Graham-Denning"], a:0,
+      e:"Chinese Wall prevents conflicts of interest based on what the subject has already accessed." },
+    { t:"ch8", k:"def", x:"E23-Q1",
+      q:"Which integrity model lets users change data only through controlled programs (access triple subject → program → object), with well-formed transactions and separation of duties?",
+      o:["Clark-Wilson","Biba","Bell-LaPadula","HRU"], a:0,
+      e:"Clark-Wilson fits commercial business processes." },
+    { t:"ch8", k:"def",
+      q:"Which international standard certifies security products using Target of Evaluation, Protection Profiles and EAL1–7?",
+      o:["Common Criteria (ISO/IEC 15408)","ISO 27001","TCSEC only","COBIT"], a:0,
+      e:"Common Criteria replaced TCSEC (Orange Book) and ITSEC." },
+    { t:"ch8", k:"mc", x:"E23-Q1",
+      q:"How do management models and architecture models differ?",
+      o:["Management models (ISO 27001, NIST CSF, NSM) say WHAT to manage at organisation level; architecture models (BLP, Biba, Clark-Wilson, CC) say HOW systems enforce access","They are the same","Architecture models are for managers only","Management models are only technical"], a:0,
+      e:"They complement each other: management sets requirements, architecture implements them." },
+    { t:"ch8", k:"mc", x:"E20-Q3",
+      q:"File permissions and database rights on individual records are which type of access control?",
+      o:["Physical","Logical","System","Data"], a:3,
+      e:"Physical = buildings/locks, logical = networks via software (firewall, VPN), system = OS/application accounts, data = files and records." },
+    { t:"ch8", k:"essay", x:"E20-Q3",
+      q:"What is the difference between physical, logical, system and data access control? How would you combine them and why? Exemplify.",
+      kp:["Physical: buildings, rooms, hardware (key cards, guards)","Logical: networks and resources via software (firewalls, VPN, passwords)","System: OS and application accounts and privileges","Data: individual files, records, fields (permissions, encryption)","Combine in layers = defence in depth","Principles: least privilege, need to know, separation of duties"],
+      m:"Physical access control protects buildings and hardware (key cards, locks, guards). Logical access control protects networks and resources through software (firewalls, VPN, passwords). System access control governs operating systems and applications (user accounts, privileges). Data access control protects individual files and records (permissions, encryption, DB rights). I would combine them in layers so an attacker must pass the door, the network, the system login and the data permissions (defence in depth), all based on least privilege and need to know. Example: a hospital uses key cards to the server room, VPN with MFA, role-based accounts in the journal system, and record-level access logging." },
+    { t:"ch8", k:"essay", x:"E23-Q1 (60%)",
+      q:"Discuss and compare 3 security management frameworks; discuss architectural models with positives and negatives; position management vs architecture models via properties.",
+      kp:["ISO/IEC 27001/27002: international, ISMS + 93 controls, certifiable; strong recognition but costly","NIST CSF 2.0: 6 functions, tiers, profiles; free, flexible, good for maturity; not certifiable, US-oriented","NSM Basic Principles: Norwegian, 4 categories, concrete; less known internationally","Architecture: BLP (confidentiality, rigid), Biba (integrity, ignores confidentiality), Clark-Wilson (business integrity, complex), Brewer-Nash (conflict of interest, narrow), Common Criteria (product certification, slow/expensive)","Positioning table: level, question answered, audience, focus, output","They complement each other"],
+      m:"ISO/IEC 27001/27002 is an international, certifiable ISMS with 93 controls in four themes; it is globally recognised but costly and documentation-heavy. NIST CSF 2.0 has six functions (Govern, Identify, Protect, Detect, Respond, Recover), tiers and profiles; it is free and easy to explain to management, but not certifiable. NSM Basic Principles are Norwegian, practical and free, in four categories, but less known abroad. Architecture models: Bell-LaPadula protects confidentiality (no read up, no write down) but ignores integrity; Biba protects integrity but ignores confidentiality; Clark-Wilson fits business processes with separation of duties but is complex; Brewer-Nash prevents conflicts of interest but has a narrow use case; Common Criteria certifies products internationally but is slow and expensive. Positioning: management models work at organisation level, answer 'what should we manage', target CISOs and auditors and produce an ISMS and maturity levels; architecture models work at system level, answer 'how is access enforced', target architects and evaluators and produce access rules and certified products. They complement each other." },
+
+    /* ---------- Ch9 Practices ---------- */
+    { t:"ch9", k:"def",
+      q:"Which term matches: 'Comparing your security practices with other organisations or standards'?",
+      o:["Benchmarking","Baselining","Gap analysis","Penetration testing"], a:0,
+      e:"Baselining measures your own current level; gap analysis compares current vs target." },
+    { t:"ch9", k:"mc", x:"E20-Q6",
+      q:"Which list contains maturity models?",
+      o:["CMMI, NIST CSF tiers, C2M2, SSE-CMM","STRIDE, DREAD, PASTA","GDPR, NIS2, Security Act","TLP, BLUF, IMRaD"], a:0,
+      e:"CMMI levels: 1 Initial, 2 Managed, 3 Defined, 4 Quantitatively managed, 5 Optimizing." },
+    { t:"ch9", k:"mc", x:"E20-Q6",
+      q:"How can a maturity investigation improve security, as in the University of Chicago BSD NIST example?",
+      o:["Measure baseline → set target per area → show gaps in a heat map → prioritise → re-measure","Buy the highest tier product","Skip measurement and implement everything","Only measure once"], a:0,
+      e:"Improve 'one step at a time' and re-measure yearly or after exercises." },
+    { t:"ch9", k:"mc", x:"R22-Q5, E23-Q6",
+      q:"Which pairing of CSIRT, CERT and SOC is correct?",
+      o:["SOC monitors and triages alerts 24/7; CSIRT handles incidents; CERT coordinates and warns a sector or nation","SOC only writes policy","CERT only exists inside one company","CSIRT monitors, SOC coordinates nationally"], a:0,
+      e:"Examples: Telenor SOC, an internal NTNU incident team, NorCERT/HelseCERT/KraftCERT." },
+    { t:"ch9", k:"def",
+      q:"Which RFC describes what a CSIRT should publish about itself (contacts, services, PGP keys, hours)?",
+      o:["RFC 2350","RFC 3971","RFC 2671","RFC 7350"], a:0,
+      e:"Publishing a service description also builds trust for information sharing." },
+    { t:"ch9", k:"essay", x:"R22-Q5, E23-Q6",
+      q:"What are the differences between a CSIRT, a CERT and a SOC, and how would an organisation benefit from them?",
+      kp:["SOC: continuous monitoring, detection and triage (SIEM), proactive","CSIRT: incident response – isolate, mitigate, recover; reactive + advisories","CERT: coordinates, warns and promotes best practice for a sector or nation","Examples (Telenor SOC, NorCERT, HelseCERT, KraftCERT)","Benefits: faster detection/response, less damage and downtime, threat intelligence, expert help, compliance with reporting duties","SOC often hands incidents to CSIRT; terms overlap"],
+      m:"A SOC monitors the organisation 24/7, detects and triages alerts with SIEM and is proactive. A CSIRT handles incidents: it isolates, mitigates and recovers, and issues advisories. A CERT coordinates and warns a whole sector or nation and promotes best practice, e.g. NorCERT, HelseCERT or KraftCERT. In practice a SOC passes confirmed incidents to the CSIRT. Benefits: faster detection and response, less damage and downtime, access to threat intelligence and sector warnings, expert help and easier compliance with reporting duties." },
+    { t:"ch9", k:"essay", x:"E20-Q6",
+      q:"What measurement (maturity) models do you know, and how can maturity investigations improve information security maturity in your organisation?",
+      kp:["Models: CMMI, NIST CSF tiers, C2M2, SSE-CMM, Wahlgren & Kowalski","UChicago BSD example: NIST CSF + custom tiers + heat map","Baseline → target → gap → heat map → prioritise → implement → re-measure","Report to management; link to strategy and budget","Repeat yearly / after exercises"],
+      m:"Known models include CMMI (five levels from Initial to Optimizing), the NIST CSF implementation tiers, C2M2 for energy, SSE-CMM and Wahlgren & Kowalski's model. Like the University of Chicago BSD, I would measure the baseline per area, set a target, show gaps in a heat map, prioritise improvements with management, implement them and re-measure yearly or after exercises, improving one step at a time." },
+
+    /* ---------- Ch10 Contingency planning ---------- */
+    { t:"ch10", k:"mc", x:"E20-Q5, R21-Q4, E22-Q5",
+      q:"What are the four components of contingency planning?",
+      o:["BIA, incident response plan, disaster recovery plan, business continuity plan","Risk assessment, policy, SETA, audit","Identify, protect, detect, recover","CSIRT, CERT, SOC, ISAC"], a:0,
+      e:"The BIA comes first; the CPMT leads all CP work." },
+    { t:"ch10", k:"mc", x:"E21-Q4, R20-Q4",
+      q:"What is the main difference between an IR plan and a DR plan?",
+      o:["IR stops and fixes a security incident at the primary site; DR restores systems, data and facilities after a disaster","They are identical","DR is used before IR","IR runs at an alternate site"], a:0,
+      e:"BC keeps critical business functions running, often at an alternate site." },
+    { t:"ch10", k:"case", x:"E21-Q4, R20-Q4",
+      q:"The data centre is flooded and patient systems are run from a backup hospital site. Which plan is in action?",
+      o:["Incident response plan","Disaster recovery plan","Business continuity plan","Policy review"], a:2,
+      e:"Keeping business functions running at an alternate site is business continuity." },
+    { t:"ch10", k:"def", x:"R22-Q1, R21-Q6",
+      q:"Which term matches: 'The longest a process can be down before the damage is unacceptable'?",
+      o:["MTD","RPO","RTO","WRT"], a:0,
+      e:"MTD = RTO + WRT. RPO = acceptable data loss in time (decides backup frequency)." },
+    { t:"ch10", k:"mc",
+      q:"RPO = 1 hour. What does this mean in practice?",
+      o:["Systems must be back within 1 hour","At most 1 hour of data may be lost, so back up at least hourly","The plan is tested hourly","MTD is 1 hour"], a:1,
+      e:"RTO is the target time to restore; RPO is about data loss." },
+    { t:"ch10", k:"mc", x:"E20-Q5, R21-Q4, E22-Q5",
+      q:"What are the first steps of NIST SP 800-34 contingency planning?",
+      o:["CP policy statement → BIA → preventive controls → recovery strategies → plans → testing/training → maintenance","Buy backup software first","Write the DR plan, then the policy","Hire a CERT"], a:0,
+      e:"Seven steps; the life cycle keeps it continuous through reviews, exercises and lessons learned." },
+    { t:"ch10", k:"def",
+      q:"Which alternate site is fully equipped and ready in hours, but costly?",
+      o:["Hot site","Warm site","Cold site","Mutual agreement"], a:0,
+      e:"Warm = partly equipped; cold = empty room with power." },
+    { t:"ch10", k:"mc",
+      q:"Which plan testing method is most realistic but also most risky?",
+      o:["Desk check","Structured walk-through","Tabletop simulation","Full interruption"], a:3,
+      e:"Order: desk check → walk-through → simulation → parallel testing → full interruption." },
+    { t:"ch10", k:"essay", x:"E20-Q5, R21-Q4, E22-Q5",
+      q:"You lead the contingency planning management team (CPMT). What are the proper steps to organise contingency planning, and how would you build a life cycle strategy to keep the work continuous?",
+      kp:["CPMT: champion (senior executive), project manager, members from business, IT, InfoSec, HR, legal, communications; IR/DR/BC teams below","CP = BIA + IR + DR + BC","NIST SP 800-34 seven steps: policy, BIA, preventive controls, strategies, plans, testing/training/exercises, maintenance","BIA: processes, recovery criticality, MTD/RTO/RPO, resources","Life cycle: plan owner, yearly review and after incidents/changes, exercises incl. top management, lessons learned (PDCA), updated contacts/contracts","Link to risk assessment and the maintenance model"],
+      m:"First I set up the CPMT with a senior champion who gives authority and budget, a project manager and members from business units, IT, InfoSec, HR, legal and communications, with IR, DR and BC teams under it. I follow NIST SP 800-34: 1) write the CP policy statement, 2) run the BIA to find critical processes, recovery criticality, MTD, RTO and RPO, 3) identify preventive controls, 4) choose recovery strategies (backups, alternate sites), 5) write the IR, DR and BC plans, 6) test, train and exercise, 7) maintain the plans. To make it continuous: assign plan owners, review at least yearly and after every incident, exercise or major change, run exercises from tabletop to full simulations with top management, feed lessons learned back into the plans (PDCA), keep contact lists and contracts current, and link CP to the risk assessment and the security maintenance model." },
+    { t:"ch10", k:"essay", x:"E21-Q4, R20-Q4",
+      q:"What is the difference between an incident response plan and a disaster recovery plan? Exemplify how they help during an incident.",
+      kp:["IR: detect, contain, eradicate, recover from an incident at the primary site (NIST 800-61 phases)","DR: restore systems, data, facilities after a disaster","BC as the third plan (alternate site)","Example IR: phishing → compromised account: isolate PC, reset passwords, remove malware","Example DR: ransomware encrypts all servers → rebuild from offline backups","Escalation from incident to disaster"],
+      m:"An IR plan handles a security incident at the primary site: preparation, detection and analysis, containment, eradication and recovery, and lessons learned. Example: a phishing email compromises an account; the IR team isolates the PC, resets passwords and removes the malware. A DR plan is used when the incident becomes a disaster that the organisation cannot contain, such as ransomware encrypting all servers; the DR team restores systems and data from offline backups. If business cannot run at the primary site meanwhile, the BC plan moves critical functions to an alternate site." },
+    { t:"ch10", k:"essay", x:"E21-Q5",
+      q:"What recovery criticality would you consider important in a business continuity plan?",
+      kp:["BIA ranks business processes by how fast they must be restored","Levels: critical (hours), essential (days), non-essential (weeks)","Criteria: life and safety first, legal duties, revenue, customers, reputation, dependencies","Hospital example: journal and lab = critical; payroll = essential; newsletter = non-essential","Link to MTD/RTO/RPO"],
+      m:"Recovery criticality comes from the BIA and ranks processes by how quickly they must be restored: critical within hours, essential within days and non-essential within weeks. Criteria are life and safety first, then legal duties, revenue, customers, reputation and dependencies between systems. In a hospital the patient journal and lab systems are critical, payroll is essential and the internal newsletter is non-essential. Each level gets MTD, RTO and RPO targets." },
+    { t:"ch10", k:"essay", x:"R21-Q6, R22-Q1",
+      q:"What efforts can you make to optimise maximum tolerable downtime (MTD) in dialogue with top management?",
+      kp:["Run the BIA with business leaders and agree MTD per process","Translate MTD into RTO/RPO (MTD = RTO + WRT)","Invest where gaps are largest: offline/immutable backups, redundancy, alternate sites","Pre-signed contract with external incident and recovery team","Manual fallback routines","Exercise ransomware scenarios with top management","Report status and residual risk regularly"],
+      m:"I would run the BIA together with business leaders so top management agrees the MTD per process, then translate it into RTO and RPO. Where there are gaps, invest in offline or immutable backups, redundancy and alternate sites, sign a contract with an external incident and recovery team in advance, and prepare manual fallback routines. Exercise ransomware scenarios with top management and report status and residual risk regularly." },
+
+    /* ---------- Ch11 Maintenance ---------- */
+    { t:"ch11", k:"mc", x:"E21-Q2, E22-Q2, R22-Q1, R20-Q5, R21-Q5, E23-Q2",
+      q:"What are the five areas of the W&M security maintenance model?",
+      o:["External monitoring, internal monitoring, planning and risk assessment, vulnerability assessment and remediation, readiness and review","Identify, protect, detect, respond, recover","Plan, do, check, act, improve","Awareness, training, education, testing, audit"], a:0,
+      e:"This is the most tested topic in IMT4115 exams." },
+    { t:"ch11", k:"case",
+      q:"Following CERT warnings, police and military intelligence, partners and vendor advisories belongs to which maintenance area?",
+      o:["External monitoring","Internal monitoring","Readiness and review","Vulnerability remediation"], a:0,
+      e:"External monitoring gives early warning about new threats." },
+    { t:"ch11", k:"case",
+      q:"SOC, SIEM monitoring and reporting, asset inventory and maturity checks belong to which area?",
+      o:["External monitoring","Internal monitoring","Planning and risk assessment","Readiness and review"], a:1,
+      e:"Internal monitoring = knowing your own environment." },
+    { t:"ch11", k:"case",
+      q:"Internal control, management review, strategy/policy evaluation and training and exercises belong to which area?",
+      o:["Readiness and review","External monitoring","Vulnerability assessment","Internal monitoring"], a:0,
+      e:"Readiness and review checks that strategy, policies, procedures and plans still fit." },
+    { t:"ch11", k:"case",
+      q:"Power redundancy, an alternative office and a 'box with equipment' are mentioned under which area in the slides?",
+      o:["Vulnerability assessment and remediation","External monitoring","Readiness and review","Planning and risk assessment"], a:0,
+      e:"The slides ask 'Why would this happen to us?' and list physical resilience next to scanning and patching." },
+    { t:"ch11", k:"mc",
+      q:"In the lecture's 'routine database', what happens when an incident is NOT described in the database?",
+      o:["Ignore it","Collect information, plan, and update the database","Follow the old routine anyway","Close the ticket"], a:1,
+      e:"If described → follow the routine. Critical vulnerabilities also update the database." },
+    { t:"ch11", k:"def",
+      q:"Which NIST publication is the 'Information Security Handbook: A Guide for Managers', listing 13 areas to maintain?",
+      o:["NIST SP 800-100","NIST SP 800-61","NIST SP 800-30","NIST SP 800-53"], a:0,
+      e:"Areas include governance, SDLC, awareness and training, contingency planning, incident response, configuration and change management." },
+    { t:"ch11", k:"mc",
+      q:"Which was a key lesson from the Østre Toten ransomware attack (2021)?",
+      o:["Cyber attacks need their own place in the risk and vulnerability analysis, and contingency plans need a contract with an external ICT recovery team","Municipalities need no backups","Only IT should be informed","Exercises are a waste of time"], a:0,
+      e:"Other lessons: extraordinary information demands, handling sensitive data during the incident, and exercising cyber attacks." },
+    { t:"ch11", k:"mc",
+      q:"Who makes strategic decisions in a crisis, as opposed to the technical IR team?",
+      o:["The crisis management team (top managers)","The SOC analysts","The vendor","The DPO alone"], a:0,
+      e:"Crisis management is a top-management task; IR is technical. Escalation: event → incident → disaster → crisis." },
+    { t:"ch11", k:"essay", x:"E21-Q2, E22-Q2, R22-Q1 (60%), R20-Q5, R21-Q5",
+      q:"Security maintenance is labour-intensive. How can you use the security maintenance model to make an optimised culture for managing and operating security over time?",
+      kp:["Five areas explained with examples (external monitoring, internal monitoring, planning and risk assessment, vulnerability assessment and remediation, readiness and review)","Routine database / risk, threat and vulnerability databases","NIST SP 800-100 areas","Culture: routine not project, clear owners, reports to management","Involve people, share results, appreciative inquiry","Learning: root cause analysis, lessons learned, double-loop learning","Train and exercise incl. top management; measure maturity yearly","Share with CERTs and partners (trust, TLP)"],
+      m:"The W&M maintenance model has five areas. External monitoring watches CERTs, police and military intelligence, partners and vendor advisories for early warning. Internal monitoring uses the SOC, SIEM, asset inventories and maturity checks. Planning and risk assessment keeps plans current with root-cause and socio-technical analysis. Vulnerability assessment and remediation finds and fixes weaknesses through scans, pen tests and patching, plus physical resilience such as power and an alternative office. Readiness and review checks strategy, policies and plans through internal control, management review, training and exercises. To build a culture over time I would make maintenance a fixed yearly routine with owners per area and reports to management, use a routine database so known events are handled consistently and new ones update it, involve staff by sharing results and celebrating improvements (appreciative inquiry), learn from incidents with root-cause analysis and double-loop learning, train and exercise regularly with top management, measure maturity yearly, and share threat information with CERTs and partners under TLP." },
+    { t:"ch11", k:"essay", x:"E23-Q2",
+      q:"How could you combine the system security maintenance model with incident response, and why is it important?",
+      kp:["External monitoring → threat intelligence improves IR preparation and early warning","Internal monitoring → SOC/SIEM alerts are the IR detection phase","Planning and risk assessment ← lessons learned update risk and plans","Vulnerability assessment ← weaknesses exploited in incidents fixed everywhere","Readiness and review → IR plans tested in exercises and reviewed after incidents","Why: faster detection/response, no repeated incidents, plans match real threats, better resource use, learning organisation instead of silos"],
+      m:"Each maintenance area links to an IR phase. External monitoring feeds threat intelligence into IR preparation. Internal monitoring (SOC/SIEM) is IR's detection phase. Lessons learned from incidents update planning and risk assessment. Weaknesses exploited in an incident are remediated across all systems. Readiness and review tests IR plans in exercises and reviews them after every incident. Combining them gives faster detection and response, prevents repeat incidents, keeps plans matched to real threats, uses resources better and makes the organisation learn instead of working in silos." }
+  ]
+});
+</script>
+
+<script>
+/* ================================================================
+   COURSE: IMT4113 – Introduction to Cyber and Information Security
+   Technology (FINAL exam part; cryptography midterm already taken)
+   Sources: final exams 2024 (+ answer guide) and 2025, IMT4113 slides
+   (Day 1–3 lectures and guest lectures), exercise sheets.
+   Exam tags: "2024 Q7" = Final exam 2024, question 7.
+   Note: the MC answer keys were coloured red in the PDFs and did not
+   survive text extraction; answers below were worked out from the
+   slides/textbook. Uncertain ones are marked chk:true (Needs checking).
+   ================================================================ */
+COURSES.push({
+  code: "IMT4113",
+  name: "Introduction to Cyber and Information Security Technology",
+  exam: "2026-12-17",
+  examInfo: "Final school exam · 2 h · simple calculator",
+  color: "indigo",
+  status: "active",
+  topics: [
+    { id: "inet", title: "Internet security (Ch 22)", file: "Day 1 - Part 1 - Internet Security - Ch22" },
+    { id: "auth", title: "Internet authentication (Ch 23)", file: "Day 1 - Part 2 - Internet Authentication - Ch23" },
+    { id: "ac", title: "Access control and security models (Ch 4, guest)", file: "Day 1 - GuestLecture - AccessControl - Ch4" },
+    { id: "mal", title: "Malicious software (Ch 6)", file: "Day 2 - Part 1 - Malicious Software - Ch6" },
+    { id: "bof", title: "Buffer overflow (Ch 10)", file: "Day 2 - Part 2 - Buffer Overflow - Ch10" },
+    { id: "ids", title: "Intrusion detection (guest)", file: "Day 2 - GuestLecture - IDS" },
+    { id: "sw", title: "Software security (Ch 11)", file: "Day 3 - Part 1 - Software Security - Ch11" },
+    { id: "os", title: "Operating system security (Ch 12)", file: "Day 3 - Part 2 - OS Security - Ch12" },
+    { id: "dos", title: "Denial of service (guest)", file: "Day 3 - GuestLecture - DDoS" }
+  ],
+  questions: [
+    /* ---------- Internet security ---------- */
+    { t:"inet", k:"mc", x:"2025 Q14, 2024 Q11",
+      q:"According to the course answer guide, what is the main reason for radix-64 conversion in S/MIME?",
+      o:["To preserve the integrity of the message and hash as it is transmitted to the recipient","To compress the message content","To obfuscate the message for confidentiality","To support encoding by all S/MIME clients"], a:0,
+      e:"Radix-64 turns binary data (signatures, ciphertext) into printable characters so it survives email transport unchanged. It gives no confidentiality." },
+    { t:"inet", k:"mc", x:"2024 Q11",
+      q:"Radix-64: split the bits into 6-bit groups. 001101 010011 001101 010100 decodes to…",
+      o:["NTNU","MTMU","ntnu","NUTN"], a:0,
+      e:"13 → N, 19 → T, 13 → N, 20 → U. Table: 0–25 = A–Z, 26–51 = a–z, 52–61 = 0–9, 62 = +, 63 = /." },
+    { t:"inet", k:"mc", x:"2025 Q15",
+      q:"Radix-64 conversion of 01001010 11010101 00011101 00010000 11011011 01 is…",
+      o:["StUdEnT","StUDent","StUDeNt","StUdENt"], a:3,
+      e:"6-bit groups: 18 S, 45 t, 20 U, 29 d, 4 E, 13 N, 45 t → StUdENt." },
+    { t:"inet", k:"mc",
+      q:"Exercise: radix-64 conversion of 10010001 10011010 10001000 gives…",
+      o:["kZqI","kZqi","KzQI","jZqI"], a:0,
+      e:"100100 = 36 → k, 011001 = 25 → Z, 101010 = 42 → q, 001000 = 8 → I." },
+    { t:"inet", k:"mc", x:"2024 Q12, 2025 Q23",
+      q:"Which statement about S/MIME vs DKIM is correct?",
+      o:["S/MIME is client-side and optional per user, and can give confidentiality and integrity; DKIM is domain-level, organisation-wide and gives only integrity","DKIM gives confidentiality; S/MIME only integrity","Both are installed only by the domain administrator","S/MIME works at the domain level"], a:0,
+      e:"DKIM signs all outgoing mail with the domain's private key; receivers verify with the public key in DNS." },
+    { t:"inet", k:"mc", x:"2024 Q12",
+      q:"Which S/MIME mode gives integrity but NOT confidentiality, with only the signature radix-64 encoded so non-S/MIME clients can read the message?",
+      o:["Enveloped data","Signed data","Clear-signed data","Signed and enveloped data"], a:2,
+      e:"Enveloped = encrypted (confidentiality). Signed = signed + whole message radix-64. Clear-signed = only the signature encoded. Signed-and-enveloped = both." },
+    { t:"inet", k:"mc", x:"2024 Q13, 2025 Q3",
+      q:"What was the Heartbleed bug?",
+      o:["A buffer over-read in OpenSSL's heartbeat: the server did not check the claimed payload length and returned adjacent memory (e.g. keys, passwords)","A DDoS attack on TLS servers","A weakness in RSA key generation","A flaw in DKIM signatures"], a:0,
+      e:"The heartbeat sends a word and its length and expects it back. A fake large length made the server leak memory." },
+    { t:"inet", k:"tf", x:"2025 Q3",
+      q:"True or false: 'The SSL heartbeat protocol uses regular signals to verify that the connection remains alive.'",
+      o:["True","False"], a:0,
+      e:"The heartbeat checks that the other side is still listening." },
+    { t:"inet", k:"tf", x:"2025 Q3",
+      q:"True or false: 'A Security Association (SA) is a one-way relationship between sender and receiver. SAs form a key concept in the TLS protocol.'",
+      o:["True","False"], a:1,
+      e:"SA is one-way, but it is a key concept in IPsec, not TLS." },
+    { t:"inet", k:"mc", x:"2024 Q2, 2025 Q11",
+      q:"Which statement about IPsec is correct?",
+      o:["Transport mode is enabled on the gateway for site-to-site","Tunnel mode needs a new outer IP header to enable routing","Tunnel mode is only used on client machines end to end","IPsec has AH, ESP and a record protocol"], a:1,
+      e:"Tunnel mode wraps the whole original packet in a new IP header (typical gateway-to-gateway VPN). Transport mode protects the payload end to end between hosts. The record protocol belongs to TLS." },
+    { t:"inet", k:"mc",
+      q:"What is the difference between an SSL/TLS session and an SSL/TLS connection?",
+      o:["A session is an association created by the handshake that defines security parameters and can be shared by several connections; a connection is a transient peer-to-peer link","They are the same","A connection can contain several sessions","Sessions exist only in IPsec"], a:0,
+      e:"Sessions avoid expensive renegotiation for every new connection." },
+    { t:"inet", k:"mc",
+      q:"What is the purpose of the Change Cipher Spec protocol in SSL/TLS?",
+      o:["It copies the pending (negotiated) state into the current state, so the new cipher suite is used from then on","It exchanges certificates","It sends alerts","It compresses records"], a:0,
+      e:"It is a single-byte message sent after the handshake has agreed parameters." },
+    { t:"inet", k:"mc",
+      q:"During an HTTPS connection, which elements are encrypted?",
+      o:["Only the domain name","URL of the requested document, contents, form data, cookies and HTTP headers","Nothing, HTTPS only signs","Only cookies"], a:1,
+      e:"HTTP runs over TLS, so the whole HTTP message is protected (the server IP and port are still visible)." },
+    { t:"inet", k:"mc",
+      q:"How does SSL/TLS counter password sniffing?",
+      o:["Passwords sent over HTTP/Telnet etc. are encrypted inside the TLS tunnel, so a sniffer only sees ciphertext","It hashes passwords on the client","It blocks sniffers on the network","It replaces passwords with tokens"], a:0,
+      e:"TLS encrypts all application data, including credentials." },
+
+    /* ---------- Internet authentication ---------- */
+    { t:"auth", k:"def", x:"2025 Q6",
+      q:"Fill in: TGT stands for…",
+      o:["Ticket Granting Ticket","Trusted Gateway Token","Ticket Generation Table","Time-Granted Ticket"], a:0,
+      e:"Issued by the Authentication Server, used to get service tickets from the TGS." },
+    { t:"auth", k:"def", x:"2025 Q6",
+      q:"Fill in: CRL stands for…",
+      o:["Certificate Revocation List","Central Registration Log","Certificate Renewal Limit","Cryptographic Root List"], a:0,
+      e:"A CRL lists certificates revoked before expiry, e.g. after key compromise (DigiNotar)." },
+    { t:"auth", k:"def", x:"2025 Q6",
+      q:"Fill in: PKI stands for… (and PGP for…)",
+      o:["Public Key Infrastructure / Pretty Good Privacy","Private Key Index / Protected Gateway Protocol","Public Key Interface / Private Group Policy","Primary Key Infrastructure / Public Good Privacy"], a:0,
+      e:"Also from the 2025 exam: APT = Advanced Persistent Threat." },
+    { t:"auth", k:"mc", x:"2024 Q14",
+      q:"In Kerberos, which order of communication is correct?",
+      o:["User → AS (gets TGT) → TGS (gets service ticket) → application server","User → TGS → AS → server","User → server → AS","AS → TGS → user"], a:0,
+      e:"The AS authenticates once per session and issues the TGT; the TGS shares keys with application servers and issues service tickets." },
+    { t:"auth", k:"mc", x:"2024 Q1",
+      q:"Which statement does NOT apply to the authenticator in Kerberos?",
+      o:["It is intended to prove the user's identity","It does not include any secret, so anyone who obtains it can use it","It includes the user's ID, network address and a timestamp","It is sent from the user to the TGS"], a:1,
+      e:"The authenticator is encrypted with the session key and has a very short lifetime to stop replay, so a thief cannot simply reuse it." },
+    { t:"auth", k:"mc", x:"2025 Q7",
+      q:"What is the consequence if an attacker can generate TGTs (e.g. has the KDC's key)?",
+      o:["They can impersonate any user in the domain, including Domain Admins, and access all Kerberos-authenticated resources","They still need each user's password","They can only act until their own session expires","They can only impersonate the compromised user"], a:0,
+      e:"This is the 'golden ticket' scenario: forged TGTs are accepted by the TGS." },
+    { t:"auth", k:"tf", x:"2025 Q1",
+      q:"True or false: 'The goal of a PKI is to enable secure, convenient and efficient verification of private keys.'",
+      o:["True","False"], a:1,
+      e:"A PKI enables secure and efficient acquisition and verification of PUBLIC keys." },
+    { t:"auth", k:"tf", x:"2025 Q1",
+      q:"True or false: 'The most widely accepted format for a certificate is the X.905 standard.'",
+      o:["True","False"], a:1,
+      e:"The standard is X.509." },
+    { t:"auth", k:"mc", x:"2024 Q15",
+      q:"What is the role of a Certificate Authority (CA) in X.509?",
+      o:["It signs certificates that bind an identity to a public key, so others can trust the key","It stores users' private keys","It encrypts all traffic","It issues TGTs"], a:0,
+      e:"Certificates contain subject, public key, validity period, serial number and the CA's signature." },
+    { t:"auth", k:"case", x:"2024 Q15",
+      q:"A CA is breached and fake certificates for google.com are issued (as with DigiNotar). What mechanism marks those certificates as invalid?",
+      o:["Certificate Revocation List (CRL)","Radix-64","Change Cipher Spec","DKIM"], a:0,
+      e:"Revoked certificates are listed in the CRL before their expiry date." },
+
+    /* ---------- Access control & security models ---------- */
+    { t:"ac", k:"mc", x:"2024 Q5",
+      q:"Which statement describes RBAC?",
+      o:["Access decisions based on the identities of subjects and objects","Access based on classification levels","Access decisions based on the roles of subjects","Access decisions based on attributes"], a:2,
+      e:"DAC = identities, MAC = levels, RBAC = roles, ABAC = attributes." },
+    { t:"ac", k:"tf", x:"2025 Q5",
+      q:"True or false: 'Role-based access control policies are more powerful and more expressive than attribute-based access control policies.'",
+      o:["True","False"], a:1,
+      e:"ABAC is the more expressive, fine-grained and context-aware model." },
+    { t:"ac", k:"case",
+      q:"A consultancy gets new clients often. With RBAC, new roles must be created per client. Which model lets one policy work for all projects using project code, clearance and sensitivity?",
+      o:["ABAC","DAC","MAC","BLP"], a:0,
+      e:"ABAC uses attributes of subject, object and environment (location, time)." },
+    { t:"ac", k:"mc", x:"2025 Q18",
+      q:"P = all states, Q = secure states, R = states allowed by the mechanism. If R = Q, the mechanism is…",
+      o:["Secure","Precise","Broad","Unusable"], a:1,
+      e:"Secure: R ⊆ Q. Precise: R = Q. Broad: some state in R is not in Q." },
+    { t:"ac", k:"mc", x:"2024 Q24",
+      q:"In an access control matrix, what is an access control list and what is a capability ticket?",
+      o:["ACL = a column (one object, rights of each subject); capability ticket = a row (one subject, rights on each object)","ACL = a row; capability = a column","Both are columns","Both list passwords"], a:0,
+      e:"The ACM is central to DAC. Rights: r, w, x, a (append), o (own)." },
+    { t:"ac", k:"mc", x:"2025 Q19",
+      q:"Which is NOT one of the six HRU primitive operations on the access control matrix?",
+      o:["enter r into a[s,o]","delete r from a[s,o]","create subject s","copy matrix A"], a:3,
+      e:"The six: enter, delete, create subject, create object, destroy subject, destroy object." },
+    { t:"ac", k:"def",
+      q:"Which principle says a subject cannot increase its rights or give rights it does not possess?",
+      o:["Principle of attenuation of privilege","Least privilege","Complete mediation","Separation of duties"], a:0,
+      e:"Related special rights: copy (grant) and own." },
+    { t:"ac", k:"mc",
+      q:"In Bell-LaPadula, the simple security condition and the *-property are…",
+      o:["No read up; no write down","No read down; no write up","Read anything; write anything","No read; no write"], a:0,
+      e:"BLP protects confidentiality: information may only flow upward." },
+    { t:"ac", k:"mc",
+      q:"Security levels with categories: does (Top Secret, {NUC, ASI}) dominate (Confidential, {EUR, ASI})?",
+      o:["Yes, because Top Secret is higher","No, because {EUR, ASI} is not a subset of {NUC, ASI}","Yes, because both contain ASI","Only for writing"], a:1,
+      e:"(L,C) dom (L′,C′) iff L′ ≤ L AND C′ ⊆ C. Both conditions must hold." },
+    { t:"ac", k:"mc",
+      q:"In the Biba low-water-mark policy, what happens when a subject reads a lower-integrity object?",
+      o:["The read is blocked","The subject's integrity level drops to the minimum of the two","The object is upgraded","Nothing"], a:1,
+      e:"i′(s) = min(i(s), i(o)). Writing requires i(o) ≤ i(s)." },
+    { t:"ac", k:"mc", x:"2025 Q21",
+      q:"'s can read o iff o is sanitized, or s already accessed an object in the same company dataset, or o is in a COI class s has not accessed.' This is…",
+      o:["The read rule of the Chinese Wall model","BLP simple security property","Low-water-mark read rule","The *-property"], a:0,
+      e:"The Chinese Wall (Brewer-Nash) uses access history and conflict-of-interest classes." },
+    { t:"ac", k:"mc", x:"2025 Q20",
+      q:"Which three properties must a reference monitor have?",
+      o:["Complete mediation, tamper-proof, verifiability","Open source, integrity, speed","Encryption, logging, backup","Availability, scalability, usability"], a:0,
+      e:"Always invoked (cannot be bypassed), immutable, and small enough to analyse and test. 'Open source' is not a property." },
+    { t:"ac", k:"mc", x:"2025 Q24",
+      q:"In formal evaluation, what are repeatability and reproducibility?",
+      o:["Repeatability: re-evaluation by the SAME team gives the same result; reproducibility: re-evaluation by DIFFERENT teams gives the same result","The opposite","Both mean the evaluation is fast","Both refer to software updates"], a:0,
+      e:"They prevent different evaluations of the same product from disagreeing." },
+    { t:"ac", k:"def",
+      q:"In XACML, which component evaluates policy and renders the authorisation decision?",
+      o:["PDP (Policy Decision Point)","PEP (Policy Enforcement Point)","PIP (Policy Information Point)","PAP (Policy Administration Point)"], a:0,
+      e:"PEP enforces, PIP supplies attribute values, PAP manages policies." },
+    { t:"ac", k:"mc",
+      q:"Which countermeasure category does an IDS belong to?",
+      o:["Deterrence","Protection/prevention","Detection","Recovery and response"], a:2,
+      e:"Categories from the slides: deterrence, protection/prevention, detection, recover and response." },
+
+    /* ---------- Malicious software ---------- */
+    { t:"mal", k:"mc",
+      q:"What are the three broad propagation methods for malware?",
+      o:["Infection of existing content (viruses), exploitation of vulnerabilities (worms), social engineering (trojans, spam)","Email, USB, cloud","Encryption, compression, obfuscation","Phishing, vishing, smishing"], a:0,
+      e:"Stallings classifies malware by how it spreads and by its payload." },
+    { t:"mal", k:"mc",
+      q:"What are the four broad payload categories?",
+      o:["System corruption; attack agent (zombie/bot); information theft (keyloggers, phishing, spyware); stealthing (backdoors, rootkits)","Viruses, worms, trojans, spam","Encryption, deletion, theft, spying","Local, remote, cloud, physical"], a:0,
+      e:"Ransomware is a type of system corruption payload." },
+    { t:"mal", k:"case", x:"2025 Q17",
+      q:"A virus is delivered as a 'PDF for a prize claim'. The attacker tricks victims to download it with ____, and the PDF is a ____.",
+      o:["social engineering; trojan horse","a trap door; logic bomb","cognitive engineering; macro add-on","a rootkit; bot"], a:0,
+      e:"A trojan horse looks useful but hides malicious code." },
+    { t:"mal", k:"mc", x:"2025 Q17",
+      q:"What is the correct order of a virus's lifetime phases?",
+      o:["Dormant → propagation → triggering → execution","Propagation → dormant → execution → triggering","Execution → triggering → dormant","Triggering → dormant → propagation → execution"], a:0,
+      e:"Dormant (idle), propagation (copies itself), triggering (condition met), execution (payload)." },
+    { t:"mal", k:"case", x:"2025 Q17, 2024 Q20",
+      q:"Malware waits and runs its function on the night of Black Friday. What component makes it conditional, and how does the attacker keep access afterwards?",
+      o:["Logic bomb; backdoor","Bot; rootkit","Trap door; worm","Macro; keylogger"], a:0,
+      e:"A logic bomb fires when a condition is met; a backdoor (trapdoor) lets the attacker connect later." },
+    { t:"mal", k:"mc",
+      q:"What is the difference between a worm and a zombie (bot)?",
+      o:["A worm propagates itself actively; a zombie is a compromised machine controlled remotely to launch attacks","They are the same","A zombie spreads by itself; a worm is controlled","A worm needs a host program"], a:0,
+      e:"Many zombies under one controller form a botnet." },
+    { t:"mal", k:"mc", x:"2024 Q20",
+      q:"Which is NOT a network worm scanning (target discovery) strategy?",
+      o:["Random","Hit-list","Topological","Radix-64"], a:3,
+      e:"Strategies: random, hit-list, topological (from the infected host's info), local subnet." },
+    { t:"mal", k:"mc", x:"2024 Q16",
+      q:"How did the Mirai botnet mainly infect devices?",
+      o:["IoT devices (cameras, DVRs, routers) still using default passwords","Zero-day exploits in Windows","USB sticks","Phishing emails"], a:0,
+      e:"The 2016 variant had only 46 hard-coded passwords but infected ~300k devices, then used them for DDoS." },
+    { t:"mal", k:"mc", x:"2025 Q22",
+      q:"Match the tool to its offensive objective: Mimikatz, msfvenom, Mirai.",
+      o:["Credential harvesting; malware generation; DDoS","DDoS; ransomware; keylogger","Malware generation; credential harvesting; file corruption","Keylogger; DDoS; credential harvesting"], a:0,
+      e:"Mimikatz dumps credentials, msfvenom generates payloads, Mirai is a DDoS botnet." },
+    { t:"mal", k:"mc", x:"2024 Q6",
+      q:"What does APT refer to, and which online knowledge base maintains information about them?",
+      o:["Advanced Persistent Threats; MITRE ATT&CK Groups","Advanced Persistent Teenagers; NIST CTI","Advanced Performance Threats; MITRE APT","Advanced Prolonged Techniques; MITRE ATLAS"], a:0,
+      e:"APTs are skilled, well-funded, long-term attackers, often state-linked." },
+    { t:"mal", k:"def",
+      q:"Which malware encrypts the victim's data and demands payment for the key?",
+      o:["Ransomware","Logic bomb","Rootkit","Adware"], a:0,
+      e:"A system corruption / information extortion payload." },
+
+    /* ---------- Buffer overflow ---------- */
+    { t:"bof", k:"def",
+      q:"Which term matches: 'More input is placed into a buffer than its capacity, overwriting adjacent memory'?",
+      o:["Buffer overflow (overrun)","Integer overflow","SQL injection","Race condition"], a:0,
+      e:"Overwriting the saved return address on the stack can redirect execution." },
+    { t:"bof", k:"mc", x:"2024 Q7",
+      q:"Which statement about buffer overflow is INCORRECT?",
+      o:["Java and Python do not suffer from buffer overflow vulnerabilities","Shellcode is the desired machine code in the overflowed buffer","A NOP sled is a defence mechanism, so the shellcode never runs","gets, strcpy and strcat are unsafe C routines"], a:2,
+      e:"A NOP sled is an attacker technique: a run of no-op instructions so a jump anywhere into it slides to the shellcode." },
+    { t:"bof", k:"mc", x:"2025 Q9",
+      q:"Which statement about buffer overflow is correct?",
+      o:["It can be exploited to gain execution on the victim machine","gets, strcpy and strcat are safe routines","A NOP sled is a defence","It cannot happen in C"], a:0,
+      e:"Classic stack smashing lets the attacker run shellcode." },
+    { t:"bof", k:"mc",
+      q:"What are the two broad categories of buffer overflow defences?",
+      o:["Compile-time defences and run-time defences","Firewalls and antivirus","Encryption and hashing","Static and dynamic IP"], a:0,
+      e:"Compile-time hardens new programs; run-time protects existing ones." },
+    { t:"bof", k:"mc", x:"2025 Q9",
+      q:"Which are COMPILE-TIME defences against buffer overflow?",
+      o:["Safe programming language and stack protection with a random canary","Non-executable memory and ASLR","Guard pages and firewalls","Fuzzing and IDS"], a:0,
+      e:"Compile-time: choice of language, safe coding, safe libraries, stack protection (canary). Run-time: executable address space protection, ASLR, guard pages.",
+      chk:true },
+    { t:"bof", k:"mc", x:"2025 Q9",
+      q:"Which are RUN-TIME defences that directly counter buffer overflow?",
+      o:["Make some memory regions non-executable, and randomise the stack address for each process (ASLR)","Firewall rules and safe coding","Choosing Python","Code review"], a:0,
+      e:"A firewall does not counter the overflow itself; safe coding is compile-time." },
+    { t:"bof", k:"mc", x:"2024 Q21",
+      q:"What does ASLR do?",
+      o:["Loads the program, stack, heap and libraries at random addresses each run, so the attacker cannot predict where code is","Encrypts the stack","Blocks all input","Marks memory non-executable"], a:0,
+      e:"NX (non-executable memory) stops injected code on stack/heap from running; combined with ASLR, exploitation becomes very hard." },
+    { t:"bof", k:"case", x:"2024 Q21",
+      q:"A company worries about stack overflows in an already-compiled program. Which check is MOST useful?",
+      o:["Check if it is compiled with stack protection and as a position-independent executable (ASLR), and fuzz it","Rewrite the privacy policy","Change the admin password","Add a CRL"], a:0,
+      e:"Also check whether it is written in a memory-safe language." },
+
+    /* ---------- IDS ---------- */
+    { t:"ids", k:"mc", x:"2025 Q16",
+      q:"What are the two detection models for IDS?",
+      o:["Misuse and anomaly","Packet filtering and application firewall","TPR and FPR","Packet filtering and stateful inspection"], a:0,
+      e:"Misuse = signatures of known attacks. Anomaly = deviation from normal profiles." },
+    { t:"ids", k:"mc", x:"2025 Q16",
+      q:"Which is NOT a classification of IDS by scope of protection?",
+      o:["Host-based","Network-based","Application-based","Location-based"], a:3,
+      e:"By scope: host-based, network-based, application-based, target-based (plus distributed/hybrid)." },
+    { t:"ids", k:"case",
+      q:"Which IDS type can detect zero-day attacks, but usually gives more false positives?",
+      o:["Anomaly-based","Misuse-based","Signature-based antivirus","Target-based checksum"], a:0,
+      e:"Misuse detection cannot detect unknown attacks; one bit of difference can make it miss." },
+    { t:"ids", k:"mc", x:"2025 Q16",
+      q:"The Aho-Corasick pattern matching machine uses three functions. Which?",
+      o:["Goto transition, failure transition, output","Input, process, output","If-then-else, while, loop","IDS, IPS, search"], a:0,
+      e:"Aho-Corasick is multi-pattern, and its average and worst-case complexity are equal, so algorithmic attacks have no effect." },
+    { t:"ids", k:"mc", x:"2025 Q16",
+      q:"Which is NOT a basic Snort rule action?",
+      o:["Alert","Log","Pass","Quit"], a:3,
+      e:"Basic actions: alert, log, pass. Inline (IPS) adds drop, reject, sdrop." },
+    { t:"ids", k:"mc", x:"2025 Q16",
+      q:"P(intrusion) = 2%, TPR = 95%, FPR = 0.2%. What is the Bayesian detection rate P(I|A)?",
+      o:["0.9065","0.0935","0.5077","0.4923"], a:0,
+      e:"0.02·0.95 / (0.02·0.95 + 0.98·0.002) = 0.019 / 0.02096 ≈ 0.9065." },
+    { t:"ids", k:"mc", x:"2024 Q10",
+      q:"Which statement about the base rate fallacy is true?",
+      o:["If the number of attacks per unit of time increases, the chances of avoiding the base rate fallacy increase","If attacks decrease, the chances increase","If the false positive rate increases, the chances increase","None of the above"], a:0,
+      e:"A higher base rate P(I) raises P(I|A). When intrusions are rare, even a small FPR makes most alarms false." },
+    { t:"ids", k:"mc", x:"2024 Q25",
+      q:"What is an algorithmic attack against an IDS?",
+      o:["Crafting traffic that forces the search algorithm into its worst-case time, so the IDS drops packets (false negatives)","Guessing the admin password","Encrypting traffic","Flooding the IDS with valid logins"], a:0,
+      e:"Possible when average and worst-case complexity differ. Skip algorithms like BNDM are vulnerable." },
+    { t:"ids", k:"mc",
+      q:"Why can a misuse-based IDS produce false negatives on high-bandwidth links?",
+      o:["Every packet must be compared with every signature; when bandwidth overwhelms it, it drops packets, and attacks may be in those packets","Signatures expire","It decrypts everything","It only checks headers"], a:0,
+      e:"Efficient multi-pattern search (Aho-Corasick) is essential." },
+    { t:"ids", k:"mc",
+      q:"What is a typical IPS?",
+      o:["A convergence of a firewall and an IDS: it detects malicious traffic and blocks it","An IDS that only logs","A VPN gateway","A certificate authority"], a:0,
+      e:"Very resource intensive; often uses hardware (ASIC, FPGA)." },
+    { t:"ids", k:"def",
+      q:"Which IDS type adds checksums/hashes to system objects to detect alterations?",
+      o:["Target-based (integrity verification) IDS","Network-based IDS","Application-based IDS","Anomaly-based IDS"], a:0,
+      e:"It generates its own data and compares changes against a policy." },
+
+    /* ---------- Software security ---------- */
+    { t:"sw", k:"tf", x:"2025 Q2",
+      q:"True or false: 'A reflected XSS attack is when input added by the attacker to a database is shown to the victim when they view it.'",
+      o:["True","False"], a:1,
+      e:"That describes stored (persistent) XSS. Reflected XSS bounces the script off the server in the response, usually via a crafted link." },
+    { t:"sw", k:"tf", x:"2025 Q2",
+      q:"True or false: 'Injection attacks originate from invalid handling of input data, when program input can influence the flow of execution.'",
+      o:["True","False"], a:0,
+      e:"Examples: command injection, SQL injection, code injection, XSS." },
+    { t:"sw", k:"case", x:"2024 Q22",
+      q:"A web app passes a user's message unsanitised into a system shell command. An attacker adds '; rm -rf /'. What weakness, and a fix?",
+      o:["OS command injection; escape/validate special characters (whitelist input)","Buffer overflow; enable ASLR","XSS; use HTTPS","CSRF; use a CRL"], a:0,
+      e:"Treat all input as data, not code." },
+    { t:"sw", k:"case", x:"2024 Q8",
+      q:"A web game sends the final score as an HTTPS request with only the player's name and score; the server updates the high score from just these. Which weakness best fits?",
+      o:["CWE-125 Out-of-bounds Read","CWE-306 Missing Authentication for Critical Function","CWE-20 Improper Input Validation","CWE-190 Integer Overflow"], a:2,
+      e:"The server trusts a client-supplied score without checking it. CWE-306 (no proof of who sends the request) is also arguable, so check this with the lecturer.",
+      chk:true },
+    { t:"sw", k:"mc",
+      q:"What do SQL injection and command injection have in common, and how do they differ?",
+      o:["Both put untrusted input into an interpreted command; SQLi targets a database query, command injection targets an OS shell","Both are buffer overflows","Both only affect C programs","SQLi targets the shell"], a:0,
+      e:"Fix: input validation, escaping, parameterised queries." },
+    { t:"sw", k:"mc",
+      q:"What is the main technique a defensive programmer uses to validate input?",
+      o:["Compare input against what is wanted (whitelisting) and accept only valid input","Blacklist a few known bad strings","Trust input from logged-in users","Validate only on the client"], a:0,
+      e:"Defensive programming means never assuming input is correct." },
+    { t:"sw", k:"mc", x:"2025 Q13",
+      q:"Which statements about input fuzzing are INCORRECT?",
+      o:["'It tests all potential nonstandard inputs' and 'it can locate bugs triggered by a small number of very specific inputs'","'It uses randomly generated inputs'","'It can discover buffer overflows'","None are incorrect"], a:0,
+      e:"Fuzzing is simple and finds many bugs, but it cannot test every input and misses bugs needing very specific values." },
+    { t:"sw", k:"mc",
+      q:"What is the difference between software quality/reliability and software security?",
+      o:["Reliability is about accidental failures from random input; security is about an attacker deliberately choosing input to trigger bugs","They are the same","Security only concerns encryption","Reliability is about attackers"], a:0,
+      e:"Attackers target rare, specific inputs that normal testing never hits." },
+    { t:"sw", k:"mc",
+      q:"MITRE CWE's 'stubborn weaknesses' fall into three categories. Which?",
+      o:["Memory safety (e.g. out-of-bounds write), input validation/injection (e.g. SQLi, XSS), and authentication/authorisation (e.g. missing authentication)","Phishing, vishing, smishing","Hardware, firmware, software","Viruses, worms, trojans"], a:0,
+      e:"Weaknesses that stay on the top-25 list year after year.",
+      chk:true },
+    { t:"sw", k:"mc", x:"2025 Q10, 2024 Q9",
+      q:"Match the knowledge source: MITRE CWE, MITRE ATT&CK, MITRE ATLAS, CIS Benchmarks.",
+      o:["Software weaknesses; adversary tactics and techniques; attacks on AI/ML systems; secure configuration (hardening)","Hardening; malware; weaknesses; AI","AI; weaknesses; hardening; tactics","All four are vulnerability databases"], a:0,
+      e:"CIS Benchmarks are prescriptive configurations for many products to support hardening." },
+    { t:"sw", k:"mc", x:"2025 Q12",
+      q:"An attacker tricks a logged-in user's browser into sending an unwanted request to a site that trusts the user. Which CWE?",
+      o:["CWE-352 Cross-Site Request Forgery","CWE-502 Deserialization of Untrusted Data","CWE-125 Out-of-bounds Read","CWE-190 Integer Overflow"], a:0,
+      e:"CSRF abuses the trust a site has in the user's browser session." },
+
+    /* ---------- OS security ---------- */
+    { t:"os", k:"mc", x:"2024 Q9",
+      q:"What are CIS Benchmarks?",
+      o:["Prescriptive configurations for many product families to support OS hardening","Performance tests for operating systems","Lists of apps to remove","Malware signatures"], a:0,
+      e:"Hardening = reducing attack surface by secure configuration." },
+    { t:"os", k:"mc",
+      q:"What are the basic steps to secure the base operating system?",
+      o:["Install and patch the OS; harden it by removing unneeded services and software; configure users, groups and permissions; install extra controls (antivirus, firewall, IDS); test","Install every app, then patch later","Only install antivirus","Disable logging"], a:0,
+      e:"Plan → install/patch → harden → configure users → extra controls → test, then maintain." },
+    { t:"os", k:"mc",
+      q:"Why is it better not to install software from unknown sources at all, rather than install, test and remove it?",
+      o:["Any installed code may leave changes or vulnerabilities behind, and removal may be incomplete","It wastes disk space","It is illegal","Removal is always complete"], a:0,
+      e:"Minimise the attack surface from the start." },
+    { t:"os", k:"mc",
+      q:"Why is logging a cornerstone of sound security practice?",
+      o:["It can only tell you about bad things after they happen, but it lets you detect, investigate and respond to breaches quickly","It prevents attacks","It replaces backups","It speeds up the system"], a:0,
+      e:"Logs support detection, forensics and accountability." },
+    { t:"os", k:"tf", x:"2025 Q4",
+      q:"True or false: 'A Type 1 hypervisor (hosted virtualisation) runs as a software module on top of the host OS.'",
+      o:["True","False"], a:1,
+      e:"Type 1 (native/bare-metal) runs directly on hardware. Type 2 (hosted) runs on top of a host OS." },
+    { t:"os", k:"tf", x:"2025 Q4",
+      q:"True or false: 'Containers run on top of the host OS kernel and provide an isolated execution environment for applications.'",
+      o:["True","False"], a:0,
+      e:"Containers share the host kernel, so they are lighter but less isolated than VMs." },
+    { t:"os", k:"mc", x:"2024 Q23, 2025 Q25",
+      q:"Comparing hypervisor types, which is correct?",
+      o:["Native (Type 1): better security and performance; hosted (Type 2): more user-friendly","Hosted: better security; native: more user-friendly","Both have the same attack surface","Native runs on a host OS"], a:0,
+      e:"Type 1 does not depend on a host OS, which reduces attack surface and overhead." },
+    { t:"os", k:"mc",
+      q:"What is a main security concern with a hypervisor?",
+      o:["Guest OS isolation: a compromise of one VM or the hypervisor could give access to other VMs or the host","It uses too much disk","It cannot run Linux","It disables logging"], a:0,
+      e:"Also: patching the hypervisor, securing its management interface, and VM sprawl." },
+
+    /* ---------- Denial of service ---------- */
+    { t:"dos", k:"def",
+      q:"NIST IR 7298 defines denial of service as…",
+      o:["The prevention of authorised access to resources or the delaying of time-critical operations","Theft of data","Unauthorised modification of data","Any malware infection"], a:0,
+      e:"DoS can also arise locally; the attacker must be able to interfere with resources shared with the victim." },
+    { t:"dos", k:"mc", x:"2024 Q17",
+      q:"How does a DNS amplification attack work?",
+      o:["The attacker spoofs the victim's IP and sends small DNS queries; servers send much larger responses to the victim","The attacker deletes DNS records","The attacker poisons the victim's cache","The attacker guesses DNS passwords"], a:0,
+      e:"UDP has no handshake; with DNSSEC/EDNS0 responses can be ~60× larger. Open recursive resolvers help attackers." },
+    { t:"dos", k:"mc",
+      q:"Why does SYN flooding work?",
+      o:["The target must keep state for every half-open TCP connection, while the attacker spends almost nothing (and spoofs source addresses)","It cracks TCP encryption","It needs only one packet","It targets DNS"], a:0,
+      e:"Resource asymmetry in a handshake is the classic flooding weakness." },
+    { t:"dos", k:"mc", x:"2024 Q3",
+      q:"Which defences help prevent or detect DDoS attacks?",
+      o:["Route-based packet filtering","Systems able to absorb DDoS traffic","Changing default settings and passwords","All of the above"], a:3,
+      e:"Changing defaults stops devices being recruited into botnets like Mirai." },
+    { t:"dos", k:"mc", x:"2025 Q8",
+      q:"Which defence does NOT help prevent or detect DDoS attacks?",
+      o:["Route-based packet filtering","Systems able to absorb DDoS traffic","User input sanitisation","Changing default settings and passwords"], a:2,
+      e:"Input sanitisation protects against injection, not traffic floods." },
+    { t:"dos", k:"case",
+      q:"Bots send partial HTTP requests that are never completed, slowly exhausting the web server's connection pool. Which attack?",
+      o:["Slow Loris","DNS amplification","SYN flood","Phlashing"], a:0,
+      e:"Slow read advertises tiny TCP windows; RUDY slowly posts form data. All are hard for IDS to spot." },
+    { t:"dos", k:"case",
+      q:"An attacker sends unauthenticated 802.11 frames using the victim's MAC address to kick it off the access point. Which attack?",
+      o:["Deauthentication attack","Slow Loris","Memcached amplification","Denial of sleep"], a:0,
+      e:"Deauth frames are not authenticated and only need the victim's public MAC address." },
+    { t:"dos", k:"case",
+      q:"Stolen cloud API keys are used to run up huge bills through auto-scaling. What is this called?",
+      o:["Denial of Wallet","Phlashing","Slow read","Jamming"], a:0,
+      e:"No botnet needed; the cloud scales automatically. Spending caps and rate limits help." },
+    { t:"dos", k:"case",
+      q:"Malware deliberately installs a malicious firmware update that 'bricks' IoT devices (e.g. BrickerBot). This is…",
+      o:["Phlashing","Denial of sleep","Deauthentication","SYN flooding"], a:0,
+      e:"Permanent DoS through poorly secured firmware update mechanisms." },
+    { t:"dos", k:"mc",
+      q:"Which protocol gave the largest amplification factor mentioned in the slides (15-byte request → 750 kB response)?",
+      o:["Memcached","DNS","NTP","HTTP"], a:0,
+      e:"About 51,200× amplification; behind the 1.7 Tbps attack on Arbor Networks." },
+    { t:"dos", k:"mc",
+      q:"Why are collaborative DDoS defences like route-based filtering rarely deployed?",
+      o:["Misaligned incentives: source and transit networks bear the cost of protecting downstream victims","They are illegal","They only work on IPv6","They need no collaboration"], a:0,
+      e:"The simpler option is over-provisioning (e.g. Cloudflare), which can still be overwhelmed." }
+  ]
+});
+</script>
+
+<script>
+/* ================================================================
+   COURSE: IMT4133 – COMING SOON
+   Replace status "soon" with "active" and fill in exam, topics and
+   questions (same format as the courses above).
+   ================================================================ */
+COURSES.push({
+  code: "IMT4133",
+  name: "Not added yet",
+  exam: "2026-12-31",
+  examInfo: "",
+  color: "slate",
+  status: "soon",
+  topics: [],
+  questions: []
+});
+</script>
+
+<!-- =====================================================================
+     APP LOGIC (design + behaviour). No course content below this line.
+     ===================================================================== -->
+<script>
+(function(){
+  "use strict";
+  const STORE_KEY = "skoleExam.v1";
+  const TYPE_LABEL = { mc:"Multiple choice", def:"Definition", case:"Scenario", tf:"True / false", essay:"Essay" };
+  const app = document.getElementById("app");
+
+  /* ---------- helpers ---------- */
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  function hash(str){ let h = 5381; for (let i=0;i<str.length;i++) h = ((h<<5)+h + str.charCodeAt(i)) >>> 0; return h.toString(36); }
+  function shuffle(a){ a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  const slug = code => code.toLowerCase();
+
+  // give every question a stable id + course reference
+  COURSES.forEach(c => (c.questions||[]).forEach(q => { q.id = c.code + "-" + q.t + "-" + hash(q.q); q.course = c.code; }));
+  const courseBy = code => COURSES.find(c => slug(c.code) === slug(code));
+  const topicOf = (c, id) => c.topics.find(t => t.id === id);
+
+  /* ---------- storage (per browser) ---------- */
+  let store = { ans:{}, miss:{}, shuffle:true };
+  try { const raw = localStorage.getItem(STORE_KEY); if (raw) store = Object.assign(store, JSON.parse(raw)); } catch(e){}
+  function save(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch(e){} }
+  function record(q, correct){
+    const prev = store.ans[q.id] || { n:0 };
+    store.ans[q.id] = { c: correct ? 1 : 0, n: prev.n + 1 };
+    const list = store.miss[q.course] || (store.miss[q.course] = []);
+    const i = list.indexOf(q.id);
+    if (!correct && i < 0) list.push(q.id);
+    if (correct && i >= 0) list.splice(i, 1);
+    save();
+  }
+  function stats(qs){
+    let answered=0, correct=0;
+    qs.forEach(q => { const a = store.ans[q.id]; if (a){ answered++; if (a.c) correct++; } });
+    return { total: qs.length, answered, correct };
+  }
+  function mistakes(c){ const ids = store.miss[c.code] || []; return c.questions.filter(q => ids.includes(q.id)); }
+
+  /* ---------- dates ---------- */
+  function daysLeft(iso){
+    const [y,m,d] = iso.split("-").map(Number);
+    const exam = new Date(y, m-1, d); const now = new Date(); const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.round((exam - today) / 86400000);
+  }
+  function fmtDate(iso){ const [y,m,d] = iso.split("-").map(Number); return new Date(y,m-1,d).toLocaleDateString("en-GB",{ weekday:"short", day:"numeric", month:"short", year:"numeric" }); }
+  function countdown(iso){
+    const n = daysLeft(iso);
+    if (n > 1) return `<div class="countdown"><b>${n}</b><span class="muted">days left</span></div>`;
+    if (n === 1) return `<div class="countdown"><b>1</b><span class="muted">day left</span></div>`;
+    if (n === 0) return `<div class="countdown"><b>Today</b></div>`;
+    return `<div class="countdown"><span class="muted">Exam was ${-n} days ago</span></div>`;
+  }
+
+  /* ---------- shared pieces ---------- */
+  function bar(s){
+    const ok = s.total ? s.correct/s.total*100 : 0, bad = s.total ? (s.answered-s.correct)/s.total*100 : 0;
+    return `<div class="bar" role="img" aria-label="${s.correct} correct, ${s.answered-s.correct} wrong, of ${s.total}"><i class="ok" style="width:${ok}%"></i><i class="bad" style="width:${bad}%"></i></div>`;
+  }
+  function statLine(s){
+    const pct = s.answered ? Math.round(s.correct/s.answered*100) : 0;
+    return `<p class="stat">${s.answered}/${s.total} answered${s.answered ? ` · ${pct}% correct last time` : ""}</p>`;
+  }
+  function nav(crumbs, backTo){
+    const parts = crumbs.map((c,i) => i < crumbs.length-1 ? `<a href="#${c.h}">${esc(c.label)}</a><span class="sep">›</span>` : `<span aria-current="page">${esc(c.label)}</span>`).join("");
+    const back = backTo === null ? "" : `<button class="back" data-go="${backTo}" aria-label="Back">← Back</button>`;
+    return `<div class="topbar">${back}<nav class="crumbs" aria-label="Breadcrumb">${parts}</nav></div>`;
+  }
+  function setTheme(color){ app.className = color ? "c-" + color : "c-teal"; document.body.className = app.className; }
+
+  /* ---------- state ---------- */
+  let session = null;     // active quiz / flashcard round
+  let confirmReset = false;
+
+  function go(h){ if (location.hash === "#" + h || (!h && !location.hash)) { session = null; render(); } else location.hash = h; }
+  window.addEventListener("hashchange", () => { session = null; confirmReset = false; render(); });
+
+  /* ---------- HOME ---------- */
+  function renderHome(){
+    setTheme("teal");
+    const active = COURSES.filter(c => c.status !== "soon").sort((a,b) => a.exam.localeCompare(b.exam));
+    const next = active.find(c => daysLeft(c.exam) >= 0);
+    const cards = COURSES.map(c => {
+      if (c.status === "soon") return `<div class="card course-card soon c-${c.color||"slate"}"><span class="code">${esc(c.code)}</span><h3>${esc(c.name)}</h3><span class="pill ghost">Coming soon</span><p class="note">Questions will be added from a separate chat.</p></div>`;
+      const s = stats(c.questions);
+      return `<button class="card course-card c-${c.color}" data-go="${slug(c.code)}">
+        <span class="code">${esc(c.code)}</span><h3>${esc(c.name)}</h3>
+        <p class="stat">Exam ${esc(fmtDate(c.exam))}</p>${countdown(c.exam)}${bar(s)}${statLine(s)}</button>`;
+    }).join("");
+    const total = active.reduce((n,c)=>n+c.questions.length,0);
+    app.innerHTML = `
+      ${nav([{label:"Home",h:""}], null)}
+      <header class="hero"><span class="eyebrow">Information Security · NTNU · Autumn 2026</span>
+        <h1>Skole Exam Trainer</h1>
+        <p class="muted">${total} questions from former exams, slides and notes. ${next ? `Next up: <b>${esc(next.code)}</b> on ${esc(fmtDate(next.exam))}.` : ""}</p></header>
+      <section class="grid">${cards}</section>
+      <footer>Progress is saved in this browser only. ⭐ = based on a former exam question.</footer>`;
+  }
+
+  /* ---------- COURSE ---------- */
+  function modeBlock(title, desc, qs, scope){
+    const n = qs.length;
+    return `<div class="mode"><h3>${esc(title)}</h3><p class="note">${esc(desc)} · ${n} question${n===1?"":"s"}</p>
+      <div class="btnrow"><button class="btn" data-start="quiz" data-scope="${scope}" ${n?"":"disabled"}>Quiz</button>
+      <button class="btn alt" data-start="flash" data-scope="${scope}" ${n?"":"disabled"}>Flashcards</button></div></div>`;
+  }
+  function shuffleToggle(){ return `<label class="toggle"><input type="checkbox" id="shuffle-toggle" ${store.shuffle?"checked":""}> Shuffle questions</label>`; }
+
+  function renderCourse(c){
+    setTheme(c.color);
+    const s = stats(c.questions);
+    const examQs = c.questions.filter(q => q.x), miss = mistakes(c);
+    const topics = c.topics.map((t,i) => {
+      const qs = c.questions.filter(q => q.t === t.id), ts = stats(qs), stars = qs.filter(q=>q.x).length;
+      return `<button class="card topic-card" data-go="${slug(c.code)}-${t.id}">
+        <span class="num">Lecture ${i+1}</span><h3>${esc(t.title)}</h3><span class="file">Slides: ${esc(t.file)}</span>
+        <div class="btnrow"><span class="pill">${qs.length} questions</span>${stars?`<span class="pill star">⭐ ${stars} from exams</span>`:""}</div>
+        ${bar(ts)}${statLine(ts)}</button>`;
+    }).join("");
+    app.innerHTML = `
+      ${nav([{label:"Home",h:""},{label:c.code,h:slug(c.code)}], "")}
+      <header class="hero"><span class="eyebrow">${esc(c.code)} · ${esc(c.examInfo)}</span><h1>${esc(c.name)}</h1>
+        <p class="muted">Exam ${esc(fmtDate(c.exam))}</p>${countdown(c.exam)}${bar(s)}${statLine(s)}</header>
+      <section class="modes">
+        ${modeBlock("All topics","Everything in this course", c.questions, "all")}
+        ${modeBlock("Former exam questions only","Questions marked ⭐", examQs, "exam")}
+        ${modeBlock("Practice my mistakes","Questions you got wrong last time", miss, "miss")}
+      </section>
+      ${shuffleToggle()}
+      <h2>Topics</h2><section class="grid">${topics}</section>
+      <div class="confirm">${confirmReset
+        ? `<span>Delete all saved answers and mistakes for ${esc(c.code)}?</span><button class="btn" data-reset="yes">Yes, reset</button><button class="btn alt" data-reset="no">Cancel</button>`
+        : `<button class="btn alt" data-reset="ask">Reset progress for ${esc(c.code)}</button>`}</div>`;
+  }
+
+  /* ---------- TOPIC ---------- */
+  function renderTopic(c, t){
+    setTheme(c.color);
+    const qs = c.questions.filter(q => q.t === t.id), s = stats(qs);
+    const examQs = qs.filter(q=>q.x), miss = mistakes(c).filter(q=>q.t===t.id);
+    const idx = c.topics.indexOf(t);
+    const kinds = Object.entries(qs.reduce((m,q)=>{ m[q.k]=(m[q.k]||0)+1; return m; },{})).map(([k,n])=>`<span class="pill ghost">${n} ${TYPE_LABEL[k].toLowerCase()}</span>`).join("");
+    app.innerHTML = `
+      ${nav([{label:"Home",h:""},{label:c.code,h:slug(c.code)},{label:t.title,h:slug(c.code)+"-"+t.id}], slug(c.code))}
+      <header class="hero"><span class="eyebrow">${esc(c.code)} · Lecture ${idx+1}</span><h1>${esc(t.title)}</h1>
+        <p class="muted">Slides: ${esc(t.file)}</p><div class="btnrow">${kinds}</div>${bar(s)}${statLine(s)}</header>
+      <section class="modes">
+        ${modeBlock("Whole topic","All questions in this topic", qs, "topic")}
+        ${modeBlock("Former exam questions","Only ⭐ questions in this topic", examQs, "topicexam")}
+        ${modeBlock("My mistakes in this topic","Wrong last time", miss, "topicmiss")}
+      </section>
+      ${shuffleToggle()}`;
+    app.dataset.topic = t.id;
+  }
+
+  /* ---------- SESSION start ---------- */
+  function startSession(c, t, mode, scope){
+    let qs, label;
+    if (scope === "all"){ qs = c.questions; label = "All topics"; }
+    else if (scope === "exam"){ qs = c.questions.filter(q=>q.x); label = "Former exam questions"; }
+    else if (scope === "miss"){ qs = mistakes(c); label = "My mistakes"; }
+    else if (scope === "topic"){ qs = c.questions.filter(q=>q.t===t.id); label = t.title; }
+    else if (scope === "topicexam"){ qs = c.questions.filter(q=>q.t===t.id && q.x); label = t.title + " · exam"; }
+    else { qs = mistakes(c).filter(q=>q.t===t.id); label = t.title + " · mistakes"; }
+    if (!qs.length) return;
+    const list = store.shuffle ? shuffle(qs) : qs.slice();
+    session = { code:c.code, topic: t ? t.id : null, mode, scope, label, list, i:0, results:[], done:false };
+    prepQuestion(); render(); window.scrollTo(0,0);
+  }
+  function prepQuestion(){
+    const q = session.list[session.i];
+    session.answered = false; session.chosen = null; session.flipped = false; session.revealed = false; session.draft = "";
+    if (!q || !q.o) { session.order = []; return; }
+    const idx = q.o.map((_,i)=>i);
+    const fixed = q.k === "tf" || q.o.some(o => /of the above|other options/i.test(o));
+    session.order = (store.shuffle && !fixed) ? shuffle(idx) : idx;
+  }
+
+  /* ---------- QUIZ / FLASH render ---------- */
+  function qMeta(c, q){
+    const t = topicOf(c, q.t);
+    return `<div class="qmeta"><span class="pill">${esc(t ? t.title : q.t)}</span><span class="pill ghost">${TYPE_LABEL[q.k]}</span>
+      ${q.x ? `<span class="pill star">⭐ ${esc(q.x)}</span>` : ""}${q.chk ? `<span class="pill chk">Needs checking</span>` : ""}</div>`;
+  }
+  function sessionNav(c){
+    const crumbs = [{label:"Home",h:""},{label:c.code,h:slug(c.code)}];
+    if (session.topic){ const t = topicOf(c, session.topic); crumbs.push({label:t.title,h:slug(c.code)+"-"+t.id}); }
+    crumbs.push({label: session.mode === "quiz" ? "Quiz" : "Flashcards", h: location.hash.slice(1)});
+    return nav(crumbs, location.hash.slice(1) || "");
+  }
+  function progress(){
+    const n = session.list.length, i = Math.min(session.i+1, n);
+    return `<div class="progress"><span>${esc(session.label)}</span><div class="bar"><i style="width:${(session.i)/n*100}%"></i></div><span>${i}/${n}</span></div>`;
+  }
+
+  function renderQuiz(c){
+    const q = session.list[session.i];
+    let body = "";
+    if (q.k === "essay"){
+      body = `<label class="note" for="essay-draft">Write your key points (optional, not saved):</label>
+        <textarea id="essay-draft" placeholder="Outline your answer here…">${esc(session.draft)}</textarea>`;
+      if (!session.revealed) body += `<div class="btnrow"><button class="btn" data-act="reveal">Show model answer</button></div>`;
+      else {
+        body += `<div class="feedback neutral"><strong>Key points to include</strong><ul class="kp">${q.kp.map(k=>`<li>${esc(k)}</li>`).join("")}</ul></div>
+          <div class="model"><strong>Model answer</strong><p>${esc(q.m)}</p></div>`;
+        body += session.answered ? `<div class="btnrow"><button class="btn" data-act="next">${session.i+1 < session.list.length ? "Next question →" : "See score"}</button></div>`
+          : `<p class="note">Compare with your outline. Did you cover the key points?</p><div class="btnrow"><button class="btn" data-self="1">I covered them</button><button class="btn alt" data-self="0">I missed some</button></div>`;
+      }
+    } else {
+      const opts = session.order.map((oi, pos) => {
+        let cls = "opt";
+        if (session.answered){ if (oi === q.a) cls += " right"; else if (oi === session.chosen) cls += " wrong"; }
+        return `<button class="${cls}" data-opt="${oi}" ${session.answered?"disabled":""}><span class="key">${pos+1}</span><span>${esc(q.o[oi])}</span></button>`;
+      }).join("");
+      body = `<div class="opts" role="group" aria-label="Answer options">${opts}</div>`;
+      if (session.answered){
+        const ok = session.chosen === q.a;
+        body += `<div class="feedback ${ok?"ok":"bad"}"><strong>${ok?"Correct":"Not quite"}</strong>
+          ${ok?"":`<p>Correct answer: <b>${esc(q.o[q.a])}</b></p>`}<p>${esc(q.e)}</p>
+          ${q.chk?`<p class="note">This answer is marked “Needs checking”: confirm it with the slides or lecturer.</p>`:""}</div>
+          <div class="btnrow"><button class="btn" data-act="next">${session.i+1 < session.list.length ? "Next question →" : "See score"}</button></div>`;
+      } else body += `<p class="note">Tip: press 1–${q.o.length} on a keyboard.</p>`;
+    }
+    app.innerHTML = `${sessionNav(c)}${progress()}<article class="qcard">${qMeta(c,q)}<p class="qtext">${esc(q.q)}</p>${body}</article>`;
+  }
+
+  function renderFlash(c){
+    const q = session.list[session.i];
+    let back = "";
+    if (q.k === "essay") back = `<strong>Key points</strong><ul class="kp">${q.kp.map(k=>`<li>${esc(k)}</li>`).join("")}</ul>`;
+    else back = `<p class="qtext">${esc(q.o[q.a])}</p><p class="muted">${esc(q.e)}</p>`;
+    const card = session.flipped
+      ? `<button class="qcard flash" data-act="flip" aria-label="Show question"><span class="side">Answer</span>${back}</button>`
+      : `<button class="qcard flash" data-act="flip" aria-label="Show answer"><span class="side">Question · tap to flip</span>${qMeta(c,q)}<p class="qtext">${esc(q.q)}</p></button>`;
+    const actions = session.flipped
+      ? `<div class="btnrow"><button class="btn" data-know="1">I knew it</button><button class="btn alt" data-know="0">I didn't know</button></div>`
+      : `<div class="btnrow"><button class="btn" data-act="flip">Show answer</button>${session.i>0?`<button class="btn alt" data-act="prev">← Previous</button>`:""}</div>`;
+    app.innerHTML = `${sessionNav(c)}${progress()}${card}${actions}`;
+  }
+
+  function renderResult(c){
+    const n = session.results.length, ok = session.results.filter(r=>r.ok).length;
+    const wrong = session.results.filter(r=>!r.ok);
+    const pct = n ? Math.round(ok/n*100) : 0;
+    const verdict = pct >= 90 ? "Excellent. You are exam-ready on this set." : pct >= 70 ? "Good. Review the ones you missed." : pct >= 50 ? "Getting there. Practise your mistakes next." : "Keep going. Use flashcards, then quiz again.";
+    const list = wrong.length ? wrong.map(r => {
+      const q = r.q, t = topicOf(c,q.t);
+      const ans = q.k === "essay" ? "See key points in the model answer" : q.o[q.a];
+      return `<div class="rev"><span class="note">${esc(t?t.title:"")}${q.x?` · ⭐ ${esc(q.x)}`:""}</span><span>${esc(q.q)}</span><span class="ans">${esc(ans)}</span></div>`;
+    }).join("") : `<div class="empty">No mistakes this round.</div>`;
+    const missCount = mistakes(c).length;
+    app.innerHTML = `${sessionNav(c)}
+      <section class="card"><span class="eyebrow">${esc(session.label)} · ${session.mode==="quiz"?"Quiz":"Flashcards"} finished</span>
+        <div class="countdown"><span class="score">${ok}/${n}</span><span class="muted">${pct}%</span></div><p>${verdict}</p>
+        <div class="btnrow"><button class="btn" data-act="again">Try this set again</button>
+        <button class="btn alt" data-start="${session.mode}" data-scope="miss" ${missCount?"":"disabled"}>Practice my mistakes (${missCount})</button>
+        <button class="btn alt" data-go="${location.hash.slice(1)}">Done</button></div></section>
+      <h2>Review: answers you missed</h2><div class="list">${list}</div>`;
+  }
+
+  /* ---------- router ---------- */
+  function render(){
+    const h = decodeURIComponent(location.hash.slice(1)).toLowerCase();
+    if (!h){ renderHome(); return; }
+    const [code, topicId] = h.split(/-(.+)/);
+    const c = courseBy(code);
+    if (!c || c.status === "soon"){ renderHome(); return; }
+    if (session && session.code === c.code){
+      if (session.done) return renderResult(c);
+      return session.mode === "quiz" ? renderQuiz(c) : renderFlash(c);
+    }
+    const t = topicId ? topicOf(c, topicId) : null;
+    if (topicId && !t) return renderCourse(c);
+    t ? renderTopic(c, t) : renderCourse(c);
+  }
+
+  function currentCourse(){ const h = location.hash.slice(1).toLowerCase(); const [code, tid] = h.split(/-(.+)/); const c = courseBy(code); return { c, t: c && tid ? topicOf(c, tid) : null }; }
+  function advance(){
+    session.i++;
+    if (session.i >= session.list.length){ session.done = true; }
+    else prepQuestion();
+    render(); window.scrollTo(0,0);
+  }
+  function answer(oi){
+    const q = session.list[session.i]; if (session.answered) return;
+    session.answered = true; session.chosen = oi;
+    const ok = oi === q.a; record(q, ok); session.results.push({ q, ok }); render();
+  }
+
+  /* ---------- events ---------- */
+  app.addEventListener("click", e => {
+    const el = e.target.closest("button, a"); if (!el) return;
+    const d = el.dataset;
+    if (d.go !== undefined){ e.preventDefault(); go(d.go); return; }
+    const { c, t } = currentCourse();
+    if (d.start){
+      // from a result screen, "miss" means mistakes in the same scope (topic or course)
+      let scope = d.scope;
+      if (session && session.topic && scope === "miss") scope = "topicmiss";
+      session = null; startSession(c, t, d.start, scope); return;
+    }
+    if (d.reset){ if (d.reset === "ask") confirmReset = true; else { if (d.reset === "yes"){ c.questions.forEach(q => delete store.ans[q.id]); delete store.miss[c.code]; save(); } confirmReset = false; } render(); return; }
+    if (!session) return;
+    if (d.opt !== undefined){ answer(Number(d.opt)); return; }
+    if (d.act === "next"){ advance(); return; }
+    if (d.act === "reveal"){ const ta = document.getElementById("essay-draft"); if (ta) session.draft = ta.value; session.revealed = true; render(); return; }
+    if (d.self !== undefined){ const ta = document.getElementById("essay-draft"); if (ta) session.draft = ta.value;
+      const q = session.list[session.i], ok = d.self === "1"; record(q, ok); session.results.push({ q, ok }); session.answered = true; render(); return; }
+    if (d.act === "flip"){ session.flipped = !session.flipped; render(); return; }
+    if (d.act === "prev"){ if (session.i > 0){ session.i--; session.results.pop(); prepQuestion(); render(); } return; }
+    if (d.know !== undefined){ const q = session.list[session.i], ok = d.know === "1"; record(q, ok); session.results.push({ q, ok }); advance(); return; }
+    if (d.act === "again"){ const list = store.shuffle ? shuffle(session.list) : session.list; Object.assign(session, { list, i:0, results:[], done:false }); prepQuestion(); render(); window.scrollTo(0,0); return; }
+  });
+  app.addEventListener("change", e => { if (e.target.id === "shuffle-toggle"){ store.shuffle = e.target.checked; save(); } });
+  app.addEventListener("input", e => { if (e.target.id === "essay-draft" && session) session.draft = e.target.value; });
+  document.addEventListener("keydown", e => {
+    if (!session || session.done || session.mode !== "quiz" || e.target.tagName === "TEXTAREA") return;
+    const q = session.list[session.i];
+    if (!session.answered && q.o && /^[1-9]$/.test(e.key)){ const pos = Number(e.key)-1; if (pos < session.order.length) answer(session.order[pos]); }
+    else if (session.answered && e.key === "Enter"){ e.preventDefault(); advance(); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
