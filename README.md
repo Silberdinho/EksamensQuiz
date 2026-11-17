@@ -7,7 +7,7 @@ Quiz and flashcard trainer for my NTNU Information Security courses (autumn 2026
 | IMT4110 – Scientific Methodology and Communication | 26 Nov 2026 |
 | IMT4115 – Introduction to Information Security Management | 11 Dec 2026 |
 | IMT4113 – Introduction to Cyber and Information Security Technology (final) | 17 Dec 2026 |
-| IMT4133 | Coming soon |
+| IMT4133 – Data Science for Security and Forensics | 30 Nov 2026 |
 
 Open `index.html` in a browser. Everything is in one file; no build step.
 
@@ -27,7 +27,7 @@ Open `index.html` in a browser. Everything is in one file; no build step.
 
 ### Question format
 ```js
-{ t: "topic-id", k: "mc" | "def" | "case" | "tf" | "essay",
+{ t: "topic-id", k: "mc" | "def" | "case" | "tf" | "calc" | "essay",
   q: "Question", o: ["A", "B", "C", "D"], a: 0,   // index of correct option
   e: "Short explanation", x: "2024 Q7",           // optional: former exam tag → ⭐
   chk: true,                                      // optional: "Needs checking"
