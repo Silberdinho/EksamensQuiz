@@ -19,13 +19,16 @@ Open `index.html` in a browser. Everything is in one file; no build step.
 - Shuffle, score at the end of each round, works on phone and computer
 - Progress is saved in the browser (localStorage)
 - **Terms quiz** per course: key terms by chapter (lecture order), term → definition, definition → term and flashcards; wrong options are other terms from the same chapter
+- **Key models**: 84 interactive diagrams (SVG, drawn in code) for the most important topics, shown at the top of each chapter, after answering linked questions and on the back of linked flashcards; tap a part of a model to see what it means
+- Celebration when you finish a chapter with 80% or more
 - Back up progress: download a backup file or copy a backup code, and restore it in any browser (home page)
 
 ## Structure of `index.html`
 1. `<head>` – design (CSS tokens, one colour per course)
 2. **Question data** – one `<script>` block per course (`COURSES.push({...})`)
 3. **Terms data** – one `<script>` block per course (`TERMS.push({...})`)
-4. **App logic** – the last `<script>` block (no course content)
+4. **Visuals** – a small SVG engine (`V.*` builders) and one block of diagrams per course (`VIS.push({...})`)
+5. **App logic** – the last `<script>` block (no course content)
 
 ### Question format
 ```js
@@ -43,6 +46,15 @@ TERMS.push({ code: "IMT4110", chapters: [
     { n: "Term", d: "Short definition", ex: "Example (optional)", x: "Ex-4", chk: true } ] } ] });
 ```
 Chapters use the topic ids, so they follow the lecture order. Each chapter needs at least 4 terms.
+
+### Visual format
+```js
+VIS.push({ c: "IMT4110", t: "topic-id", id: "unique-id", icon: "🔄", title: "Title", x: "Ex-4",
+  draw: () => V.flow([{ k: "part", l: "Label", s: "Sub-label" }]),   // or V.cycle, V.grid, V.compare, V.stacks, V.seq, V.rings
+  info: { part: "What this part means" },                              // shown when a part is tapped
+  fact: "Did you know?",
+  q: ["question text pattern"], terms: ["Term name"] });               // where the visual appears after answering
+```
 
 ## Adding a course
 Push one more `COURSES` block (and optionally a `TERMS` block) in the same format.

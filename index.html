@@ -116,6 +116,49 @@ textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:
 .glossary dl{margin:12px 0 0;display:flex;flex-direction:column;gap:10px}
 .glossary dt{font-weight:600} .glossary dd{margin:2px 0 0;color:var(--muted);font-size:.93rem}
 .term-front{font-family:var(--f-display);font-size:1.6rem;font-weight:700;line-height:1.2}
+/* visuals */
+.keymodels{display:flex;flex-direction:column;gap:12px}
+.keymodels > summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+.keymodels > summary::-webkit-details-marker{display:none}
+.keymodels > summary h2{display:flex;align-items:center;gap:8px}
+.keymodels > summary::after{content:"▾";color:var(--muted);margin-left:auto}
+.keymodels:not([open]) > summary::after{content:"▸"}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px;align-items:start}
+.vis{margin:0;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.vis.compact{border-top-width:1px;border-left:4px solid var(--c)}
+@media (max-width:480px){ .vis{padding:12px 10px} }
+.vis figcaption{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--f-display);font-size:1rem;line-height:1.25}
+.vis figcaption b{flex:1 1 12em;min-width:0}
+.v-ico{font-size:1.3rem;line-height:1}
+.vis svg{width:100%;max-width:470px;height:auto;display:block;margin:0 auto;overflow:visible}
+.vis svg text{fill:var(--fg);font-family:var(--f-body);font-size:12px}
+.vis svg .vmt{fill:var(--muted)} .vis svg .vw,.vis svg .vnt{fill:var(--surface)} .vis svg .vct{fill:var(--c)} .vis svg .vbadt{fill:var(--bad)} .vis svg .vokt{fill:var(--ok)}
+.vbox{fill:var(--c-soft);stroke:var(--c);stroke-width:1.4;transition:stroke-width .15s}
+.vbox.vC{fill:var(--c)} .vbox.vok{fill:var(--ok-bg);stroke:var(--ok)} .vbox.vbad{fill:var(--bad-bg);stroke:var(--bad)}
+.vbox.vwarn{fill:var(--warn-bg);stroke:var(--warn)} .vbox.vg{fill:var(--surface-2);stroke:var(--line)}
+.vnum{fill:var(--c)} .vah{fill:var(--c)}
+.va{stroke:var(--c);stroke-width:2;fill:none} .va.vab{stroke:var(--bad)}
+.vline{stroke:var(--muted);stroke-width:1.2;fill:none} .vdash{stroke-dasharray:4 4}
+.vhit{fill:transparent} .vtlp{stroke:var(--line)} .vtlp0{fill:#c62828} .vtlp1{fill:#f2a900} .vtlp2{fill:#2e7d32} .vtlp3{fill:#ffffff} .vis svg .vtlpw{fill:#ffffff} .vis svg .vtlpk{fill:#1b201d} .vring{fill:var(--c-soft);stroke:var(--c)} .vring2{fill:var(--surface);stroke:var(--c)}
+.vdot{fill:var(--c)} .vdot2{fill:var(--muted)} .vdotb{fill:var(--bad)} .vdoto{fill:var(--ok)}
+.vlineC{stroke:var(--c);stroke-width:3;fill:none} .vlineC2{stroke:var(--muted);stroke-width:3;fill:none;stroke-dasharray:6 4}
+.vband1{fill:var(--c-soft)} .vband2{fill:var(--c);opacity:.35} .vband3{fill:var(--c);opacity:.85}
+.vp{cursor:pointer;outline:none}
+.vp:hover .vbox,.vp:focus-visible .vbox,.vp.on .vbox{stroke-width:3.2}
+.vp:focus-visible .vbox,.vp.on .vbox{stroke:var(--fg)}
+.v-info{background:var(--c-soft);border-radius:10px;padding:10px 12px;font-size:.92rem;line-height:1.45}
+.v-fact{font-size:.88rem;color:var(--muted);line-height:1.45}
+.v-fact b{color:var(--fg)}
+.vis .st{animation:vIn .5s ease both;animation-delay:calc(var(--i,0) * .16s)}
+.vis .flow{stroke-dasharray:6 4;animation:vDash 1.1s linear infinite}
+@keyframes vIn{from{opacity:0}to{opacity:1}}
+@keyframes vDash{to{stroke-dashoffset:-20}}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti i{position:absolute;top:-14px;width:9px;height:14px;border-radius:2px;opacity:0;animation:cfFall 2.8s ease-in forwards;transform:rotate(var(--r))}
+.cf-c{background:var(--c)} .cf-ok{background:var(--ok)} .cf-warn{background:var(--warn)} .cf-bad{background:var(--bad)}
+@keyframes cfFall{0%{opacity:1;transform:translateY(0) rotate(var(--r))}100%{opacity:0;transform:translateY(105vh) rotate(calc(var(--r) + 540deg))}}
+.card.party{border-color:var(--c);box-shadow:0 0 0 3px var(--c-soft)}
+@media (prefers-reduced-motion: reduce){ .vis .st,.vis .flow{animation:none} .confetti{display:none} }
 footer{font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
 </style>
@@ -141,6 +184,11 @@ footer{font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px}
        n = term   d = short definition   ex = simple example (optional)
        x = former exam tag (⭐)   chk = true → shown as "Needs checking"
        Chapters use the same ids as the topics, so they follow the lecture order.
+
+     VISUALS DATA (one block per course, after the terms blocks)
+       VIS.push({ c, t: topic id, id, icon, title, x?, draw(), info:{ part: text }, fact?, q:[patterns], terms:[names] })
+       draw() returns an SVG made with the small V.* builders; info explains each clickable part.
+       q = question-text patterns (same topic) and terms = term names that show this visual after answering.
      ===================================================================== -->
 <script>const COURSES = []; const TERMS = [];</script>
 <script>
@@ -2792,6 +2840,1085 @@ TERMS.push({ code: "IMT4133", chapters: [
 ]});
 </script>
 
+<script>
+/* =====================================================================
+   VISUALS ENGINE – small SVG builders used by the diagram data below.
+   Diagrams are drawn at runtime from short specs, so the page stays light.
+   Colours come from the course theme (var(--c), var(--c-soft)).
+   ===================================================================== */
+const VIS = [];
+const V = (function(){
+  "use strict";
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  let uid = 0;
+  function wrap(s, n){ const out = []; let cur = ""; String(s).split(" ").forEach(w => { if (cur && (cur + " " + w).length > n){ out.push(cur); cur = w; } else cur = cur ? cur + " " + w : w; }); if (cur) out.push(cur); return out; }
+  // text, centred on (x,y), wrapped at o.w characters
+  function T(x, y, s, o){ o = o || {}; const lines = String(s).split("\n").flatMap(p => wrap(p, o.w || 99)); const lh = o.lh || (o.fs ? o.fs * 1.2 : 14);
+    const y0 = y - (lines.length - 1) * lh / 2;
+    return `<text x="${x}" y="${y0}" text-anchor="${o.a || "middle"}" dominant-baseline="central" class="${o.c || ""}"${o.fs ? ` font-size="${o.fs}"` : ""}${o.b ? ` font-weight="700"` : ""}>${lines.map((l, i) => `<tspan x="${x}" dy="${i ? lh : 0}">${esc(l)}</tspan>`).join("")}</text>`; }
+  function SVG(w, h, body, label){ const id = "vm" + (++uid);
+    return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label || "diagram")}" focusable="false"><defs><marker id="${id}" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" class="vah"/></marker></defs>${body.replace(/MARK/g, `url(#${id})`)}</svg>`; }
+  const tone = t => t ? " v" + t : "";
+  function rect(x, y, w, h, t, r){ return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r == null ? 8 : r}" class="vbox${tone(t)}"/>`; }
+  function box(x, y, w, h, label, o){ o = o || {}; return rect(x, y, w, h, o.t, o.r) + T(x + w / 2, y + h / 2, label, { w: o.w || Math.max(6, Math.floor(w / 6.4)), fs: o.fs, b: o.b, c: o.tc }); }
+  function part(k, label, inner, i){ i = Math.min(i || 0, 8); return k ? `<g class="vp st" style="--i:${i}" data-part="${esc(k)}" tabindex="0" role="button" aria-label="${esc(label)}">${inner}</g>` : `<g class="st" style="--i:${i}">${inner}</g>`; }
+  function arrow(x1, y1, x2, y2, cls){ return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="va ${cls || ""}" marker-end="MARK"/>`; }
+  function path(d, cls, mark){ return `<path d="${d}" class="va ${cls || ""}"${mark === false ? "" : ` marker-end="MARK"`}/>`; }
+
+  /* vertical flow of steps; o.loop draws a return arrow */
+  function flow(steps, o){ o = o || {}; const W = 360, bw = o.bw || 290, x = (W - bw) / 2 + (o.num ? 6 : 0), gap = 20; let y = 10, out = "";
+    steps.forEach((s, i) => { const dark = s.t === "C", nl = wrap(s.l, 40).length, ns = s.s ? wrap(s.s, 48).length : 0, h = 12 + nl * 15 + ns * 13;
+      const inner = rect(x, y, bw, h, s.t) + T(x + bw / 2, y + 6 + nl * 7.5, s.l, { b:1, w:40, lh:15, c: dark ? "vw" : "" }) + (s.s ? T(x + bw / 2, y + 6 + nl * 15 + ns * 6.5, s.s, { c: dark ? "vw" : "vmt", fs:11, w:48, lh:13 }) : "");
+      out += part(s.k, s.l, inner + (o.num ? `<circle cx="${x - 2}" cy="${y + h / 2}" r="10" class="vnum"/>` + T(x - 2, y + h / 2, String(i + 1), { fs:11, b:1, c:"vnt" }) : ""), i);
+      if (i < steps.length - 1) out += `<g class="st" style="--i:${Math.min(i, 8)}">${arrow(x + bw / 2, y + h + 1, x + bw / 2, y + h + gap - 2, "flow")}</g>`;
+      y += h + gap; });
+    const H = y - gap + 12;
+    if (o.loop){ const top = 28, bot = y - gap - 18; out += `<g class="st" style="--i:6">${path(`M${x + bw} ${bot} C ${W + 2} ${bot}, ${W + 2} ${top}, ${x + bw + 2} ${top}`, "flow")}</g>`; }
+    return SVG(W, H, out, o.label); }
+
+  /* cycle of steps around a circle */
+  function cycle(steps, o){ o = o || {}; const n = steps.length, W = 360, R = o.R || (n > 6 ? 126 : n > 5 ? 118 : 104), bw = o.bw || (n > 6 ? 94 : 112), bh = 40, cx = W / 2, cy = R + bh / 2 + 10, H = cy + R + bh / 2 + 10;
+    const ang = i => -Math.PI / 2 + i * 2 * Math.PI / n, P = a => [cx + R * Math.cos(a), cy + R * Math.sin(a)];
+    const exitA = a => { const tx = -Math.sin(a), ty = Math.cos(a); const t = Math.min(Math.abs(tx) > 1e-6 ? (bw / 2) / Math.abs(tx) : 1e9, Math.abs(ty) > 1e-6 ? (bh / 2) / Math.abs(ty) : 1e9); return (t + 7) / R; };
+    let arcs = "", nodes = "";
+    steps.forEach((s, i) => { const a1 = ang(i) + exitA(ang(i)), a2 = ang(i + 1) - exitA(ang(i + 1));
+      if (a2 > a1){ const [x1, y1] = P(a1), [x2, y2] = P(a2); arcs += `<g class="st" style="--i:${Math.min(i, 8)}">${path(`M${x1.toFixed(1)} ${y1.toFixed(1)} A ${R} ${R} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`, "flow")}</g>`; }
+      else { const [cx1, cy1] = P(ang(i)), [cx2, cy2] = P(ang(i + 1)), dx = cx2 - cx1, dy = cy2 - cy1, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
+        const t = Math.min(Math.abs(ux) > 1e-6 ? (bw / 2) / Math.abs(ux) : 1e9, Math.abs(uy) > 1e-6 ? (bh / 2) / Math.abs(uy) : 1e9) + 2;
+        if (L > 2 * t + 6) arcs += `<g class="st" style="--i:${Math.min(i, 8)}">${arrow((cx1 + ux * t).toFixed(1), (cy1 + uy * t).toFixed(1), (cx2 - ux * t).toFixed(1), (cy2 - uy * t).toFixed(1), "flow")}</g>`; }
+      const [x, y] = P(ang(i)); nodes += part(s.k, s.l, box(x - bw / 2, y - bh / 2, bw, bh, s.l, { t: s.t || "", b: 1, w: Math.floor(bw / 6.6), fs: 11.5 }), i); });
+    const mid = o.center ? part(o.center.k, o.center.l, `<circle cx="${cx}" cy="${cy}" r="${o.cr || 44}" class="vbox vC"/>` + T(cx, cy, o.center.l, { w: 11, b: 1, c: "vw", fs: 12 }), n) : "";
+    return SVG(W, H, arcs + nodes + mid, o.label); }
+
+  /* table / matrix: rows × cols with header labels */
+  function grid(g){ const nC = g.cols.length, nR = g.rows.length, W = 360, hw = g.hw == null ? 92 : g.hw, top = g.colTitle ? 56 : (g.cols.some(c => c) ? 30 : 4), ch = g.ch || 48;
+    const cw = (W - hw - (hw ? 10 : 0)) / nC, footL = g.foot ? wrap(g.foot, 62).length : 0, H = top + nR * ch + 10 + footL * 13 + (footL ? 8 : 0); let out = "";
+    if (g.colTitle) out += T(hw + 5 + cw * nC / 2, 12, g.colTitle, { b: 1, fs: 11.5, c: "vct" });
+    g.cols.forEach((c, j) => out += T((hw ? hw + 5 : 0) + cw * j + cw / 2, top - 14, c, { fs: 11.5, b: 1, w: Math.floor(cw / 6.2) }));
+    g.rows.forEach((r, i) => { out += T(hw / 2, top + ch * i + ch / 2, r, { fs: 11.5, b: 1, w: Math.floor(hw / 6.4) });
+      g.cells[i].forEach((c, j) => { if (!c) return; out += part(c.k, c.l, box((hw ? hw + 5 : 0) + cw * j + 2, top + ch * i + 2, cw - 4, ch - 4, c.l, { t: c.t, w: Math.floor((cw - 8) / 6.4), fs: c.fs || 11.5, b: c.b, tc: c.t === "C" ? "vw" : "" }), i + j); }); });
+    if (g.rowTitle) out += T(8, top + nR * ch / 2, "", {});
+    if (g.foot) out += T(W / 2, top + nR * ch + 8 + footL * 6.5, g.foot, { fs: 10.5, c: "vmt", w: 62, lh: 13 });
+    return SVG(W, H, out, g.label); }
+
+  /* side-by-side columns with a header and bullet items */
+  function compare(cols, o){ o = o || {}; const n = cols.length, W = 360, gap = 8, cw = (W - gap * (n + 1)) / n, wc = Math.floor((cw - 14) / 5.9);
+    const lines = cols.map(c => c.items.map(it => wrap("• " + it, wc).length)); const rowsH = lines.map(ls => ls.reduce((a, b) => a + b * 13 + 9, 0));
+    const hl = cols.map(c => wrap((c.icon ? c.icon + " " : "") + c.h, Math.floor(cw / 6.8)).length), hh = 22 + Math.max(...hl) * 14, H = hh + 14 + Math.max(...rowsH) + 14; let out = "";
+    cols.forEach((c, j) => { const x = gap + j * (cw + gap); let y = hh + 14;
+      let inner = rect(x, 6, cw, H - 12, c.t || "", 10) + `<rect x="${x}" y="6" width="${cw}" height="${hh}" rx="10" class="vbox vC"/>` + T(x + cw / 2, 6 + hh / 2, (c.icon ? c.icon + " " : "") + c.h, { b: 1, c: "vw", w: Math.floor(cw / 6.8), fs: 12 });
+      c.items.forEach((it, k) => { const nL = wrap("• " + it, wc).length; inner += T(x + 8, y + nL * 13 / 2, "• " + it, { a: "start", w: wc, fs: 11, lh: 13 }); y += nL * 13 + 9; });
+      out += part(c.k, c.h, inner, j); });
+    return SVG(W, H, out, o.label); }
+
+  /* stacks of layers (top → bottom), side by side */
+  function stacks(list, o){ o = o || {}; const n = list.length, W = 360, gap = 10, cw = (W - gap * (n + 1)) / n, lh = o.lh || 30, maxL = Math.max(...list.map(s => s.layers.length));
+    const H = 30 + maxL * (lh + 4) + 8; let out = "", idx = 0;
+    list.forEach((s, j) => { const x = gap + j * (cw + gap); out += T(x + cw / 2, 13, s.h, { b: 1, fs: 12, w: Math.floor(cw / 6.2) });
+      const off = (maxL - s.layers.length) * (lh + 4);
+      s.layers.forEach((L, i) => { out += part(L.k, L.l, box(x, 28 + off + i * (lh + 4), cw, lh, L.l, { t: L.t, fs: 11, w: Math.floor(cw / 6), r: 6, b: L.b }), idx++); }); });
+    return SVG(W, H, out, o.label); }
+
+  /* sequence diagram: actors with lifelines and numbered messages */
+  function seq(actors, msgs, o){ o = o || {}; const n = actors.length, W = 360, step = (W - 20) / n, X = i => 10 + step * i + step / 2, mh = o.mh || 40, H = 60 + msgs.length * mh + 10;
+    let out = actors.map((a, i) => part(a.k, a.l, box(X(i) - step / 2 + 4, 4, step - 8, 34, a.l, { t: "C", tc: "vw", b: 1, fs: 11.5, w: Math.floor((step - 12) / 6.2) }), 0) + `<line x1="${X(i)}" y1="40" x2="${X(i)}" y2="${H - 6}" class="vline"/>`).join("");
+    msgs.forEach((m, k) => { const y = 70 + k * mh, x1 = X(m.f), x2 = X(m.t), d = x2 > x1 ? 1 : -1;
+      out += part(m.k, m.l, `<rect x="${Math.min(x1, x2)}" y="${y - 22}" width="${Math.abs(x2 - x1)}" height="${mh - 4}" class="vhit"/>` + arrow(x1 + d * 3, y + 6, x2 - d * 3, y + 6, m.bad ? "vab" : "") + (() => { const lab = (o.num === false ? "" : (k + 1) + ". ") + m.l, w = Math.max(12, Math.floor((Math.abs(x2 - x1) - 6) / 6.0)), n = wrap(lab, w).length; return T((x1 + x2) / 2, y + 1 - n * 6, lab, { fs: 10, w, lh: 12 }); })(), k + 1); });
+    return SVG(W, H, out, o.label); }
+
+  /* concentric rings, outer → inner */
+  function rings(items, o){ o = o || {}; const W = 360, n = items.length, Rmax = o.R || 130, H = Rmax * 2 + 20, cx = W / 2, cy = H / 2; let out = "";
+    items.forEach((it, i) => { const r = Rmax - i * (Rmax - (o.rmin || 34)) / Math.max(1, n - 1);
+      out += part(it.k, it.l, `<circle cx="${cx}" cy="${cy}" r="${r}" class="vbox${i === n - 1 ? " vC" : ""}" style="opacity:${i === n - 1 ? 1 : 0.55 + 0.45 * i / n}"/>` + T(cx, i === n - 1 ? cy : cy - r + (Rmax - (o.rmin || 34)) / Math.max(1, n - 1) / 2 + 2, it.l, { b: 1, fs: i === n - 1 ? 11.5 : 12, c: i === n - 1 ? "vw" : "", w: i === n - 1 ? 11 : 30 }), i); });
+    return SVG(W, H, out, o.label); }
+
+  return { esc, T, SVG, rect, box, part, arrow, path, wrap, flow, cycle, grid, compare, stacks, seq, rings };
+})();
+</script>
+
+<script>
+/* ===== VISUALS · IMT4110 – Scientific Methodology and Communication =====
+   Each visual: c (course), t (topic), id, icon, title, x (exam tag), draw(), info (part → text),
+   fact ("Did you know?"), q (question-text patterns in this topic), terms (term names). */
+(function(){
+const { T, SVG, box, part, arrow, path, rect } = V;
+
+VIS.push({ c:"IMT4110", t:"intro", id:"cycle", icon:"🔄", title:"The cycle of scientific inquiry", x:"Add-1",
+  draw: () => V.cycle([
+    { k:"q", l:"Unanswered question" }, { k:"goal", l:"State the problem" }, { k:"sub", l:"Subproblems" },
+    { k:"hyp", l:"Hypotheses or questions" }, { k:"plan", l:"Plan the design" }, { k:"data", l:"Collect and analyse data" },
+    { k:"int", l:"Interpret: new questions" } ], { center:{ k:"c", l:"Research is cyclical" }, label:"Seven steps of research in a circle" }),
+  info: { q:"1. Research starts with a problem: a question that has not been answered yet.", goal:"2. State the goal clearly as a specific, researchable problem.",
+    sub:"3. Divide the main problem into smaller, researchable subproblems.", hyp:"4. Form hypotheses or research questions, based on theory and earlier research.",
+    plan:"5. Plan the design: method, sample, instruments and analysis.", data:"6. Collect, organise and analyse the data.",
+    int:"7. Interpret the data: it supports the hypothesis or not, and usually reveals new problems.", c:"The answer to one problem usually reveals new problems, so the process loops (or spirals: helical)." },
+  fact: "Research is called helical: each loop starts again at a higher level of understanding.",
+  q: ["cyclical", "helical"], terms: ["Cycle of scientific inquiry", "Research"] });
+
+VIS.push({ c:"IMT4110", t:"var", id:"medmod", icon:"🔀", title:"Mediator vs. moderator",
+  draw: () => { let s = T(180, 12, "Mediator: explains HOW", { b:1, fs:12, c:"vct" });
+    s += part("iv", "IV", box(8, 26, 96, 40, "IV: phone use", { t:"C", tc:"vw", b:1 }), 0) + part("med", "Mediator", box(132, 26, 96, 40, "Less attention", { b:1 }), 1) + part("dv", "DV", box(256, 26, 96, 40, "DV: exam score", { t:"C", tc:"vw", b:1 }), 2);
+    s += `<g class="st" style="--i:1">${arrow(105, 46, 130, 46, "flow")}${arrow(229, 46, 254, 46, "flow")}</g>`;
+    s += T(180, 96, "Moderator: changes HOW STRONG", { b:1, fs:12, c:"vct" });
+    s += part("iv2", "IV", box(8, 110, 96, 40, "IV: phone use", { t:"C", tc:"vw", b:1 }), 3) + part("dv2", "DV", box(256, 110, 96, 40, "DV: exam score", { t:"C", tc:"vw", b:1 }), 3);
+    s += `<g class="st" style="--i:3">${arrow(105, 130, 254, 130, "flow")}</g>`;
+    s += part("mod", "Moderator", box(122, 168, 116, 38, "Year of study", { b:1, t:"warn" }) + arrow(180, 167, 180, 134), 4);
+    return SVG(360, 214, s, "Mediator sits between IV and DV; moderator acts on the IV–DV arrow"); },
+  info: { iv:"Independent variable (IV): the cause or predictor you change or group by.", dv:"Dependent variable (DV): the measured outcome.",
+    iv2:"The same IV → DV relationship…", dv2:"…measured as exam score.", med:"Mediator: sits between IV and DV and explains HOW the effect happens (IV → mediator → DV).",
+    mod:"Moderator: changes the STRENGTH or direction of the effect. Phone use hurts first-year students more than master’s students." },
+  fact: "A quick test: if you can draw it on the arrow, it is a moderator; if it sits in the middle of the chain, it is a mediator.",
+  q: ["IV → \\?", "Year of study", "independent variable\\?"], terms: ["Mediating variable", "Moderating variable", "Independent variable (IV)", "Dependent variable (DV)"] });
+
+VIS.push({ c:"IMT4110", t:"cause", id:"confound", icon:"🍦", title:"Correlation is not causation", x:"Ex-1",
+  draw: () => { let s = part("hot", "Third variable", box(115, 8, 130, 40, "☀️ Hot weather", { t:"warn", b:1 }), 0);
+    s += part("ice", "Ice-cream sales", box(10, 104, 120, 40, "🍦 Ice-cream sales", { b:1 }), 1) + part("drown", "Drownings", box(230, 104, 120, 40, "🏊 Drownings", { b:1 }), 1);
+    s += `<g class="st" style="--i:1">${arrow(150, 49, 95, 102, "flow")}${arrow(210, 49, 265, 102, "flow")}</g>`;
+    s += part("corr", "Correlation only", `<line x1="132" y1="124" x2="228" y2="124" class="vline vdash"/>` + T(180, 112, "correlated", { fs:10.5, c:"vmt" }) + T(180, 136, "✗ no cause", { fs:11, b:1, c:"vbadt" }), 2);
+    const cond = [["cov","✓ Covariation"],["time","✓ Cause before effect"],["alt","✓ No other explanation"]];
+    cond.forEach(([k, l], i) => s += part(k, l, box(6 + i * 118, 162, 112, 34, l, { t:"ok", fs:11, b:1 }), 3 + i));
+    s += T(180, 210, "All three are needed to claim cause", { fs:10.5, c:"vmt" });
+    return SVG(360, 220, s, "Hot weather causes both ice-cream sales and drownings"); },
+  info: { hot:"The confounding (third) variable affects BOTH variables and creates a false relationship between them.", ice:"Ice-cream sales go up in summer…", drown:"…and so do drownings. Ice cream does not cause drowning.",
+    corr:"Correlation means the variables change together. It does not prove that one causes the other.", cov:"1. Covariation: the variables must be related.",
+    time:"2. Temporal order: the cause must come before the effect.", alt:"3. No alternative explanation: third variables must be ruled out, best with a controlled experiment." },
+  fact: "Even a perfect correlation of r = 1 can come from a third variable.",
+  q: ["Ice-cream", "three conditions", "clear correlation", "100% sure"], terms: ["Confounding (third) variable", "Correlation", "Causation", "Covariation", "Temporal order", "No alternative explanation", "Spurious relationship"] });
+
+VIS.push({ c:"IMT4110", t:"cause", id:"threats", icon:"⚠️", title:"Threats to internal validity", x:"Add-11",
+  draw: () => V.grid({ rows:["", ""], cols:["", "", ""], hw:0, ch:58, cells:[
+      [{ k:"hist", l:"📰 History" }, { k:"mat", l:"🌱 Maturation" }, { k:"test", l:"📝 Testing" }],
+      [{ k:"inst", l:"📏 Instrumentation" }, { k:"reg", l:"↔️ Regression to the mean" }, { k:"attr", l:"🚪 Attrition" }]],
+    foot:"A control group + random assignment protects against most of these", label:"Six threats to internal validity" }),
+  info: { hist:"History: an outside event during the study, e.g. a big data breach in the news during a security-training study.", mat:"Maturation: participants change naturally over time, e.g. children read better by growing older.",
+    test:"Testing: the pre-test itself changes later scores, e.g. participants remember the questions.", inst:"Instrumentation: the measuring tool or observer changes, e.g. observers get tired or stricter.",
+    reg:"Statistical regression: extreme scorers move toward the average on a retest, even without treatment.", attr:"Attrition (mortality): participants drop out unevenly from the groups." },
+  fact: "A control group does not stop these threats – it suffers them too, so the difference between the groups still shows the real effect.",
+  q: ["threat to internal validity", "Which threat", "pre-test questions", "lowest scores", "Which threat matches"], terms: ["Maturation", "History (threat)", "Statistical regression", "Attrition (mortality)", "Internal validity"] });
+
+VIS.push({ c:"IMT4110", t:"relval", id:"target", icon:"🎯", title:"Reliability vs. validity", x:"Ex-12",
+  draw: () => { const tgt = (cx, cy, pts) => [34, 24, 14, 5].map((r, i) => `<circle cx="${cx}" cy="${cy}" r="${r}" class="${i % 2 ? "vring2" : "vring"}"/>`).join("") + pts.map(([dx, dy]) => `<circle cx="${cx + dx}" cy="${cy + dy}" r="3.2" class="vdot"/>`).join("");
+    let s = T(150, 14, "Valid", { b:1, fs:12 }) + T(285, 14, "Not valid", { b:1, fs:12 }) + T(42, 74, "Reliable", { b:1, fs:12 }) + T(42, 170, "Not reliable", { b:1, fs:12, w:8 });
+    s += part("rv", "Reliable and valid", rect(92, 28, 118, 90, "ok") + tgt(151, 73, [[0,-2],[3,1],[-2,3],[1,-4],[-3,-1]]), 0);
+    s += part("rn", "Reliable, not valid", rect(226, 28, 118, 90) + tgt(285, 73, [[18,-14],[21,-11],[17,-10],[20,-16],[22,-13]]), 1);
+    s += part("nv", "Valid, not reliable", rect(92, 126, 118, 90, "bad") + T(151, 171, "Impossible", { b:1, c:"vbadt" }), 2);
+    s += part("nn", "Neither", rect(226, 126, 118, 90) + tgt(285, 171, [[-22,-18],[14,20],[25,-8],[-10,24],[4,-26]]), 3);
+    return SVG(360, 224, s, "Target analogy for reliability and validity"); },
+  info: { rv:"Reliable AND valid: hits the bullseye every time. This is the goal.", rn:"Reliable but NOT valid: hits the same wrong spot every time, like a scale that always shows 2 kg too much.",
+    nv:"Valid but not reliable is impossible: random, inconsistent results cannot be accurate. Valid ⇒ reliable.", nn:"Neither reliable nor valid: shots all over the board." },
+  fact: "Reliability is a prerequisite for validity, but not a guarantee.",
+  q: ["reliability is a prerequisite", "consistent results under", "Random measurement error"], terms: ["Reliability", "Validity"] });
+
+VIS.push({ c:"IMT4110", t:"survey", id:"sampling", icon:"🎲", title:"Sampling methods", x:"Ex-5, Ex-10, Add-7",
+  draw: () => V.compare([
+    { k:"prob", h:"Probability", icon:"🎲", items:["Simple random: everyone has an equal chance", "Stratified: random within subgroups (strata)", "Systematic: every k-th person", "Cluster: random whole groups"], t:"ok" },
+    { k:"non", h:"Non-probability", icon:"✋", items:["Convenience: easiest to reach", "Quota: fill fixed quotas, not random", "Purposive: researcher picks who fits", "Snowball: participants recruit others", "Self-selected: people sign up"], t:"warn" } ],
+    { label:"Probability vs non-probability sampling" }),
+  info: { prob:"Probability sampling lets you generalise to the population and estimate sampling error. Best chance of a representative sample.",
+    non:"Non-probability sampling is cheaper and common in qualitative work, but generalisability is weak. Watch for self-selection bias." },
+  fact: "In the 1936 US election poll from the slides, a huge sample still predicted the wrong winner: a biased method stays biased, however big the sample.",
+  q: ["representative sample", "bachelor \\(60%\\)", "hackers", "population and a sample", "1936", "choose for themselves"], terms: ["Population", "Sample", "Representative sample", "Sampling frame", "Simple random sampling", "Stratified random sampling", "Convenience sampling", "Snowball sampling", "Self-selection bias", "Sampling error"] });
+
+VIS.push({ c:"IMT4110", t:"survey", id:"qualquant", icon:"⚖️", title:"Quantitative vs. qualitative", x:"Ex-8",
+  draw: () => V.compare([
+    { k:"quan", h:"Quantitative", icon:"🔢", items:["Measure and test hypotheses", "Numbers", "Large, random sample", "Fixed design, mostly deductive", "Experiments, closed surveys", "Statistics, generalisable"] },
+    { k:"qual", h:"Qualitative", icon:"💬", items:["Explore experiences and meaning", "Words, text, observations", "Small, purposive sample", "Flexible design, mostly inductive", "Interviews, observation, case studies", "Rich description, new theory"] } ],
+    { label:"Comparison of quantitative and qualitative research" }),
+  info: { quan:"Quantitative: “how many / how much / does X cause Y?” The researcher is detached and objective.",
+    qual:"Qualitative: “why / how do people experience…?” The researcher is the instrument. Mixed methods combine both." },
+  fact: "“Why do users ignore security warnings?” is a classic qualitative question – a number alone cannot answer “why”.",
+  q: ["qualitative and quantitative", "Why do users ignore", "interview 10", "one hospital"], terms: [] });
+
+VIS.push({ c:"IMT4110", t:"scales", id:"noir", icon:"🪜", title:"Scales of measurement (NOIR)",
+  draw: () => { const st = [["nom","Nominal","categories","Mode"],["ord","Ordinal","+ order","Median"],["int","Interval","+ equal gaps","Mean, SD"],["rat","Ratio","+ true zero","+ ratios"]];
+    let s = st.map(([k, l, a, stat], i) => { const y = 150 - i * 38, h = 80 + i * 38, c = i === 3 ? "vw" : "";
+      return part(k, l, rect(8 + i * 87, y, 82, h, i === 3 ? "C" : "") + T(49 + i * 87, y + 16, l, { b:1, c }) + T(49 + i * 87, y + 33, a, { fs:10.5, c: c || "vmt" }) + T(49 + i * 87, y + h - 14, "📊 " + stat, { fs:10, c: c || "vct", b:1 }), i); }).join("");
+    return SVG(360, 238, s, "Staircase from nominal to ratio"); },
+  info: { nom:"Nominal: categories only, no order. Example: operating system. Use mode and frequencies.", ord:"Ordinal: ordered categories with unequal gaps. Example: risk level low/medium/high. Use median.",
+    int:"Interval: equal gaps but no true zero. Example: °C (20 °C is not twice as hot as 10 °C). Use mean and SD.", rat:"Ratio: equal gaps AND a true zero, so “twice as much” makes sense. Example: reaction time, number of logins." },
+  fact: "Each step up the staircase keeps everything from the step below and adds one property.",
+  q: ["measured on which scale", "nominal data"], terms: ["Nominal scale", "Ordinal scale", "Interval scale", "Ratio scale", "Mode"] });
+
+VIS.push({ c:"IMT4110", t:"scales", id:"normal", icon:"🔔", title:"The normal curve (68–95–99.7)", x:"Add-8",
+  draw: () => { const X = z => 180 + z * 52, Y = z => 150 - 118 * Math.exp(-z * z / 2);
+    const curve = (a, b) => { let d = `M${X(a)} 150`; for (let z = a; z <= b + 1e-9; z += 0.05) d += ` L${X(z).toFixed(1)} ${Y(z).toFixed(1)}`; return d + ` L${X(b)} 150 Z`; };
+    let s = part("b3", "99.7%", `<path d="${curve(-3, 3)}" class="vband1"/>` + T(X(2.6), 132, "99.7%", { fs:10.5 }), 0) + part("b2", "95%", `<path d="${curve(-2, 2)}" class="vband2"/>` + T(X(1.6), 120, "95%", { fs:10.5 }), 1) + part("b1", "68%", `<path d="${curve(-1, 1)}" class="vband3"/>` + T(180, 110, "68%", { fs:12, b:1, c:"vw" }), 2);
+    s += part("mid", "Mean = median = mode", `<line x1="180" y1="30" x2="180" y2="150" class="vline vdash"/>` + T(180, 20, "mean = median = mode", { fs:10.5, b:1 }), 3);
+    s += `<line x1="20" y1="150" x2="340" y2="150" class="vline"/>` + [-3,-2,-1,0,1,2,3].map(z => T(X(z), 162, z ? (z > 0 ? "+" : "−") + Math.abs(z) + " SD" : "0", { fs:9.5, c:"vmt" })).join("");
+    return SVG(360, 172, s, "Normal curve with 68, 95 and 99.7 percent bands"); },
+  info: { b1:"About 68% of values lie within ±1 SD of the mean. SPSS task: men 14.60 ± 5.79 → 8.81 to 20.39.", b2:"About 95% lie within ±2 SD.", b3:"About 99.7% lie within ±3 SD.",
+    mid:"The normal curve is symmetric: mean = median = mode at the centre. With skewed data the mean is pulled toward the tail, so use the median." },
+  fact: "Many statistical tests (t-test, ANOVA) assume the data is roughly normally distributed.",
+  q: ["normal curve", "68%", "median instead of the mean", "Men in the SPSS"], terms: ["Normal distribution", "Standard deviation (SD)", "Mean", "Median", "Skewness", "Outlier"] });
+
+VIS.push({ c:"IMT4110", t:"exp", id:"solomon", icon:"🧪", title:"Solomon four-group design", x:"Ex-11",
+  draw: () => V.grid({ rows:["Group 1","Group 2","Group 3","Group 4"], cols:["Random","Pre-test","Treatment","Post-test"], hw:64, ch:38, cells:[
+      [{ l:"R" }, { k:"o1", l:"O", t:"C", b:1 }, { k:"x", l:"X", t:"warn", b:1 }, { l:"O", t:"C", b:1 }],
+      [{ l:"R" }, { k:"o1", l:"O", t:"C", b:1 }, { k:"none", l:"–" }, { l:"O", t:"C", b:1 }],
+      [{ l:"R" }, { k:"nop", l:"–" }, { k:"x", l:"X", t:"warn", b:1 }, { l:"O", t:"C", b:1 }],
+      [{ l:"R" }, { k:"nop", l:"–" }, { k:"none", l:"–" }, { l:"O", t:"C", b:1 }]],
+    foot:"R = random assignment · O = observation · X = treatment", label:"Solomon four-group design table" }),
+  info: { o1:"Groups 1 and 2 take a pre-test (O). This is a normal pre-test/post-test control group design.", nop:"Groups 3 and 4 take NO pre-test. Comparing 1 vs 3 (and 2 vs 4) shows if the pre-test itself changed the results.",
+    x:"Groups 1 and 3 get the treatment (X).", none:"Groups 2 and 4 are control groups: no treatment." },
+  fact: "Solomon controls the testing effect: does taking the pre-test make people react differently to the treatment?",
+  q: ["Solomon", "pre-test makes", "R, O and X", "one-group pre-test", "control group help"], terms: ["Solomon four-group design", "Control group", "Random assignment", "True experiment"] });
+
+VIS.push({ c:"IMT4110", t:"exp", id:"factorial", icon:"✖️", title:"2 × 2 factorial design and interaction", x:"Ord-23 Q5",
+  draw: () => { const X = i => 70 + i * 220, Y = v => 170 - v * 4;
+    let s = `<line x1="40" y1="170" x2="330" y2="170" class="vline"/><line x1="40" y1="30" x2="40" y2="170" class="vline"/>` + T(14, 100, "Click rate %", { fs:10, c:"vmt", w:6 });
+    s += T(X(0), 184, "No reminders", { fs:10.5 }) + T(X(1), 184, "Reminders", { fs:10.5 });
+    s += part("main", "No training", `<polyline points="${X(0)},${Y(30)} ${X(1)},${Y(24)}" class="vlineC2"/>` + `<circle cx="${X(0)}" cy="${Y(30)}" r="5" class="vdot2"/><circle cx="${X(1)}" cy="${Y(24)}" r="5" class="vdot2"/>` + T(250, Y(24) + 18, "No training: 30% → 24%", { fs:10.5 }), 0);
+    s += part("inter", "Training", `<polyline points="${X(0)},${Y(22)} ${X(1)},${Y(8)}" class="vlineC"/>` + `<circle cx="${X(0)}" cy="${Y(22)}" r="5" class="vdot"/><circle cx="${X(1)}" cy="${Y(8)}" r="5" class="vdot"/>` + T(X(1) - 40, Y(8) + 16, "Training: 22% → 8%", { fs:10.5, b:1 }), 1);
+    s += T(180, 14, "Example numbers · lines not parallel = interaction", { fs:10.5, c:"vmt" });
+    return SVG(360, 194, s, "Line chart with non-parallel lines showing an interaction"); },
+  info: { main:"Main effect: reminders lower clicks a little even without training (30% → 24%).",
+    inter:"Interaction: with training, reminders help much more (22% → 8%). The effect of one IV depends on the other IV. Only factorial designs show this." },
+  fact: "Parallel lines = no interaction. The more the lines differ in slope, the stronger the interaction.",
+  q: ["factorial", "× reminder"], terms: ["Factorial design", "Main effect", "Interaction effect"] });
+
+VIS.push({ c:"IMT4110", t:"hyp", id:"errors", icon:"🚨", title:"Type I and Type II errors", x:"Ex-2",
+  draw: () => V.grid({ rows:["Reject H0","Keep H0"], cols:["H0 true (no effect)","H0 false (real effect)"], colTitle:"Reality", hw:84, ch:56, cells:[
+      [{ k:"t1", l:"Type I error (α) false positive", t:"bad", b:1 }, { k:"pow", l:"✓ Correct (power)", t:"ok", b:1 }],
+      [{ k:"ok", l:"✓ Correct", t:"ok", b:1 }, { k:"t2", l:"Type II error (β) false negative", t:"bad", b:1 }]],
+    foot:"Rows = your decision · Columns = the truth", label:"Type I and Type II error table" }),
+  info: { t1:"Type I error: rejecting H0 when it is true. You claim an effect that does not exist, e.g. a training “works” when it does not. Risk = α.",
+    t2:"Type II error: keeping H0 when it is false. You miss a real effect, e.g. concluding a vaccine does not work when it does. Risk = β.",
+    pow:"Correct rejection: you find a real effect. Its probability is the power (1 – β); a larger sample increases it.", ok:"Correct: there is no effect, and you do not claim one." },
+  fact: "Lowering α (0.05 → 0.01) reduces Type I errors but increases Type II errors, unless you also increase the sample size.",
+  q: ["Type I error", "vaccine", "Type I\\b"], terms: ["Type I error", "Type II error", "Statistical power", "Significance level (α)"] });
+
+VIS.push({ c:"IMT4110", t:"hyp", id:"decision", icon:"🧭", title:"Hypothesis test in 4 steps", x:"SPSS",
+  draw: () => V.flow([
+    { k:"h", l:"State H0 and H1", s:"H0: no difference · H1: women report more stress" },
+    { k:"a", l:"Choose α before the test", s:"Usually 0.05 or 0.01" },
+    { k:"p", l:"Run the test and read p", s:"SPSS example: p (2-tailed) = .048" },
+    { k:"d", l:"p ≤ α → reject H0 · p > α → keep H0", s:"α = .05: reject (barely) · α = .01: keep", t:"C" } ], { num:1, label:"Four steps of a hypothesis test" }),
+  info: { h:"H0 says there is no effect; it is what the test actually tests. We never prove H1.", a:"α is the accepted risk of a Type I error, chosen BEFORE seeing the data.",
+    p:"p = the probability of a result at least this extreme IF H0 is true.", d:"Reject H0 when p ≤ α. Always also check effect size: significant does not mean important." },
+  fact: "“Failing to reject H0” is not the same as proving H0 – absence of evidence is not evidence of absence.",
+  q: ["statistically significant' mean", "p \\(2-tailed\\)", "IF H0 is true", "fail to reject"], terms: ["Null hypothesis (H0)", "p-value", "Statistical significance"] });
+
+VIS.push({ c:"IMT4110", t:"hyp", id:"whichtest", icon:"🧮", title:"Which test fits?",
+  draw: () => V.grid({ rows:["2 separate groups","Same people twice","3+ groups","2 categorical variables"], cols:["Data","Test"], hw:118, ch:40, cells:[
+      [{ l:"Interval / ratio" }, { k:"t", l:"Independent t-test", t:"C", b:1 }],
+      [{ l:"Interval / ratio" }, { k:"pt", l:"Paired t-test", t:"C", b:1 }],
+      [{ l:"Interval / ratio" }, { k:"an", l:"One-way ANOVA", t:"C", b:1 }],
+      [{ l:"Nominal (counts)" }, { k:"chi", l:"Chi-square", t:"C", b:1 }]], label:"Table of which statistical test fits which situation" }),
+  info: { t:"Independent-samples t-test: compares the means of TWO separate groups. Check Levene’s test first.", pt:"Paired t-test: two means from the SAME people, e.g. before and after training.",
+    an:"ANOVA: three or more groups. Running many t-tests instead would inflate the Type I error.", chi:"Chi-square: tests whether two categorical variables are related, using counts. It does not prove cause." },
+  fact: "With 3 groups you would need 3 t-tests; at α = 0.05 each, the chance of at least one false positive rises to about 14%.",
+  q: ["Which test fits"], terms: ["Independent-samples t-test", "ANOVA", "Chi-square test", "Levene’s test"] });
+
+VIS.push({ c:"IMT4110", t:"ethics", id:"consent", icon:"🤝", title:"Ethics from start to finish", x:"Ex-3",
+  draw: () => V.flow([
+    { k:"ic", l:"✍️ Informed consent", s:"Purpose, procedure, risks, rights – BEFORE agreeing" },
+    { k:"vol", l:"🚪 Voluntary participation", s:"Can withdraw at any time, no penalty" },
+    { k:"dec", l:"🎭 Deception (only if justified)", s:"Real value, no alternative, minimal risk, approved", t:"warn" },
+    { k:"deb", l:"💬 Debriefing", s:"True purpose explained, data can be withdrawn" } ], { label:"Ethics steps from consent to debriefing" }),
+  info: { ic:"Informed consent: participants know the purpose, procedures, risks, benefits, data use and their rights before they agree.", vol:"Participation is voluntary, and participants may quit at any time without penalty.",
+    dec:"Deception is ethical only if the study has real value, there is no non-deceptive alternative, risk is minimal, an ethics committee approves, and participants are debriefed.", deb:"Debriefing: the researcher explains the true purpose, corrects the deception and lets participants withdraw their data." },
+  fact: "In Norway, Sikt assesses projects that process personal data, and REK assesses health research.",
+  q: ["informed consent mean", "Deceptive research", "explains the true purpose"], terms: ["Informed consent", "Voluntary participation", "Deception", "Debriefing"] });
+
+VIS.push({ c:"IMT4110", t:"ethics", id:"anon", icon:"🕶️", title:"Privacy, anonymity and confidentiality",
+  draw: () => V.compare([
+    { k:"priv", h:"Privacy", items:["The right itself", "Control over own information", "Collect only needed data"] },
+    { k:"anon", h:"Anonymity", items:["Nobody can link data to a person", "Not even the researcher", "Anonymous web survey"] },
+    { k:"conf", h:"Confidentiality", items:["Researcher knows who said what", "Keeps it secret", "Coded interview transcripts"] } ], { label:"Three-column comparison of privacy, anonymity and confidentiality" }),
+  info: { priv:"Privacy is the participant’s right to control information about themselves.", anon:"Anonymity: no identifiers are collected, so nobody can link answers to a person.",
+    conf:"Confidentiality: the researcher can link data to people but protects it with codes, locked storage and group-level reporting." },
+  fact: "If names are replaced by codes but the key exists, it is confidentiality – not anonymity.",
+  q: ["anonymity and confidentiality", "anonymity or confidentiality"], terms: ["Anonymity", "Confidentiality"] });
+})();
+</script>
+
+<script>
+/* ===== VISUALS · IMT4115 – Introduction to Information Security Management ===== */
+(function(){
+const { T, SVG, box, part, arrow, path, rect } = V;
+
+VIS.push({ c:"IMT4115", t:"ch1", id:"cia", icon:"🔺", title:"The CIA triad",
+  draw: () => { let s = `<polygon points="180,40 52,196 308,196" class="vbox" style="opacity:.55"/>`;
+    s += part("c", "Confidentiality", box(110, 10, 140, 40, "🔒 Confidentiality", { t:"C", tc:"vw", b:1 }), 0);
+    s += part("i", "Integrity", box(4, 178, 130, 40, "✅ Integrity", { t:"C", tc:"vw", b:1 }), 1);
+    s += part("a", "Availability", box(226, 178, 130, 40, "⏱️ Availability", { t:"C", tc:"vw", b:1 }), 2);
+    s += T(180, 135, "Information assets", { b:1, fs:12, w:12 });
+    return SVG(360, 226, s, "Triangle of confidentiality, integrity and availability"); },
+  info: { c:"Confidentiality: only authorised people can read the information. A leaked patient register breaks confidentiality.",
+    i:"Integrity: data is correct and not changed without authorisation.", a:"Availability: data and systems can be used when needed. Ransomware that encrypts all patient records mainly attacks availability." },
+  fact: "The McCumber Cube adds two more dimensions to CIA: information states (storage, processing, transmission) and safeguards (policy, education, technology).",
+  q: ["CIA property", "information states"], terms: ["CIA triad", "Confidentiality", "Integrity", "Availability"] });
+
+VIS.push({ c:"IMT4115", t:"ch2", id:"unethical", icon:"⚖️", title:"Unethical behaviour: cause → prevention", x:"E22-Q6, E23-Q4",
+  draw: () => V.compare([
+    { k:"ign", h:"Ignorance", icon:"🤷", items:["Does not know the rules", "Pirated software by mistake", "→ Education, training, clear policy"] },
+    { k:"acc", h:"Accident", icon:"💥", items:["Honest mistake with access", "Admin deletes a database", "→ Controls, planning, least privilege"] },
+    { k:"int", h:"Intent", icon:"😈", items:["Deliberate wrongdoing", "Employee sells customer data", "→ Deterrence, monitoring, sanctions"] } ], { label:"Three causes of unethical behaviour with prevention" }),
+  info: { ign:"Ignorance: people break rules they do not know about. Prevent with SETA and a clear acceptable-use policy.",
+    acc:"Accident: honest mistakes by people with access. Prevent with controls, careful planning and least privilege.",
+    int:"Intent: deliberate wrongdoing. Prevent with deterrence: fear of the penalty, a high chance of being caught, and a high chance the penalty is applied." },
+  fact: "Deterrence only works when all three conditions hold: fear of the penalty, likely to be caught, and the penalty actually applied.",
+  q: ["unethical", "pirated", "deters"], terms: ["Ignorance (unethical behaviour)", "Accident (unethical behaviour)", "Intent (unethical behaviour)", "Deterrence"] });
+
+VIS.push({ c:"IMT4115", t:"ch3", id:"levels", icon:"🏔️", title:"Planning levels", x:"E22-Q1, R20-Q1",
+  draw: () => { const lv = [["str","Strategic","3–5 years · board, CEO, CISO"],["tac","Tactical","1–3 years · middle managers"],["op","Operational","days–months · team leads"]];
+    let s = lv.map(([k, l, d], i) => { const y = 10 + i * 64, w1 = 110 + i * 75, w2 = 190 + i * 75; const x1 = 180 - w1 / 2, x2 = 180 - w2 / 2;
+      return part(k, l, `<polygon points="${x1},${y} ${x1 + w1},${y} ${x2 + w2},${y + 58} ${x2},${y + 58}" class="vbox${i === 0 ? " vC" : ""}"/>` + T(180, y + 18, l, { b:1, c: i === 0 ? "vw" : "" }) + T(180, y + 40, d.replace(" · ", "\n"), { fs:10, lh:12, c: i === 0 ? "vw" : "vmt" }), i); }).join("");
+    s += T(180, 214, "Mission → vision → values → strategy → goals → objectives", { fs:10.5, c:"vmt" });
+    return SVG(360, 224, s, "Pyramid of strategic, tactical and operational planning"); },
+  info: { str:"Strategic planning: long-term direction (3–5 years), owned by the board, CEO and CISO. Example: “Become ISO 27001 certified by 2028”.",
+    tac:"Tactical planning: 1–3 years, middle managers turn strategy into projects. Example: a yearly plan to implement SIEM and run an awareness program.",
+    op:"Operational planning: days to months, team leads and staff. Example: a weekly patch schedule and daily log reviews." },
+  fact: "Norway’s National Cyber Security Strategy (2019) has the vision: “In Norway, it is safe to use digital services.”",
+  q: ["correct order from top", "planning level", "top-down", "operative example", "implementation"], terms: ["Strategic planning", "Tactical planning", "Operational planning", "Mission statement", "Vision statement", "Objectives", "Implementation plan", "Top-down implementation"] });
+
+VIS.push({ c:"IMT4115", t:"ch4", id:"enforce", icon:"📜", title:"When is a policy enforceable?", x:"E20-Q1, R21-Q2",
+  draw: () => V.flow([
+    { k:"d", l:"📢 Disseminated", s:"Distributed: intranet, email, onboarding" },
+    { k:"r", l:"👀 Reviewed", s:"Read, in a language employees understand" },
+    { k:"c", l:"🧠 Comprehended", s:"Understood, e.g. checked with a short quiz" },
+    { k:"a", l:"✍️ Complied with", s:"Employees agree, e.g. sign or click “I agree”" },
+    { k:"u", l:"⚖️ Uniformly enforced", s:"Same rules for everyone, managers included", t:"C" } ], { num:1, label:"Five criteria for an enforceable policy" }),
+  info: { d:"Disseminated: the policy is distributed so everyone can get it.", r:"Reviewed: employees actually read it, in a language they understand.",
+    c:"Comprehended: employees understand it; a short quiz can prove this.", a:"Complied with: employees agree to follow it, e.g. by signing.", u:"Uniformly enforced: the same consequences apply to everyone. Without this, a policy cannot be enforced in court." },
+  fact: "Memory trick: D-R-C-C-U – “Do Read, Comprehend, Comply, Uniformly”.",
+  q: ["enforceable"], terms: ["Enforceable policy criteria", "Uniform enforcement", "Policy"] });
+
+VIS.push({ c:"IMT4115", t:"ch4", id:"ptypes", icon:"🗂️", title:"Three types of policy", x:"E21-Q1",
+  draw: () => V.compare([
+    { k:"eisp", h:"EISP", items:["Whole organisation", "Everyone", "Strategic", "General InfoSec policy"] },
+    { k:"issp", h:"ISSP", items:["One issue or technology", "Users of that technology", "Tactical", "Acceptable use of email"] },
+    { k:"sysp", h:"SysSP", items:["One system", "Admins and users of it", "Technical", "Firewall rule set"] } ], { label:"EISP, ISSP and SysSP compared" }),
+  info: { eisp:"Enterprise Information Security Policy: the top-level, organisation-wide policy that sets direction, scope and tone. Written first.",
+    issp:"Issue-Specific Security Policy: one technology or issue, such as email, BYOD or AI tools. Can be modular: central control, local detail.",
+    sysp:"System-Specific Security Policy: managerial guidance plus technical specifications (ACLs, capability tables, configuration rules) for one system." },
+  fact: "The policy hierarchy goes from general to detailed: policy → standard → guideline → procedure.",
+  q: ["policy type", "top-level, organisation-wide", "most general to most detailed", "14 characters"], terms: ["EISP", "ISSP", "SysSP", "Standard", "Guideline", "Procedure"] });
+
+VIS.push({ c:"IMT4115", t:"ch4", id:"bullseye", icon:"🎯", title:"The bull’s-eye model",
+  draw: () => V.rings([{ k:"pol", l:"Policies" }, { k:"net", l:"Networks" }, { k:"sys", l:"Systems" }, { k:"app", l:"Applications" }], { R:118, rmin:36, label:"Concentric rings: policies, networks, systems, applications" }),
+  info: { pol:"Policies: the outer ring and foundation. Without policy, technical controls have no direction.", net:"Networks: where threats first meet the organisation, e.g. firewalls.",
+    sys:"Systems: computers and servers, e.g. hardening and patching.", app:"Applications: the centre, e.g. secure configuration and access rights." },
+  fact: "Security is built from the outside in: policy first, applications last.",
+  q: ["bull's-eye"], terms: ["Bull’s-eye model"] });
+
+VIS.push({ c:"IMT4115", t:"ch5", id:"seta", icon:"🎓", title:"SETA: awareness, training, education", x:"R20-Q3, E23-Q3",
+  draw: () => V.compare([
+    { k:"aw", h:"Awareness", icon:"💡", items:["“What”: recognise threats", "All employees", "Posters, videos, phishing tests", "Short term, repeated"] },
+    { k:"tr", h:"Training", icon:"🛠️", items:["“How”: skills for the job", "Staff with security tasks", "Workshops, hands-on", "Medium term"] },
+    { k:"ed", h:"Education", icon:"🎓", items:["“Why”: deep understanding", "Security professionals", "Degrees, certifications", "Long term"] } ], { label:"SETA comparison table" }),
+  info: { aw:"Awareness keeps security in mind for everyone: posters, newsletters, phishing simulations, short e-learning.", tr:"Training gives job skills to people with security tasks: IT staff, developers and managers.",
+    ed:"Education builds deep understanding for security professionals: degrees and certifications such as CISSP or CISM." },
+  fact: "Measure SETA with click rates in phishing simulations, incident numbers and quiz scores – then adjust.",
+  q: ["SETA", "educated security personnel"], terms: ["SETA", "Security awareness", "Security training", "Security education"] });
+
+VIS.push({ c:"IMT4115", t:"ch5", id:"trust", icon:"🤝", title:"Levels of trust in information sharing", x:"E21-Q6",
+  draw: () => { const st = [["calc","Calculus-based","rules, contracts, sanctions"],["know","Knowledge-based","knowing the partner"],["iden","Identification-based","shared values and goals"]];
+    let s = st.map(([k, l, d], i) => part(k, l, rect(10 + i * 115, 120 - i * 46, 110, 60 + i * 46, i === 2 ? "C" : "") + T(65 + i * 115, 140 - i * 46, l.replace("-based", "-\nbased"), { b:1, w:15, fs:11, c: i === 2 ? "vw" : "" }) + T(65 + i * 115, 168 - i * 46, d, { fs:10, w:17, c: i === 2 ? "vw" : "vmt" }), i)).join("");
+    s += T(65, 196, "lowest", { fs:10, c:"vmt" }) + T(295, 196, "highest", { fs:10, c:"vmt" });
+    s += part("tlp", "Traffic Light Protocol", ["RED","AMBER","GREEN","CLEAR"].map((c2, i) => `<rect x="${12 + i * 46}" y="18" width="40" height="22" rx="5" class="vtlp vtlp${i}"/>` + T(32 + i * 46, 29, c2, { fs:8.5, b:1, c: i === 1 || i === 3 ? "vtlpk" : "vtlpw" })).join("") + T(100, 52, "TLP raises trust", { fs:10, c:"vmt" }), 3);
+    return SVG(360, 206, s, "Staircase of trust levels and the Traffic Light Protocol"); },
+  info: { calc:"Calculus-based trust: based on rules, contracts and sanctions. The lowest level.", know:"Knowledge-based trust: you know the partner and their past behaviour.",
+    iden:"Identification-based trust: shared values and goals. The highest level.", tlp:"TLP labels how far information may spread: RED (named recipients), AMBER (own organisation, need-to-know), GREEN (community), CLEAR (public)." },
+  fact: "Trust grows with clear rules (TLP, NDAs), reciprocity, regular meetings and a track record of handling shared data well.",
+  q: ["trust", "TLP"], terms: ["Identification-based trust", "Calculus-based trust", "Traffic Light Protocol (TLP)"] });
+
+VIS.push({ c:"IMT4115", t:"ch6", id:"rmcycle", icon:"🔁", title:"Risk management process (ISO 31000 / 27005)", x:"R21-Q1",
+  draw: () => V.cycle([
+    { k:"ctx", l:"Establish context" }, { k:"id", l:"Identify risks" }, { k:"an", l:"Analyse risks" },
+    { k:"ev", l:"Evaluate risks" }, { k:"tr", l:"Treat risks" }, { k:"mon", l:"Monitor and review" } ], { center:{ k:"com", l:"Communicate and consult" }, cr:48, label:"Risk management cycle" }),
+  info: { ctx:"Establish the context: scope, criteria and risk appetite.", id:"Identify: assets, threats and vulnerabilities (e.g. a TVA worksheet).", an:"Analyse: likelihood × impact, qualitatively or quantitatively (ALE, FAIR).",
+    ev:"Evaluate: compare with risk criteria and prioritise, e.g. in a risk matrix.", tr:"Treat: defence, transference, mitigation, acceptance or termination.", mon:"Monitor and review: risk changes over time, so the process repeats.",
+    com:"Communicate and consult with stakeholders during every step." },
+  fact: "Risk assessment = identification + analysis + evaluation. Treatment comes after.",
+  q: ["Risk assessment consists", "risk management process"], terms: ["Risk", "Risk assessment"] });
+
+VIS.push({ c:"IMT4115", t:"ch6", id:"matrix", icon:"🟥", title:"Risk matrix (heat map)", x:"R20-Q2",
+  draw: () => { const tone = s => s >= 15 ? "bad" : s >= 8 ? "warn" : "ok"; let s = "";
+    for (let L = 5; L >= 1; L--) for (let I = 1; I <= 5; I++){ const sc = L * I, x = 50 + (I - 1) * 60, y = 10 + (5 - L) * 36;
+      const k = sc >= 15 ? "high" : sc >= 8 ? "med" : "low";
+      s += part(k, k, rect(x, y, 56, 32, tone(sc), 5) + T(x + 28, y + 16, String(sc), { fs:11, b:1 }), 5 - L); }
+    s += part("ex", "Example risk", `<circle cx="${50 + 4 * 60 + 28}" cy="${10 + 36 + 16}" r="14" class="vbox vC"/>` + T(50 + 4 * 60 + 28, 10 + 36 + 16, "🦠", { fs:13 }), 6);
+    s += T(200, 200, "Impact →", { fs:11, c:"vmt" }) + T(18, 100, "Likelihood →", { fs:11, c:"vmt", w:6 });
+    return SVG(360, 210, s, "Five by five risk matrix coloured green, yellow and red"); },
+  info: { low:"Green: low risk (score 1–7). Often accepted or monitored.", med:"Yellow: medium risk (score 8–14). Treat when cost-effective.",
+    high:"Red: high risk (score 15–25). Treat first and report to management.", ex:"Example: ransomware with likelihood 4 and impact 5 = 20 → red, treat first." },
+  fact: "The score bands here are an example; each organisation sets its own risk criteria and appetite.",
+  q: ["likelihood × impact grid"], terms: ["Risk matrix (heat map)"] });
+
+VIS.push({ c:"IMT4115", t:"ch7", id:"treat", icon:"🛡️", title:"Five risk treatment strategies", x:"R21-Q1",
+  draw: () => V.grid({ rows:["", ""], cols:["", "", ""], hw:0, ch:62, cells:[
+      [{ k:"def", l:"🛡️ Defence (avoidance)", b:1 }, { k:"tra", l:"🔄 Transference", b:1 }, { k:"mit", l:"🩹 Mitigation", b:1 }],
+      [{ k:"acc", l:"🤷 Acceptance", b:1 }, { k:"ter", l:"⛔ Termination", b:1 }, { k:"fea", l:"✅ Check feasibility first", t:"warn", b:1 }]], label:"Five risk treatment strategies" }),
+  info: { def:"Defence: prevent the vulnerability from being exploited. Example: patching, firewall, MFA.", tra:"Transference: shift the risk to others. Example: cyber insurance or outsourcing.",
+    mit:"Mitigation: reduce the impact if it happens. Example: IR plan, DR plan, backups.", acc:"Acceptance: consciously do nothing after evaluation. Example: a low-value test server.",
+    ter:"Termination: stop the risky activity or remove the asset. Example: shut down an old, unsupported web service.", fea:"Feasibility: economic (CBA), organisational, operational, technical and political. A control that users reject will fail." },
+  fact: "Acceptance is only valid when it is a conscious decision after evaluation – ignoring a risk is not acceptance.",
+  q: ["cyber insurance", "IR plan, DR plan and backups", "Shutting down", "feasibility"], terms: ["Defence (avoidance)", "Transference", "Mitigation", "Acceptance", "Termination", "Feasibility of controls"] });
+
+VIS.push({ c:"IMT4115", t:"ch7", id:"ale", icon:"🧮", title:"From SLE to cost-benefit", x:"R21-Q1",
+  draw: () => V.flow([
+    { k:"sle", l:"SLE = asset value × exposure factor", s:"200,000 × 50% = 100,000 NOK" },
+    { k:"ale", l:"ALE = SLE × ARO", s:"100,000 × 2 per year = 200,000 NOK/year" },
+    { k:"cba", l:"CBA = ALE before – ALE after – cost", s:"200,000 – 40,000 – 60,000 = 100,000 NOK/year", t:"C" },
+    { k:"res", l:"Positive → the control is worth it", s:"What remains after the control is the residual risk", t:"ok" } ], { label:"Calculation flow from SLE to CBA" }),
+  info: { sle:"Single loss expectancy: how much one incident costs.", ale:"Annualised loss expectancy: expected loss per year. ARO = how often per year.",
+    cba:"Cost-benefit analysis: the yearly loss you avoid minus what the control costs.", res:"A positive CBA means the control saves more than it costs. Residual risk is what remains after controls." },
+  fact: "Quantitative analysis like this is precise, but only as good as the numbers you put in.",
+  q: ["200,000", "ALE before"], terms: ["SLE", "ARO", "ALE", "Cost-benefit analysis (CBA)", "Residual risk"] });
+
+VIS.push({ c:"IMT4115", t:"ch8", id:"csf", icon:"🧭", title:"NIST Cybersecurity Framework 2.0", x:"E23-Q1, E20-Q6",
+  draw: () => V.cycle([{ k:"id", l:"Identify" }, { k:"pr", l:"Protect" }, { k:"de", l:"Detect" }, { k:"rs", l:"Respond" }, { k:"rc", l:"Recover" }], { center:{ k:"gv", l:"Govern" }, label:"NIST CSF 2.0 functions around Govern" }),
+  info: { gv:"Govern (new in 2.0): strategy, roles, policy and oversight. It sits in the centre of all other functions.", id:"Identify: understand assets, risks and the business context.",
+    pr:"Protect: safeguards such as access control, training and data security.", de:"Detect: find cyber events in time, e.g. monitoring.", rs:"Respond: act on a detected incident.", rc:"Recover: restore services and learn." },
+  fact: "NIST CSF is voluntary and not certifiable; ISO/IEC 27001 is the certifiable one.",
+  q: ["NIST CSF", "certifiable"], terms: ["NIST CSF 2.0", "ISO/IEC 27001"] });
+
+VIS.push({ c:"IMT4115", t:"ch8", id:"blpbiba", icon:"🔐", title:"Bell-LaPadula vs. Biba", x:"E23-Q1",
+  draw: () => { const col = (x, title, k, upOK, label) => { let s = T(x + 75, 12, title, { b:1, fs:12 }) + T(x + 75, 28, label, { fs:10, c:"vmt" });
+      ["High", "Subject’s level", "Low"].forEach((l, i) => s += rect(x, 40 + i * 56, 150, 44, i === 1 ? "C" : "", 6) + T(x + 75, 62 + i * 56, i === 1 ? "🧑 " + l : l, { b: i === 1, c: i === 1 ? "vw" : "", fs:11.5 }));
+      s += T(x + 75, 214, upOK ? "✗ no read up\n✗ no write down" : "✗ no read down\n✗ no write up", { fs:11, b:1, c:"vbadt", lh:14 });
+      return part(k, title, s, k === "blp" ? 0 : 1); };
+    return SVG(360, 236, col(4, "Bell-LaPadula", "blp", true, "protects confidentiality") + col(206, "Biba", "biba", false, "protects integrity"), "Bell-LaPadula and Biba read and write rules"); },
+  info: { blp:"Bell-LaPadula (confidentiality): NO READ UP (you cannot read secrets above your clearance) and NO WRITE DOWN (you cannot leak secrets to lower levels).",
+    biba:"Biba (integrity): NO READ DOWN (do not trust low-integrity data) and NO WRITE UP (do not corrupt high-integrity data). The exact opposite of Bell-LaPadula." },
+  fact: "Brewer-Nash (Chinese Wall) is the model where a consultant for Bank A cannot see Bank B’s files.",
+  q: ["no read up", "Bank A"], terms: ["Bell-LaPadula", "Biba", "Brewer-Nash (Chinese Wall)", "Clark-Wilson"] });
+
+VIS.push({ c:"IMT4115", t:"ch8", id:"aclayers", icon:"🧅", title:"Access control in layers", x:"E20-Q3",
+  draw: () => V.rings([{ k:"phy", l:"🚪 Physical" }, { k:"log", l:"🌐 Logical" }, { k:"sys", l:"💻 System" }, { k:"dat", l:"Data" }], { R:118, rmin:38, label:"Layers of access control" }),
+  info: { phy:"Physical: buildings, rooms and hardware. Key cards, locks, guards.", log:"Logical: networks and resources via software. Firewalls, VPN, passwords.",
+    sys:"System: operating systems and applications. OS user accounts and privileges.", dat:"Data: individual files, records and fields. File permissions, encryption, database rights." },
+  fact: "Defence in depth: an attacker must pass the door, the network, the system login AND the data permissions.",
+  q: ["File permissions", "physical, logical, system and data"], terms: ["Data access control", "Logical access control", "Least privilege", "Separation of duties"] });
+
+VIS.push({ c:"IMT4115", t:"ch9", id:"cmmi", icon:"📈", title:"Maturity levels (CMMI)", x:"E20-Q6",
+  draw: () => { const lv = ["Initial", "Managed", "Defined", "Quantitatively managed", "Optimizing"];
+    let s = lv.map((l, i) => part("l" + (i + 1), l, rect(6 + i * 70, 160 - i * 34, 66, 40 + i * 34, i === 4 ? "C" : "") + T(39 + i * 70, 172 - i * 34, String(i + 1), { b:1, fs:14, c: i === 4 ? "vw" : "vct" }) + T(39 + i * 70, 192 - i * 34, l, { fs:10, w:10, c: i === 4 ? "vw" : "" }), i)).join("");
+    return SVG(360, 206, s, "Five maturity levels as a staircase"); },
+  info: { l1:"1 Initial: ad hoc, depends on individual heroes.", l2:"2 Managed: basic processes are planned and tracked per project.", l3:"3 Defined: standard processes across the organisation.",
+    l4:"4 Quantitatively managed: processes are measured and controlled with metrics.", l5:"5 Optimizing: continuous improvement based on the measurements." },
+  fact: "Use a maturity model like this: measure a baseline → set a target per area → show the gaps in a heat map → improve “one step at a time”.",
+  q: ["maturity"], terms: ["Maturity model", "Baselining", "Gap analysis", "Benchmarking"] });
+
+VIS.push({ c:"IMT4115", t:"ch9", id:"csirt", icon:"🚒", title:"CSIRT vs. CERT vs. SOC", x:"R22-Q5, E23-Q6",
+  draw: () => V.compare([
+    { k:"soc", h:"SOC", icon:"👁️", items:["Monitors 24/7", "Detects and triages alerts (SIEM)", "Continuous, proactive", "e.g. Telenor SOC"] },
+    { k:"csirt", h:"CSIRT", icon:"🚒", items:["Handles incidents", "Isolate, mitigate, recover", "Reactive", "e.g. internal NTNU team"] },
+    { k:"cert", h:"CERT", icon:"📣", items:["Coordinates and advises", "Warns a sector or nation", "Best practice", "e.g. NorCERT, HelseCERT"] } ], { label:"SOC, CSIRT and CERT compared" }),
+  info: { soc:"Security Operations Center: monitors around the clock, detects and triages alerts, often hands incidents to a CSIRT.", csirt:"Computer Security Incident Response Team: handles the incident – isolate, mitigate and recover.",
+    cert:"Computer Emergency Response Team: coordinates, advises and warns a whole sector or nation." },
+  fact: "RFC 2350 describes what a CSIRT should publish about itself: contacts, services, PGP keys and hours.",
+  q: ["CSIRT"], terms: ["CSIRT", "CERT", "SOC", "RFC 2350"] });
+
+VIS.push({ c:"IMT4115", t:"ch10", id:"cp", icon:"🧰", title:"Contingency planning: BIA + three plans", x:"E20-Q5, E21-Q4, E21-Q5",
+  draw: () => { let s = part("bia", "BIA", box(90, 6, 180, 42, "📋 Business impact analysis", { t:"C", tc:"vw", b:1 }), 0);
+    const p = [["ir","IR plan","🚨","Stop the incident","Primary site","Hours"],["dr","DR plan","🛠️","Restore systems","Primary site","Short–medium"],["bc","BC plan","🏢","Keep business running","Alternate site","Until site is back"]];
+    p.forEach(([k, l, ic, f, w, t], i) => { const x = 6 + i * 118;
+      s += `<g class="st" style="--i:${i + 1}">${arrow(180, 49, x + 56, 82, "flow")}</g>`;
+      s += part(k, l, rect(x, 84, 112, 122) + T(x + 56, 102, ic + " " + l, { b:1 }) + T(x + 56, 130, f, { fs:10.5, w:16 }) + T(x + 56, 160, w, { fs:10, c:"vmt" }) + T(x + 56, 184, t, { fs:10, c:"vmt", w:16 }), i + 1); });
+    s += T(180, 222, "Led by the CPMT · MTD = RTO + WRT", { fs:10.5, c:"vmt" });
+    return SVG(360, 232, s, "BIA feeding the IR, DR and BC plans"); },
+  info: { bia:"Business impact analysis: which processes are most critical, what happens if they stop, and how fast they must be back (recovery criticality, MTD, RTO, RPO).",
+    ir:"Incident response plan: detect, contain, eradicate and recover from an incident at the primary site. Example: isolate a phished PC and reset passwords.",
+    dr:"Disaster recovery plan: restore systems, data and facilities after a disaster. Example: ransomware encrypted all servers → rebuild from offline backups.",
+    bc:"Business continuity plan: keep critical functions running at an alternate site. Example: the data centre is flooded → run patient systems from a backup hospital site." },
+  fact: "The CPMT needs a champion: a senior executive who gives the work authority and budget.",
+  q: ["four components", "IR plan and a DR plan", "flooded", "CPMT", "incident response plan and a disaster", "recovery criticality"], terms: ["Contingency planning (CP)", "CPMT", "Business impact analysis (BIA)", "Incident response (IR) plan", "Disaster recovery (DR) plan", "Business continuity (BC) plan", "Recovery criticality"] });
+
+VIS.push({ c:"IMT4115", t:"ch10", id:"mtd", icon:"⏳", title:"RPO, RTO, WRT and MTD", x:"R22-Q1, R21-Q6",
+  draw: () => { let s = `<line x1="10" y1="100" x2="350" y2="100" class="vline"/>`;
+    s += `<g class="st" style="--i:0"><line x1="120" y1="60" x2="120" y2="140" class="va vab"/>${T(120, 50, "💥 Disruption", { fs:11, b:1 })}</g>`;
+    s += part("rpo", "RPO", rect(20, 86, 98, 28, "warn", 5) + T(69, 100, "◀ RPO", { b:1, fs:11 }) + T(40, 128, "last backup", { fs:9.5, c:"vmt" }), 1);
+    s += part("rto", "RTO", rect(122, 86, 128, 28, "", 5) + T(186, 100, "RTO ▶", { b:1, fs:11 }) + T(250, 128, "systems restored", { fs:9.5, c:"vmt" }), 2);
+    s += part("wrt", "WRT", rect(252, 86, 96, 28, "", 5) + T(300, 100, "WRT ▶", { b:1, fs:11 }), 3);
+    s += part("mtd", "MTD", `<path d="M122 160 L122 170 L348 170 L348 160" class="vline" style="stroke:var(--c);stroke-width:2"/>` + T(235, 186, "MTD = RTO + WRT", { b:1, c:"vct" }), 4);
+    return SVG(360, 200, s, "Timeline showing RPO before the disruption and RTO plus WRT after it"); },
+  info: { rpo:"RPO (recovery point objective): how much data loss, in time, is acceptable. RPO = 1 hour → back up at least every hour.", rto:"RTO (recovery time objective): the target time to get the system back after the disruption.",
+    wrt:"WRT (work recovery time): time to test and get work back to normal after the technical restore.", mtd:"MTD (maximum tolerable downtime): the longest a process can be down before the damage is unacceptable. Set together with top management." },
+  fact: "Optimise MTD with offline backups, redundancy, an external recovery team on contract, manual fallback routines and ransomware exercises with top management.",
+  q: ["MTD", "RPO", "longest a process can be down"], terms: ["MTD", "RTO", "RPO", "WRT"] });
+
+VIS.push({ c:"IMT4115", t:"ch11", id:"maint", icon:"♻️", title:"Security maintenance model (W&M)", x:"E21-Q2, E22-Q2, R22-Q1, R20-Q5, R21-Q5, E23-Q2",
+  draw: () => V.cycle([
+    { k:"ext", l:"🌍 External monitoring" }, { k:"int", l:"🖥️ Internal monitoring" }, { k:"plan", l:"🗺️ Planning and risk assessment" },
+    { k:"vuln", l:"🔧 Vulnerability assessment" }, { k:"ready", l:"✅ Readiness and review" } ], { bw:118, R:108, center:{ k:"c", l:"Continuous security" }, label:"Five areas of the security maintenance model" }),
+  info: { ext:"External monitoring: watch for new threats and vulnerabilities – CERT warnings, police and military intelligence, partners, vendor advisories, news.",
+    int:"Internal monitoring: know your own environment – SOC, SIEM, logs, asset and configuration inventory, maturity checks.",
+    plan:"Planning and risk assessment: keep plans and risk assessments current, e.g. root cause and socio-technical analysis.",
+    vuln:"Vulnerability assessment and remediation: find and fix weaknesses – scans, penetration tests, patching, power redundancy, an alternative office.",
+    ready:"Readiness and review: internal control, management review, policy evaluation, training and exercises.", c:"Security is never “done”: the five areas repeat as threats, systems and people change." },
+  fact: "This is the most-tested topic in IMT4115: it appeared in six former exams.",
+  q: ["five areas", "belong to which area", "which area", "maintenance model"], terms: ["Security maintenance model", "External monitoring", "Internal monitoring", "Planning and risk assessment (maintenance)", "Vulnerability assessment and remediation", "Readiness and review"] });
+
+VIS.push({ c:"IMT4115", t:"ch11", id:"bowtie", icon:"🎀", title:"The bow-tie model (DSB)",
+  draw: () => { let s = `<polygon points="10,30 160,95 10,160" class="vbox" style="opacity:.6"/><polygon points="350,30 200,95 350,160" class="vbox" style="opacity:.6"/>`;
+    s += part("cause", "Causes", T(50, 95, "⚡ Causes and threats", { fs:11, b:1, w:9 }), 0);
+    s += part("prev", "Preventive measures", `<rect x="106" y="58" width="12" height="74" rx="3" class="vbox vC"/>` + T(112, 148, "Preventive", { fs:10, c:"vmt" }), 1);
+    s += part("event", "Unwanted event", `<circle cx="180" cy="95" r="26" class="vbox vbad"/>` + T(180, 95, "💥 Event", { fs:11, b:1 }), 2);
+    s += part("limit", "Damage-limiting measures", `<rect x="242" y="58" width="12" height="74" rx="3" class="vbox vC"/>` + T(248, 148, "Damage-limiting", { fs:10, c:"vmt" }), 3);
+    s += part("cons", "Consequences", T(310, 95, "Consequences 💔", { fs:11, b:1, w:9 }), 4);
+    return SVG(360, 176, s, "Bow-tie model with the unwanted event in the middle"); },
+  info: { cause:"Causes and threats on the left side.", prev:"Preventive measures stop the causes from leading to the unwanted event.", event:"The unwanted event in the middle, e.g. a ransomware attack.",
+    limit:"Damage-limiting measures: emergency preparedness and crisis management reduce the consequences.", cons:"Consequences: life, health, environment, finance, infrastructure and reputation." },
+  fact: "Østre Toten (2021) showed that cyber attacks need their own place in the risk and vulnerability analysis.",
+  q: ["causes → preventive"], terms: [] });
+})();
+</script>
+
+<script>
+/* ===== VISUALS · IMT4113 – Introduction to Information Security (final part) ===== */
+(function(){
+const { T, SVG, box, part, arrow, path, rect } = V;
+
+VIS.push({ c:"IMT4113", t:"inet", id:"ipsecmode", icon:"📦", title:"IPsec: transport vs. tunnel mode", x:"2024 Q2, 2025 Q11",
+  draw: () => { const row = (y, k, title, segs) => { let x = 6, s = T(6, y - 12, title, { a:"start", b:1, fs:12 });
+      segs.forEach(([l, w, t]) => { s += rect(x, y, w, 34, t, 4) + T(x + w / 2, y + 17, l, { fs:10.5, w: Math.floor(w / 5.6), b: t === "C", c: t === "C" ? "vw" : "" }); x += w + 3; });
+      return part(k, title, s, k === "tr" ? 0 : 1); };
+    let s = row(24, "tr", "Transport mode (end to end)", [["IP header", 70, "g"], ["ESP header", 66, "C"], ["TCP + data (protected)", 150, "ok"], ["ESP trailer", 54, "C"]]);
+    s += row(106, "tu", "Tunnel mode (gateway to gateway, VPN)", [["NEW IP header", 62, "warn"], ["ESP header", 60, "C"], ["Original IP header + TCP + data", 160, "ok"], ["ESP trailer", 54, "C"]]);
+    s += T(180, 160, "Green = protected by ESP", { fs:10.5, c:"vmt" });
+    return SVG(360, 170, s, "Packet layout in IPsec transport and tunnel mode"); },
+  info: { tr:"Transport mode protects only the payload of the original IP packet. The original IP header stays visible. Used end to end between two hosts.",
+    tu:"Tunnel mode wraps the WHOLE original packet inside a new IP packet with a new header. Used between gateways, e.g. a VPN." },
+  fact: "A Security Association (SA) is one-way: two-way traffic needs two SAs, each identified by its SPI.",
+  q: ["IPsec", "Security Association"], terms: ["IPsec", "Transport mode", "Tunnel mode", "ESP", "AH", "Security Association (SA)"] });
+
+VIS.push({ c:"IMT4113", t:"inet", id:"stack", icon:"🥞", title:"Where security sits in the TCP/IP stack",
+  draw: () => V.stacks([
+    { h:"Network level", layers:[{ l:"HTTP · SMTP" }, { l:"TCP" }, { k:"ipsec", l:"IP + IPsec", t:"C", b:1 }] },
+    { h:"Transport level", layers:[{ l:"HTTP · SMTP" }, { k:"tls", l:"SSL / TLS", t:"C", b:1 }, { l:"TCP" }, { l:"IP" }] },
+    { h:"Application level", layers:[{ k:"app", l:"S/MIME · PGP · DKIM", t:"C", b:1 }, { l:"SMTP · HTTP" }, { l:"TCP" }, { l:"IP" }] } ], { label:"Three protocol stacks with security at different layers" }),
+  info: { ipsec:"IPsec works at the IP layer, so it protects ALL traffic above it, transparently to applications.", tls:"SSL/TLS sits on top of TCP. HTTPS = HTTP over TLS (port 443): URL, contents, form data, cookies and headers are encrypted.",
+    app:"Application-level security is built into one application, e.g. S/MIME, PGP or DKIM for email." },
+  fact: "Heartbleed (2014) was a missing length check in OpenSSL’s heartbeat: the server leaked memory such as keys and passwords.",
+  q: ["HTTPS", "password sniffing", "Heartbleed", "heartbeat", "SSL/TLS session", "Change Cipher Spec"], terms: ["HTTPS", "TLS record protocol", "Handshake protocol", "Heartbeat protocol", "Heartbleed"] });
+
+VIS.push({ c:"IMT4113", t:"inet", id:"radix", icon:"🔤", title:"Radix-64 in three steps", x:"2024 Q11, 2025 Q15",
+  draw: () => { const bits = ["001101", "010011", "001101", "010100"], val = [13, 19, 13, 20], ch = ["N", "T", "N", "U"]; let s = "";
+    s += part("bits", "Bits", T(180, 12, "1. Split the bits into 6-bit groups", { b:1, fs:11.5 }) + bits.map((b, i) => rect(10 + i * 86, 24, 80, 30, "g", 5) + T(50 + i * 86, 39, b, { fs:12 })).join(""), 0);
+    s += part("num", "Numbers", T(180, 72, "2. Turn each group into a number (0–63)", { b:1, fs:11.5 }) + val.map((v, i) => rect(10 + i * 86, 84, 80, 30, "", 5) + T(50 + i * 86, 99, String(v), { b:1 })).join(""), 1);
+    s += part("chr", "Characters", T(180, 132, "3. Look up the character", { b:1, fs:11.5 }) + ch.map((c, i) => rect(10 + i * 86, 144, 80, 32, "C", 5) + T(50 + i * 86, 160, c, { b:1, fs:15, c:"vw" })).join(""), 2);
+    s += T(180, 194, "0–25 = A–Z · 26–51 = a–z · 52–61 = 0–9 · 62 = + · 63 = /", { fs:10.5, c:"vmt" });
+    return SVG(360, 204, s, "Radix-64 example that decodes to NTNU"); },
+  info: { bits:"Split the bit string into groups of 6 bits (pad the last group with zeros if needed).", num:"Convert each 6-bit group to a decimal number: 001101 = 13, 010011 = 19, 010100 = 20.",
+    chr:"Look up each number: 13 → N, 19 → T, 20 → U. Result: NTNU." },
+  fact: "Radix-64 makes binary data printable so it survives email transport – that is why S/MIME uses it.",
+  q: ["radix-64", "Radix-64"], terms: ["Radix-64"] });
+
+VIS.push({ c:"IMT4113", t:"auth", id:"kerberos", icon:"🎟️", title:"Kerberos step by step", x:"2024 Q14",
+  draw: () => V.seq([{ k:"cl", l:"💻 Client" }, { k:"as", l:"AS" }, { k:"tgs", l:"TGS" }, { k:"sv", l:"🖥️ Server" }], [
+    { f:0, t:1, k:"m1", l:"Request TGT" }, { f:1, t:0, k:"m2", l:"TGT + session key" }, { f:0, t:2, k:"m3", l:"TGT + authenticator" },
+    { f:2, t:0, k:"m4", l:"Service ticket" }, { f:0, t:3, k:"m5", l:"Ticket + authenticator" }, { f:3, t:0, k:"m6", l:"Optional: mutual auth" } ], { mh:42, label:"Kerberos message sequence" }),
+  info: { cl:"The client (user’s machine) logs in once and then uses tickets.", as:"Authentication Server: checks the user and issues a ticket-granting ticket (TGT).", tgs:"Ticket-Granting Server: exchanges the TGT for service tickets.",
+    sv:"The server (service) the user wants to use.", m1:"1. The client asks the AS for a TGT.", m2:"2. The AS returns a TGT and a session key, encrypted with a key derived from the user’s password.",
+    m3:"3. The client sends the TGT plus a fresh authenticator (ID, address, timestamp) to the TGS.", m4:"4. The TGS returns a service ticket for the requested server.",
+    m5:"5. The client sends the service ticket plus a new authenticator to the server.", m6:"6. Optionally, the server proves its identity back to the client (mutual authentication)." },
+  fact: "If an attacker steals the KDC’s krbtgt key, they can forge TGTs for any user (a “golden ticket”).",
+  q: ["Kerberos", "TGT"], terms: ["Kerberos", "Authentication server (AS)", "Ticket-granting server (TGS)", "TGT", "Authenticator (Kerberos)", "Realm"] });
+
+VIS.push({ c:"IMT4113", t:"auth", id:"pki", icon:"📜", title:"Certificate chain of trust", x:"2024 Q15, 2025 Q1",
+  draw: () => { let s = part("root", "Root CA", box(90, 6, 180, 42, "🏛️ Root CA (self-signed)", { t:"C", tc:"vw", b:1 }), 0);
+    s += `<g class="st" style="--i:1">${arrow(180, 49, 180, 72, "flow")}${T(232, 60, "signs", { fs:10, c:"vmt" })}</g>`;
+    s += part("int", "Intermediate CA", box(90, 74, 180, 40, "Intermediate CA", { b:1 }), 1);
+    s += `<g class="st" style="--i:2">${arrow(180, 115, 180, 138, "flow")}${T(232, 126, "signs", { fs:10, c:"vmt" })}</g>`;
+    s += part("leaf", "Server certificate", box(90, 140, 180, 44, "🔒 example.com: public key + identity", { b:1, w:26, fs:11 }), 2);
+    s += part("store", "Trust store", box(6, 6, 76, 42, "Trust store", { t:"g", fs:10.5 }) + arrow(82, 27, 89, 27), 3);
+    s += part("rev", "Revocation", box(284, 140, 70, 44, "CRL / OCSP", { t:"bad", fs:10.5, b:1 }) + arrow(283, 162, 271, 162, "vab"), 4);
+    return SVG(360, 192, s, "Root CA signs intermediate CA which signs the server certificate"); },
+  info: { root:"The root CA is at the top; its certificate is self-signed and trusted because it is in your trust store.", int:"An intermediate CA is signed by the root and signs end-entity certificates.",
+    leaf:"The X.509 certificate binds an identity to a public key. The CA’s signature lets others trust that key.", store:"Your browser or OS trust store lists the root CAs it trusts.",
+    rev:"Revocation: a CRL is a CA-signed list of revoked certificates; OCSP checks one certificate’s status in real time." },
+  fact: "DigiNotar (2011) was breached and issued fake certificates for google.com – it was removed from trust stores and went bankrupt.",
+  q: ["Certificate Authority", "DigiNotar", "PKI", "X.905", "CRL stands"], terms: ["X.509", "Certificate Authority (CA)", "CRL", "OCSP", "PKI", "Root CA", "Trust store", "DigiNotar"] });
+
+VIS.push({ c:"IMT4113", t:"ac", id:"matrix", icon:"🔢", title:"Access control matrix: ACL vs. capability", x:"2024 Q24",
+  draw: () => { const r = { k:"cap", t:"warn" }, a = { k:"acl", t:"C", b:1 };
+    return V.grid({ rows:["Alice", "Bob", "Carol"], cols:["File 1", "File 2", "Printer"], hw:70, ch:42, cells:[
+      [Object.assign({ l:"own, r, w" }, a), { l:"r" }, { l:"print" }],
+      [Object.assign({ l:"r" }, a), Object.assign({ l:"r, w" }, r), Object.assign({ l:"print" }, r)],
+      [Object.assign({ l:"–" }, a), { l:"own, r, w" }, { l:"–" }]],
+      foot:"Column = ACL (one object) · Row = capability ticket (one subject)", label:"Access control matrix with highlighted column and row" }); },
+  info: { acl:"Access control list = one COLUMN: for File 1, which subjects have which rights. Stored with the object.",
+    cap:"Capability ticket = one ROW: for Bob, which objects he may access and how. Stored with the subject." },
+  fact: "DAC lets the owner (“own”) decide who gets rights; under MAC the system decides from labels and clearances.",
+  q: ["access control list and what is a capability"], terms: ["Access control matrix", "Access control list (ACL)", "Capability ticket"] });
+
+VIS.push({ c:"IMT4113", t:"ac", id:"models", icon:"🗝️", title:"DAC, MAC, RBAC and ABAC", x:"2024 Q5, 2025 Q5",
+  draw: () => V.grid({ rows:["", ""], cols:["", ""], hw:0, ch:70, cells:[
+      [{ k:"dac", l:"👤 DAC: the owner decides", b:1 }, { k:"mac", l:"🏷️ MAC: labels and clearances", b:1 }],
+      [{ k:"rbac", l:"🧑‍💼 RBAC: rights via roles", b:1 }, { k:"abac", l:"🧩 ABAC: rules on attributes", b:1 }]], label:"Four access control models" }),
+  info: { dac:"Discretionary access control: the owner of an object decides who gets access (e.g. file permissions you set yourself).", mac:"Mandatory access control: the system enforces access from security labels and clearances; users cannot change it.",
+    rbac:"Role-based access control: rights are given to roles, and users get rights through their roles. A consultancy with many clients needs many roles (role explosion).",
+    abac:"Attribute-based access control: decisions use attributes of the subject, object and environment. More expressive than RBAC." },
+  fact: "In ABAC one rule like “consultants may read files of their own client” replaces a new role for every client.",
+  q: ["RBAC", "Role-based"], terms: ["DAC", "MAC", "RBAC", "ABAC"] });
+
+VIS.push({ c:"IMT4113", t:"ac", id:"refmon", icon:"🛂", title:"The reference monitor", x:"2025 Q20",
+  draw: () => { let s = part("sub", "Subject", box(4, 70, 84, 44, "🧑 Subject", { b:1 }), 0) + part("obj", "Object", box(272, 70, 84, 44, "📁 Object", { b:1 }), 2);
+    s += part("rm", "Reference monitor", box(118, 62, 124, 60, "🛂 Reference monitor", { t:"C", tc:"vw", b:1, w:12 }), 1);
+    s += `<g class="st" style="--i:1">${arrow(89, 92, 116, 92, "flow")}${arrow(243, 92, 270, 92, "flow")}</g>`;
+    s += part("pol", "Policy", box(130, 4, 100, 34, "📜 Policy", { t:"g", fs:11 }) + arrow(180, 39, 180, 60), 3);
+    s += part("aud", "Audit", box(130, 146, 100, 34, "📝 Audit log", { t:"g", fs:11 }) + arrow(180, 123, 180, 144), 4);
+    s += T(180, 200, "Tamper-proof · always invoked · small enough to verify", { fs:10.5, b:1, c:"vct" });
+    return SVG(360, 210, s, "Subject goes through the reference monitor to reach an object"); },
+  info: { sub:"A subject (user or process) asks for access.", obj:"The object (file, device, record) being accessed.",
+    rm:"The reference monitor checks EVERY access. It must be tamper-proof, always invoked (complete mediation) and small enough to be analysed and tested.",
+    pol:"It decides from the security policy (the access rules).", aud:"Decisions are logged so they can be audited." },
+  fact: "In XACML the same idea is split up: the PEP intercepts the request and the PDP makes the decision.",
+  q: ["reference monitor", "XACML"], terms: ["Reference monitor", "Policy decision point (PDP)", "Policy enforcement point (PEP)"] });
+
+VIS.push(Object.assign({}, VIS.find(v => v.c === "IMT4115" && v.id === "blpbiba"), { c:"IMT4113", t:"ac", x:undefined,
+  fact: "Biba’s low-water-mark policy lowers a subject’s integrity level when it reads lower-integrity data.",
+  q: ["Bell-LaPadula", "Biba", "dominate"], terms: ["Bell-LaPadula", "Biba", "Chinese Wall"] }));
+
+VIS.push({ c:"IMT4113", t:"mal", id:"phases", icon:"🦠", title:"The four phases of a virus", x:"2025 Q17",
+  draw: () => V.flow([
+    { k:"dor", l:"😴 Dormant", s:"Idle, waiting – not every virus has this phase" },
+    { k:"pro", l:"📤 Propagation", s:"Copies itself into other programs or disks" },
+    { k:"tri", l:"⏰ Triggering", s:"A condition activates it, e.g. a date", t:"warn" },
+    { k:"exe", l:"💣 Execution", s:"The payload runs: harmless message or damage", t:"bad" } ], { num:1, label:"Dormant, propagation, triggering, execution" }),
+  info: { dor:"Dormant: the virus is idle and waits for an event. Not all viruses have this phase.", pro:"Propagation: it places copies of itself into other programs or system areas.",
+    tri:"Triggering: the trigger (logic bomb) activates it, e.g. “run on the night of Black Friday”.", exe:"Execution: the payload runs – from a harmless message to deleting files." },
+  fact: "A “PDF for a prize claim” that hides malware is a trojan: it relies on social engineering to get you to run it.",
+  q: ["lifetime phases", "Black Friday", "prize claim"], terms: ["Virus phases", "Trigger (logic bomb)", "Payload", "Virus", "Trojan horse"] });
+
+VIS.push({ c:"IMT4113", t:"mal", id:"botnet", icon:"🤖", title:"How a botnet works", x:"2024 Q16",
+  draw: () => { let s = part("bm", "Botmaster", box(130, 4, 100, 36, "😈 Botmaster", { t:"bad", b:1 }), 0);
+    s += `<g class="st" style="--i:1">${arrow(180, 41, 180, 62, "flow")}</g>` + part("c2", "C2 server", box(120, 64, 120, 36, "📡 C2 server", { t:"C", tc:"vw", b:1 }), 1);
+    ["📷 Camera", "📶 Router", "💻 PC", "📺 TV box"].forEach((l, i) => { const x = 6 + i * 88; s += `<g class="st" style="--i:2">${arrow(180, 101, x + 41, 128, "flow")}</g>` + part("bot", "Bot", box(x, 130, 82, 34, l, { fs:11 }), 2 + i); });
+    s += `<g class="st" style="--i:6">${[0, 1, 2, 3].map(i => arrow(47 + i * 88, 165, 180, 190, "vab")).join("")}</g>` + part("vic", "Victim", box(120, 192, 120, 32, "🎯 Victim (DDoS)", { t:"bad", b:1 }), 6);
+    return SVG(360, 230, s, "Botmaster controls bots through a C2 server to attack a victim"); },
+  info: { bm:"The botmaster (attacker) controls the whole network.", c2:"The command-and-control (C2) server sends orders to all bots, historically often over IRC.",
+    bot:"Bots (zombies) are infected devices. Mirai infected IoT devices like cameras and routers using default passwords.", vic:"On command, all bots attack the same victim, e.g. a DDoS." },
+  fact: "Simply changing default passwords would have stopped most of the Mirai infections.",
+  q: ["Mirai", "zombie"], terms: ["Botnet"] });
+
+VIS.push({ c:"IMT4113", t:"bof", id:"frame", icon:"🧱", title:"Stack overflow: before and after", x:"2024 Q7, 2025 Q9",
+  draw: () => V.stacks([
+    { h:"Normal stack frame", layers:[{ k:"par", l:"Function parameters" }, { k:"ret", l:"Return address", t:"C", b:1 }, { k:"fp", l:"Saved frame pointer" }, { k:"can", l:"(Canary)", t:"g" }, { k:"buf", l:"Local buffer" }] },
+    { h:"After the attack", layers:[{ l:"Function parameters" }, { k:"ret2", l:"→ Address of NOP sled", t:"bad", b:1 }, { k:"junk", l:"Frame pointer overwritten", t:"bad" }, { k:"can2", l:"Canary changed!", t:"warn" }, { k:"code", l:"NOP sled + shellcode", t:"bad" }] } ], { lh:32, label:"Stack frame before and after a buffer overflow" }),
+  info: { par:"Higher addresses: the parameters passed to the function.", ret:"The return address: where the program continues after the function. The classic target.",
+    fp:"The saved frame pointer of the calling function.", can:"Stack protection places a random canary below the old frame pointer. If it changes, the program aborts.", buf:"The local buffer. Writing past its end overwrites the values ABOVE it.",
+    ret2:"The return address is overwritten to point into the NOP sled, so the function “returns” into the attacker’s code.", junk:"Everything between the buffer and the return address is overwritten too. In the slides’ example, 88 bytes of input reach the saved frame pointer.",
+    can2:"An overwritten canary is detected before the function returns.", code:"Shellcode, often placed in the buffer itself, behind a NOP sled so an approximate jump still works." },
+  fact: "Unsafe C functions like gets() and strcpy() copy data without checking the buffer size.",
+  q: ["More input is placed", "statement about buffer overflow"], terms: ["Buffer overflow", "Stack overflow", "Return address", "Shellcode", "NOP sled", "Stack canary", "Unsafe C functions"] });
+
+VIS.push({ c:"IMT4113", t:"bof", id:"defences", icon:"🛡️", title:"Buffer overflow defences", x:"2025 Q9, 2024 Q21",
+  draw: () => V.compare([
+    { k:"ct", h:"Compile-time", icon:"🛠️", items:["Safer programming language", "Safe coding", "Safe libraries", "Stack protection (canary)", "Harden NEW programs"] },
+    { k:"rt", h:"Run-time", icon:"🏃", items:["Non-executable memory (NX)", "ASLR: random addresses", "Guard pages", "Protect EXISTING programs"] } ], { label:"Compile-time and run-time defences" }),
+  info: { ct:"Compile-time defences harden programs when they are built: language choice, safe coding, safe libraries and stack protection.",
+    rt:"Run-time defences detect or stop attacks in existing programs: non-executable stack/heap, ASLR and guard pages." },
+  fact: "For an already-compiled program, check whether it was built with stack protection and as a position-independent executable (for ASLR) – and fuzz it.",
+  q: ["COMPILE-TIME", "RUN-TIME", "two broad categories", "ASLR", "already-compiled"], terms: ["Compile-time defence", "Run-time defence", "ASLR", "Non-executable memory (NX)", "Guard pages"] });
+
+VIS.push({ c:"IMT4113", t:"ids", id:"place", icon:"🗺️", title:"Firewall, IPS and IDS placement",
+  draw: () => { let s = part("inet", "Internet", box(130, 4, 100, 32, "🌐 Internet", { t:"g", b:1 }), 0);
+    s += `<g class="st" style="--i:1">${arrow(180, 37, 180, 54, "flow")}</g>` + part("fw", "Firewall / IPS", box(110, 56, 140, 34, "🧱 Firewall + IPS", { t:"C", tc:"vw", b:1 }), 1);
+    s += `<g class="st" style="--i:2">${arrow(150, 91, 80, 118, "flow")}${arrow(210, 91, 280, 118, "flow")}</g>`;
+    s += part("dmz", "DMZ", rect(6, 120, 160, 58) + T(86, 136, "DMZ: web and mail servers", { fs:11 }), 2) + part("nids", "NIDS", box(40, 162, 92, 26, "👁️ NIDS sensor", { t:"warn", fs:10.5, b:1 }), 3);
+    s += part("lan", "Internal network", rect(194, 120, 160, 58) + T(274, 136, "Internal network", { fs:11 }), 2) + part("hids", "HIDS", box(206, 162, 136, 26, "🖥️ HIDS on hosts", { t:"warn", fs:10.5, b:1 }), 4);
+    return SVG(360, 196, s, "Network with firewall, DMZ, NIDS and HIDS"); },
+  info: { inet:"Untrusted traffic from the internet.", fw:"An IPS combines a firewall and an IDS: it sits inline, detects malicious traffic AND blocks it.",
+    dmz:"The DMZ holds public servers, separated from the internal network.", nids:"A network-based IDS sensor watches traffic on a network segment.",
+    lan:"The internal network with workstations and internal servers.", hids:"A host-based IDS watches events on one host, such as logs and system calls." },
+  fact: "This layout is a typical example; real networks place sensors wherever the traffic they need to see passes.",
+  q: ["scope of protection", "typical IPS"], terms: ["Intrusion detection system (IDS)", "HIDS", "NIDS"] });
+
+VIS.push({ c:"IMT4113", t:"ids", id:"detect", icon:"🔍", title:"Misuse vs. anomaly detection", x:"2025 Q16",
+  draw: () => V.compare([
+    { k:"mis", h:"Misuse", icon:"📚", items:["Matches known attack signatures", "Few false positives", "Misses new (zero-day) attacks", "e.g. Snort rules"] },
+    { k:"ano", h:"Anomaly", icon:"📈", items:["Learns a normal profile", "Flags deviations", "Can find new attacks", "More false positives"] } ], { label:"Misuse and anomaly detection compared" }),
+  info: { mis:"Misuse (signature) detection compares traffic with known attack patterns, e.g. with Aho-Corasick for many signatures at once.",
+    ano:"Anomaly detection learns what normal looks like and alerts on deviations – it can catch zero-days but raises more false alarms." },
+  fact: "Snort’s basic rule actions include alert, log and pass.",
+  q: ["two detection models", "zero-day"], terms: ["Misuse (signature) detection", "Anomaly detection", "Snort", "Aho-Corasick"] });
+
+VIS.push({ c:"IMT4113", t:"ids", id:"baserate", icon:"🎲", title:"Base-rate fallacy in numbers", x:"2025 Q16, 2024 Q10",
+  draw: () => { let s = part("all", "All events", box(105, 4, 150, 34, "100,000 events", { t:"g", b:1 }), 0);
+    s += `<g class="st" style="--i:1">${arrow(150, 39, 80, 60, "flow")}${arrow(210, 39, 280, 60, "flow")}</g>`;
+    s += part("int", "Intrusions", box(6, 62, 150, 40, "2% = 2,000 intrusions", { b:1 }), 1) + part("nor", "Normal", box(204, 62, 150, 40, "98% = 98,000 normal", { b:1 }), 1);
+    s += `<g class="st" style="--i:2">${arrow(81, 103, 81, 122, "flow")}${arrow(279, 103, 279, 122, "flow")}</g>`;
+    s += part("tp", "True alarms", box(6, 124, 150, 40, "TPR 95% → 1,900 alarms", { t:"ok", b:1 }), 2) + part("fp", "False alarms", box(204, 124, 150, 40, "FPR 0.2% → 196 alarms", { t:"bad", b:1 }), 2);
+    s += part("res", "Result", box(40, 178, 280, 40, "P(I|A) = 1,900 / 2,096 ≈ 0.9065", { t:"C", tc:"vw", b:1 }), 3);
+    return SVG(360, 224, s, "Tree of 100,000 events split into true and false alarms"); },
+  info: { all:"Imagine 100,000 events. Counting cases is easier than formulas.", int:"P(intrusion) = 2% → 2,000 real intrusions.", nor:"The other 98,000 events are normal.",
+    tp:"The IDS catches 95% of intrusions: 1,900 true alarms.", fp:"It wrongly flags 0.2% of normal events: 196 false alarms.",
+    res:"Of 2,096 alarms, 1,900 are real: P(I|A) ≈ 0.9065. If intrusions were rarer, the false alarms would dominate – that is the base-rate fallacy." },
+  fact: "With only 0.02% intrusions instead of 2%, the same IDS would give more false alarms than true ones.",
+  q: ["Bayesian detection", "base rate"], terms: ["Base-rate fallacy", "Bayesian detection rate"] });
+
+VIS.push({ c:"IMT4113", t:"sw", id:"xss", icon:"🕸️", title:"Reflected vs. stored XSS", x:"2025 Q2",
+  draw: () => V.compare([
+    { k:"ref", h:"Reflected", icon:"🪞", items:["1. Attacker sends a crafted link", "2. Victim clicks it", "3. Site reflects the script in its response", "4. Script runs in the victim’s browser"] },
+    { k:"sto", h:"Stored", icon:"💾", items:["1. Attacker posts a script, e.g. a comment", "2. Site saves it in the database", "3. Visitors load the page", "4. Script runs in every visitor’s browser"] } ], { label:"Steps of reflected and stored XSS" }),
+  info: { ref:"Reflected XSS: the script is in the request (e.g. a link) and comes straight back in the response. It hits only the person who clicks.",
+    sto:"Stored XSS: the script is saved on the server and served to everyone who views the page. Input added to a database = stored, not reflected." },
+  fact: "Both work because the browser trusts all content from the same site equally.",
+  q: ["XSS"], terms: ["Cross-site scripting (XSS)", "Reflected XSS", "Stored XSS"] });
+
+VIS.push({ c:"IMT4113", t:"sw", id:"inject", icon:"💉", title:"How injection works", x:"2024 Q22, 2025 Q2",
+  draw: () => V.flow([
+    { k:"in", l:"⌨️ Untrusted input", s:"hello; rm -rf /" },
+    { k:"cat", l:"🔗 Pasted into a command or query", s:"echo hello; rm -rf /", t:"warn" },
+    { k:"run", l:"💥 Interpreter runs the attacker’s part", s:"Shell (command injection) or database (SQL injection)", t:"bad" },
+    { k:"fix", l:"✅ Fix: validate input against what is allowed", s:"Whitelist, escaping, parameterised queries", t:"ok" } ], { label:"Steps of an injection attack and its fix" }),
+  info: { in:"The program gets input it does not control, e.g. a chat message.", cat:"The input is put directly into a shell command or SQL query without sanitising.",
+    run:"The interpreter cannot tell data from code, so the attacker’s extra command runs. SQLi targets a database query, command injection an OS shell.", fix:"Defensive programming: compare input with what is wanted (whitelist), not only with known bad values." },
+  fact: "Injection, path traversal and XSS all belong to CWE’s “error-prone processing of untrusted data” group.",
+  q: ["Injection attacks", "shell command", "SQL injection", "validate input"], terms: ["Injection attack", "SQL injection", "OS command injection", "Defensive programming"] });
+
+VIS.push({ c:"IMT4113", t:"os", id:"hyper", icon:"🖥️", title:"Type 1, Type 2 and containers", x:"2025 Q4, 2024 Q23",
+  draw: () => V.stacks([
+    { h:"Type 1 (native)", layers:[{ l:"Apps · Apps" }, { l:"Guest OS · Guest OS" }, { k:"t1", l:"Hypervisor", t:"C", b:1 }, { l:"Hardware", t:"g" }] },
+    { h:"Type 2 (hosted)", layers:[{ l:"Apps · Apps" }, { l:"Guest OS · Guest OS" }, { k:"t2", l:"Hypervisor", t:"C", b:1 }, { k:"host", l:"Host OS", t:"warn" }, { l:"Hardware", t:"g" }] },
+    { h:"Containers", layers:[{ l:"App · App" }, { l:"Libs · Libs" }, { k:"ce", l:"Container engine", t:"C", b:1 }, { k:"kern", l:"Host OS kernel", t:"warn" }, { l:"Hardware", t:"g" }] } ], { label:"Layer stacks of type 1, type 2 hypervisors and containers" }),
+  info: { t1:"Type 1 (native): the hypervisor runs directly on the hardware, e.g. VMware ESXi, KVM. Better performance and security, smaller attack surface.",
+    t2:"Type 2 (hosted): the hypervisor runs as software on a host OS, e.g. VirtualBox. Easier to use, but depends on the host OS’s security.",
+    host:"The extra host OS layer competes for resources and adds attack surface.", ce:"Containers (application virtualisation): isolated environments for applications, with no guest OS.",
+    kern:"All containers share the host OS kernel – lighter than VMs, but weaker isolation." },
+  fact: "“Hosted virtualisation” = Type 2. A Type 1 hypervisor is NOT hosted.",
+  q: ["hypervisor", "Containers run"], terms: ["Hypervisor", "Type 1 hypervisor", "Type 2 hypervisor", "Container", "Virtualisation"] });
+
+VIS.push({ c:"IMT4113", t:"os", id:"harden", icon:"🔩", title:"Securing the base OS",
+  draw: () => V.flow([
+    { k:"p", l:"Install and patch the OS" }, { k:"r", l:"Remove unneeded services and apps" }, { k:"u", l:"Configure users, groups, permissions" },
+    { k:"c", l:"Add controls: antivirus, firewall, IDS" }, { k:"t", l:"Test the security", t:"C" } ], { num:1, label:"Five steps of OS hardening" }),
+  info: { p:"Install the OS and apply patches – a system can be compromised during installation, before it is patched.", r:"Remove what you do not need: every service is attack surface.",
+    u:"Configure users, groups and permissions, and resource controls.", c:"Install extra security controls such as antivirus, a host-based firewall and an IDS.", t:"Test that the steps really meet the security needs. CIS Benchmarks help with the settings." },
+  fact: "Four strategies were said to stop 85% of attacks: application whitelisting, patching, restricting admin rights and defence in depth.",
+  q: ["basic steps to secure", "CIS Benchmarks"], terms: ["OS hardening", "CIS Benchmarks", "Application whitelisting", "Defence in depth"] });
+
+VIS.push({ c:"IMT4113", t:"dos", id:"amp", icon:"📢", title:"DNS amplification (reflection)", x:"2024 Q17",
+  draw: () => V.seq([{ k:"att", l:"😈 Attacker" }, { k:"res", l:"Open DNS resolvers" }, { k:"vic", l:"🎯 Victim" }], [
+    { f:0, t:1, k:"m1", l:"Small query, spoofed source = victim" }, { f:1, t:2, k:"m2", l:"LARGE responses (many times bigger)", bad:1 }, { f:0, t:1, k:"m3", l:"…repeated from many bots" } ], { mh:50, label:"DNS amplification sequence" }),
+  info: { att:"The attacker (often a botnet) sends many small requests.", res:"Open recursive resolvers answer anyone – they become unwilling amplifiers.", vic:"The victim receives a flood of large responses it never asked for.",
+    m1:"Spoofing: the request carries the victim’s IP address as the source. UDP has no handshake, so this works.", m2:"Amplification: each response is much larger than the request (about 60× with DNSSEC/EDNS0 in the slides).",
+    m3:"Thousands of bots repeat this, so the victim’s link is flooded." },
+  fact: "Memcached gave the largest amplification factor mentioned in the slides.",
+  q: ["amplification"], terms: ["Amplification attack", "Reflection", "DDoS"] });
+
+VIS.push({ c:"IMT4113", t:"dos", id:"syn", icon:"🌊", title:"SYN flood",
+  draw: () => V.seq([{ k:"att", l:"😈 Attacker" }, { k:"srv", l:"🖥️ Server" }], [
+    { f:0, t:1, k:"m1", l:"SYN (spoofed source)" }, { f:1, t:0, k:"m2", l:"SYN-ACK goes to a fake address" }, { f:0, t:1, k:"m3", l:"ACK never comes", bad:1 }, { f:0, t:1, k:"m4", l:"Repeat until the table is full", bad:1 } ], { mh:40, label:"SYN flood sequence" }),
+  info: { att:"The attacker sends many SYN packets, usually with spoofed source addresses.", srv:"The server must keep state for every half-open connection.",
+    m1:"1. SYN: “I want to connect.”", m2:"2. The server answers SYN-ACK and stores a half-open connection.", m3:"3. The final ACK never arrives, so the entry waits until it times out.",
+    m4:"4. When the table is full, real users cannot connect. The attacker spends almost nothing." },
+  fact: "SYN flooding works because of asymmetry: cheap for the attacker, expensive state for the server.",
+  q: ["SYN flooding"], terms: ["SYN flood", "Denial of service (DoS)"] });
+})();
+</script>
+
+<script>
+/* ===== VISUALS · IMT4133 – Data Science for Security and Forensics ===== */
+(function(){
+const { T, SVG, box, part, arrow, path, rect } = V;
+const dot = (x, y, cls, r) => `<circle cx="${x}" cy="${y}" r="${r || 4.5}" class="${cls || "vdot"}"/>`;
+const frame = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" class="vbox vg"/>`;
+
+VIS.push({ c:"IMT4133", t:"l1", id:"aimldl", icon:"🪆", title:"AI ⊃ ML ⊃ DL", x:"Mock 2026 Q1a, May 2026 Q1",
+  draw: () => V.rings([{ k:"ai", l:"Artificial intelligence" }, { k:"ml", l:"Machine learning" }, { k:"dl", l:"Deep learning" }], { R:112, rmin:42, label:"Nested circles: deep learning inside machine learning inside AI" }),
+  info: { ai:"AI: making computers do things that seem smart. A rule-based spam filter with a hand-written word list is AI, but not ML.",
+    ml:"Machine learning: the computer learns patterns from data instead of hand-written rules. Two stages: training and testing.", dl:"Deep learning: ML with many-layered neural networks that find useful features by themselves." },
+  fact: "Every deep learning system is also machine learning – but not every machine learning system is deep.",
+  q: ["AI, machine learning", "hand-written list", "two main stages"], terms: ["Artificial intelligence (AI)", "Machine learning (ML)", "Deep learning (DL)", "Rule-based system"] });
+
+VIS.push({ c:"IMT4133", t:"l1", id:"tasks", icon:"🧭", title:"Classification, regression, clustering", x:"May 2026 Q1, Mock 2026 Q1b",
+  draw: () => { let s = "";
+    s += part("cls", "Classification", frame(4, 4, 114, 140) + [[24,40],[40,60],[30,80],[56,44]].map(([x, y]) => dot(x, y, "vdotb")).join("") + [[78,100],[94,84],[86,120],[100,112]].map(([x, y]) => dot(x, y, "vdoto")).join("") + `<line x1="20" y1="124" x2="108" y2="30" class="vlineC"/>` + T(61, 132, "category", { fs:10.5, b:1 }), 0);
+    s += part("reg", "Regression", frame(123, 4, 114, 140) + [[140,110],[156,100],[170,92],[186,76],[202,70],[218,52]].map(([x, y]) => dot(x, y, "vdot")).join("") + `<line x1="134" y1="116" x2="228" y2="46" class="vlineC"/>` + T(180, 132, "number", { fs:10.5, b:1 }), 1);
+    s += part("clu", "Clustering", frame(242, 4, 114, 140) + [[262,40],[272,52],[260,58],[318,40],[330,50],[322,60],[284,100],[296,108],[290,94]].map(([x, y]) => dot(x, y, "vdot2")).join("") + `<circle cx="266" cy="50" r="18" class="vline vdash"/><circle cx="324" cy="50" r="18" class="vline vdash"/><circle cx="290" cy="101" r="18" class="vline vdash"/>` + T(299, 132, "groups", { fs:10.5, b:1 }), 2);
+    s += T(120, 160, "Supervised (labels)", { fs:10.5, c:"vct", b:1 }) + T(299, 160, "Unsupervised", { fs:10.5, c:"vct", b:1 });
+    return SVG(360, 168, s, "Three panels: classification, regression and clustering"); },
+  info: { cls:"Classification predicts a CATEGORY, e.g. attack or normal, salmon or cod. Supervised: it learns from labelled examples.",
+    reg:"Regression predicts a NUMBER, e.g. how many GB of traffic will hit a server tomorrow. Also supervised.",
+    clu:"Clustering groups similar examples WITHOUT labels, e.g. millions of unlabelled network flows. Unsupervised." },
+  fact: "Predicting tomorrow’s temperature is regression – even though it sounds like a “forecast class”.",
+  q: ["classification and regression", "Which task fits"], terms: ["Classification", "Regression", "Clustering", "Supervised learning", "Unsupervised learning"] });
+
+VIS.push({ c:"IMT4133", t:"l1", id:"fpfn", icon:"🚨", title:"False positives and false negatives (IDS)", x:"Mock 2026 Q1c",
+  draw: () => V.grid({ rows:["Real attack", "Normal traffic"], cols:["IDS: alarm 🚨", "IDS: no alarm"], colTitle:"What the model says", hw:86, ch:56, cells:[
+      [{ k:"tp", l:"✓ True positive", t:"ok", b:1 }, { k:"fn", l:"✗ False negative: missed attack", t:"bad", b:1 }],
+      [{ k:"fp", l:"✗ False positive: false alarm", t:"warn", b:1 }, { k:"tn", l:"✓ True negative", t:"ok", b:1 }]], label:"Grid of true and false positives and negatives" }),
+  info: { tp:"True positive: there is an attack and the IDS raises an alarm.", fn:"False negative: an attack the IDS misses. Usually the more dangerous error in security, because the attack goes unnoticed.",
+    fp:"False positive: an alarm for normal traffic, like a smoke alarm when you make toast. Too many cause alert fatigue.", tn:"True negative: normal traffic, no alarm." },
+  fact: "“Positive” only means the model said YES (attack), not that the result is good.",
+  q: ["false positive", "more dangerous"], terms: ["False positive", "False negative"] });
+
+VIS.push({ c:"IMT4133", t:"l2", id:"cycle", icon:"🔄", title:"The data science cycle", x:"Mock 2026 Q2a",
+  draw: () => V.flow([
+    { k:"col", l:"📥 Data collection", s:"PCAP, Argus, Zeek logs" }, { k:"pre", l:"🧹 Preprocessing", s:"Missing values, duplicates, noise" },
+    { k:"fe", l:"🧩 Feature engineering", s:"Encode, scale, build new features" }, { k:"ad", l:"📊 Analytical dataset", s:"Clean, numeric table" },
+    { k:"ml", l:"🤖 Machine learning" }, { k:"ev", l:"✅ Evaluation and validation", t:"C" } ], { num:1, loop:true, label:"Six steps of the data science cycle" }),
+  info: { col:"Collect raw data, e.g. packet captures turned into flows by Argus and logs by Zeek (Bro-IDS).", pre:"Clean the data: missing values, duplicates (42% in UNSW-NB15!), inconsistent values, noise, outliers.",
+    fe:"Choose, transform and create features: one-hot encoding, scaling, domain features like ct_dst_ltm.", ad:"The analytical dataset: the clean, structured table the model learns from.",
+    ml:"Train and test the model.", ev:"Evaluate and validate – the results often send you back to an earlier step." },
+  fact: "Garbage in, garbage out: no algorithm can fix bad data.",
+  q: ["data science cycle", "preprocessing important"], terms: ["Data preprocessing", "Feature engineering", "Domain-based feature construction"] });
+
+VIS.push({ c:"IMT4133", t:"l2", id:"scale", icon:"📏", title:"Normalisation vs. standardisation", x:"Mock 2026 Q2b, Q2c",
+  draw: () => { let s = part("mm", "Min-max", T(180, 12, "Min-max normalisation: (x − min) / (max − min)", { b:1, fs:11.5 }) + `<line x1="40" y1="46" x2="320" y2="46" class="vline"/>` +
+      [[10, 0], [30, 0.5], [50, 1]].map(([v, n], i) => `<line x1="${40 + n * 280}" y1="38" x2="${40 + n * 280}" y2="54" class="vline"/>` + T(40 + n * 280, 30, String(v), { fs:11 }) + T(40 + n * 280, 66, String(n), { fs:11, b:1, c:"vct" })).join("") + dot(180, 46, "vdot", 6) + T(180, 84, "x = 30 → 0.5 (range 0 to 1)", { fs:10.5, c:"vmt" }), 0);
+    s += part("z", "Z-score", T(180, 108, "Standardisation: (x − mean) / SD", { b:1, fs:11.5 }) + `<line x1="40" y1="140" x2="320" y2="140" class="vline"/>` +
+      [-2, -1, 0, 1, 2].map(z => `<line x1="${180 + z * 64}" y1="132" x2="${180 + z * 64}" y2="148" class="vline"/>` + T(180 + z * 64, 160, z ? (z > 0 ? "+" : "−") + Math.abs(z) : "0 = mean", { fs:10.5, b: !z, c:"vct" })).join("") + T(180, 180, "Mean becomes 0 and SD becomes 1 (no fixed range)", { fs:10.5, c:"vmt" }), 1);
+    return SVG(360, 190, s, "Two number lines comparing min-max normalisation and z-score standardisation"); },
+  info: { mm:"Min-max normalisation squeezes values into 0–1. Example: x = 30, min = 10, max = 50 → (30 − 10) / 40 = 0.5. Sensitive to outliers.",
+    z:"Standardisation (z-score) centres on the mean and divides by the standard deviation: “2 steps above average”." },
+  fact: "Fit the scaling on the training data only, then apply the same parameters to the test data – otherwise test information leaks into training.",
+  q: ["normalis", "standardis", "scaling"], terms: ["Normalisation (min-max)", "Standardisation (z-score)"] });
+
+VIS.push({ c:"IMT4133", t:"l2", id:"onehot", icon:"🔘", title:"One-hot encoding", x:"Mock 2026 Q2b",
+  draw: () => V.grid({ rows:["proto = tcp", "proto = udp", "proto = icmp"], cols:["TCP", "UDP", "ICMP"], hw:96, ch:40, cells:[
+      [{ k:"t", l:"1", t:"C", b:1 }, { k:"t", l:"0" }, { k:"t", l:"0" }],
+      [{ k:"u", l:"0", t:"warn" }, { k:"u", l:"1", t:"C", b:1 }, { k:"u", l:"0", t:"warn" }],
+      [{ k:"i", l:"0" }, { k:"i", l:"0" }, { k:"i", l:"1", t:"C", b:1 }]], foot:"One column per category · exactly one 1 per row", label:"One-hot encoding table" }),
+  info: { t:"tcp → TCP = 1, UDP = 0, ICMP = 0.", u:"udp → TCP = 0, UDP = 1, ICMP = 0. This is the exam-style answer for proto = udp.", i:"icmp → TCP = 0, UDP = 0, ICMP = 1." },
+  fact: "Why not tcp = 1, udp = 2, icmp = 3? Numbers would suggest an order and distances that do not exist.",
+  q: ["One-hot"], terms: ["One-hot encoding"] });
+
+VIS.push({ c:"IMT4133", t:"l2", id:"forensic", icon:"🔍", title:"Forensic-safe preprocessing", x:"Mock 2026 Q2d",
+  draw: () => V.flow([
+    { k:"orig", l:"🔒 Original evidence", s:"Seized and kept unchanged" }, { k:"img", l:"💽 Forensic image", s:"Exact bit-by-bit copy" },
+    { k:"hash", l:"#️⃣ Hash verification", s:"SHA-256 of copy = original ✓", t:"ok" }, { k:"work", l:"🧪 Working copy", s:"Clean, encode, analyse here" },
+    { k:"coc", l:"📋 Chain of custody", s:"Who handled it, when and how", t:"warn" } ], { label:"Forensic workflow from original evidence to working copy" }),
+  info: { orig:"The original evidence is locked away and never preprocessed.", img:"A forensic image is an exact bit-by-bit copy of the storage device.", hash:"Matching hash values prove the copy is identical to the original.",
+    work:"All preprocessing happens on a working copy, so the analysis is reproducible and the evidence stays admissible.", coc:"The chain of custody records every person who handled the evidence." },
+  fact: "Preprocessing changes data – that is exactly why it must never touch the original evidence.",
+  q: ["working copy", "forensic copy"], terms: ["Forensic image", "Working copy", "Hash verification", "Chain of custody"] });
+
+VIS.push({ c:"IMT4133", t:"l3", id:"pca", icon:"🧭", title:"PCA: finding the main direction", x:"Exam 2021 Q3",
+  draw: () => { const pts = [[-90,-38],[-70,-30],[-60,-18],[-40,-20],[-30,-6],[-10,-8],[0,4],[14,0],[30,12],[44,10],[60,24],[76,22],[92,36],[-50,-30],[20,16],[66,30],[-20,-14],[50,18]];
+    let s = pts.map(([x, y]) => dot(150 + x, 96 - y, "vdot2", 4)).join("");
+    s += part("pc1", "PC1", `<line x1="40" y1="140" x2="262" y2="50" class="va" marker-end="MARK" style="stroke-width:3"/>` + T(270, 40, "PC1 (λ₁ = 9)", { b:1, fs:11.5 }), 1);
+    s += part("pc2", "PC2", `<line x1="164" y1="122" x2="138" y2="60" class="va vab" marker-end="MARK" style="stroke-width:2.5"/>` + T(118, 50, "PC2 (λ₂ = 1)", { b:1, fs:11 }), 2);
+    s += part("ev", "Explained variance", rect(234, 120, 122, 44, "C") + T(295, 142, "PC1 keeps 9/10 = 90%", { b:1, fs:11, c:"vw", w:12 }), 3);
+    return SVG(360, 170, s, "Scatter plot with the first two principal components"); },
+  info: { pc1:"PC1 points along the direction of most variance. Its eigenvalue λ₁ = 9 tells how much variance lies along it.", pc2:"PC2 is perpendicular to PC1 and captures the rest (λ₂ = 1).",
+    ev:"Explained variance = λ / Σλ = 9 / (9 + 1) = 90%. Keeping only PC1 reduces 2 dimensions to 1 and keeps 90% of the information." },
+  fact: "PCA is feature EXTRACTION: it builds new features from the old ones, unlike feature selection, which keeps a subset.",
+  q: ["PCA"], terms: ["PCA", "Principal component", "Eigenvalue", "Explained variance"] });
+
+VIS.push({ c:"IMT4133", t:"l3", id:"selext", icon:"✂️", title:"Feature selection vs. extraction", x:"Exam 2021 Q3",
+  draw: () => { const cols = ["spkts", "dpkts", "total", "id", "dur"]; let s = T(180, 10, "Original features", { b:1, fs:11.5 }) + cols.map((c, i) => rect(20 + i * 66, 20, 60, 28, "g", 5) + T(50 + i * 66, 34, c, { fs:11 })).join("");
+    s += part("sel", "Selection", T(90, 72, "Selection: keep a subset", { b:1, fs:11.5, c:"vct" }) + ["spkts", "dur"].map((c, i) => rect(30 + i * 66, 84, 60, 28, "C", 5) + T(60 + i * 66, 98, c, { fs:11, c:"vw", b:1 })).join("") + T(90, 128, "drop: id (irrelevant), total (redundant)", { fs:9.5, c:"vmt", w:24 }), 0);
+    s += part("ext", "Extraction", T(272, 72, "Extraction: build new ones", { b:1, fs:11.5, c:"vct" }) + ["PC1", "PC2"].map((c, i) => rect(212 + i * 66, 84, 60, 28, "warn", 5) + T(242 + i * 66, 98, c, { fs:11, b:1 })).join("") + T(272, 128, "combinations of ALL features", { fs:9.5, c:"vmt" }), 1);
+    return SVG(360, 142, s, "Feature selection keeps columns; extraction creates new ones"); },
+  info: { sel:"Feature selection keeps some original features (ranked e.g. by information gain) and removes the rest, such as irrelevant record_id and redundant total_pkts = spkts + dpkts.",
+    ext:"Feature extraction creates NEW features from the originals, e.g. PCA components. Fewer dimensions, but harder to interpret." },
+  fact: "Removing features fights the curse of dimensionality: with many features, distances lose meaning and you need far more data.",
+  q: ["feature selection and feature extraction", "IRRELEVANT", "curse of dimensionality", "too complex"], terms: ["Feature selection", "Feature extraction", "Relevant feature", "Irrelevant feature", "Redundant feature", "Curse of dimensionality"] });
+
+VIS.push({ c:"IMT4133", t:"l3", id:"entropy", icon:"🎲", title:"Entropy of a two-class set",
+  draw: () => { const X = p => 40 + p * 280, Y = h => 150 - h * 120; let d = "M" + X(0) + " " + Y(0);
+    for (let p = 0.01; p < 1; p += 0.01){ const h = -(p * Math.log2(p) + (1 - p) * Math.log2(1 - p)); d += ` L${X(p).toFixed(1)} ${Y(h).toFixed(1)}`; } d += ` L${X(1)} ${Y(0)}`;
+    let s = `<line x1="40" y1="150" x2="330" y2="150" class="vline"/><line x1="40" y1="20" x2="40" y2="150" class="vline"/><path d="${d}" class="vlineC"/>`;
+    s += T(20, 30, "1", { fs:10.5 }) + T(20, 150, "0", { fs:10.5 }) + T(185, 168, "share of attacks in the set", { fs:10.5, c:"vmt" });
+    s += part("max", "Maximum", dot(X(0.5), Y(1), "vdot", 6) + T(X(0.5), Y(1) - 12, "50/50 → H = 1 (max mess)", { fs:10.5, b:1 }), 1);
+    s += part("pure", "Pure", dot(X(0), Y(0), "vdoto", 6) + dot(X(1), Y(0), "vdoto", 6) + T(X(1) - 30, 118, "pure → H = 0", { fs:10.5, b:1 }), 2);
+    return SVG(360, 176, s, "Entropy curve peaking at 1 for a 50/50 split"); },
+  info: { max:"A 50% attack / 50% normal set has entropy H = 1: maximum uncertainty.", pure:"A set with only one class has entropy 0: no uncertainty. A split that gives pure groups has information gain 1 − 0 = 1." },
+  fact: "Information gain = entropy before the split − weighted entropy after it. The best question in “20 Questions” has the highest gain.",
+  q: ["entropy", "information gain", "H\\(S\\) = 1"], terms: ["Entropy", "Information gain"] });
+
+VIS.push({ c:"IMT4133", t:"l4", id:"fit", icon:"〰️", title:"Underfitting, good fit, overfitting", x:"May 2026 Q1, Exam 2021 Q1",
+  draw: () => { const pts = [0.05, 0.16, 0.27, 0.38, 0.5, 0.62, 0.72, 0.84, 0.95].map((x, i) => [x, Math.sin(2 * Math.PI * x) + [0.25, -0.2, 0.15, -0.25, 0.2, -0.15, 0.25, -0.2, 0.15][i]]);
+    const panel = (k, ox, title, fn, i) => { const X = x => ox + 8 + x * 100, Y = y => 74 - y * 34; let d = "";
+      for (let x = 0; x <= 1.0001; x += 0.01) d += (d ? " L" : "M") + X(x).toFixed(1) + " " + Y(Math.max(-1.9, Math.min(1.9, fn(x)))).toFixed(1);
+      return part(k, title, frame(ox, 4, 116, 140) + pts.map(([x, y]) => dot(X(x), Y(y), "vdot2", 3.5)).join("") + `<path d="${d}" class="vlineC"/>` + T(ox + 58, 132, title, { fs:11, b:1 }), i); };
+    const lag = x => { let s = 0; pts.forEach(([xi, yi], i) => { let l = 1; pts.forEach(([xj], j) => { if (j !== i) l *= (x - xj) / (xi - xj); }); s += yi * l; }); return s; };
+    return SVG(360, 150, panel("under", 2, "Underfit (M = 0)", () => 0, 0) + panel("good", 122, "Good fit (M = 3)", x => Math.sin(2 * Math.PI * x), 1) + panel("over", 242, "Overfit (M = 8)", lag, 2), "Three panels: underfitting, good fit and overfitting"); },
+  info: { under:"Underfitting: the model is too simple (a flat line). Poor on training AND test data. Fix: a more flexible model or better features.",
+    good:"Good fit: follows the real pattern (here sin(2πx)) and ignores the noise, so it generalises to new data.",
+    over:"Overfitting: the model is so flexible it passes through every training point and memorises the noise. Perfect on training data, poor on test data. Fix: more data, a simpler model or regularisation." },
+  fact: "The model complexity drives the training data requirements: a wiggly model needs many more points to behave.",
+  q: ["perfect on training", "reduce overfitting", "poor on BOTH", "regularisation", "complexity drives", "separate test set"], terms: ["Underfitting", "Overfitting", "Regularisation", "Order (M)", "Polynomial curve fitting"] });
+
+VIS.push({ c:"IMT4133", t:"l4", id:"cm", icon:"🧮", title:"Confusion matrix and its formulas", x:"Exam 2021 Q1",
+  draw: () => V.grid({ rows:["Actual: attack", "Actual: normal"], cols:["Predicted: attack", "Predicted: normal"], hw:86, ch:52, cells:[
+      [{ k:"tp", l:"TP = 40", t:"ok", b:1, fs:13 }, { k:"fn", l:"FN = 10", t:"bad", b:1, fs:13 }],
+      [{ k:"fp", l:"FP = 20", t:"warn", b:1, fs:13 }, { k:"tn", l:"TN = 930", t:"ok", b:1, fs:13 }]],
+    foot:"Tap a cell · example from the quiz (1,000 records)", label:"Confusion matrix with TP 40, FN 10, FP 20, TN 930" }),
+  info: { tp:"TP = 40 attacks found. Precision = TP / (TP + FP) = 40 / 60 ≈ 0.67. Recall = TP / (TP + FN) = 40 / 50 = 0.80.",
+    fn:"FN = 10 attacks missed. Recall = 40 / (40 + 10) = 0.80: the model finds 80% of real attacks.",
+    fp:"FP = 20 false alarms. Precision = 40 / (40 + 20) ≈ 0.67: two out of three alarms are real.",
+    tn:"TN = 930. Accuracy = (40 + 930) / 1,000 = 0.97 and specificity = 930 / (930 + 20) ≈ 0.98 – high, because normal traffic dominates." },
+  fact: "F1 = 2 · 0.67 · 0.80 / (0.67 + 0.80) ≈ 0.73. With class imbalance, F1 tells you more than the 97% accuracy.",
+  q: ["Confusion matrix", "Same matrix", "cancer example", "F1-score", "class imbalance"], terms: ["Confusion matrix", "Accuracy", "Precision", "Recall (sensitivity)", "Specificity", "F1-score", "Class imbalance"] });
+
+VIS.push({ c:"IMT4133", t:"l4", id:"cv", icon:"🔟", title:"10-fold cross-validation",
+  draw: () => { let s = "";
+    for (let r = 0; r < 10; r++){ let row = T(18, 14 + r * 17, "Run " + (r + 1), { fs:9.5, c:"vmt", a:"start" });
+      for (let c2 = 0; c2 < 10; c2++) row += `<rect x="${70 + c2 * 28}" y="${6 + r * 17}" width="25" height="14" rx="3" class="vbox${c2 === r ? " vC" : ""}"/>`;
+      s += `<g class="st" style="--i:${r}">${row}</g>`; }
+    s += part("test", "Test fold", rect(70, 182, 25, 14, "C", 3) + T(100, 189, "test fold", { fs:10.5, a:"start" }), 10) + part("train", "Training folds", rect(190, 182, 25, 14, "", 3) + T(220, 189, "9 training folds", { fs:10.5, a:"start" }), 10);
+    return SVG(360, 204, s, "Ten runs, each with a different test fold"); },
+  info: { test:"Each fold is the test set exactly once.", train:"The other 9 folds train the model, so the model is trained 10 times and the 10 results are averaged." },
+  fact: "Stratified cross-validation keeps the same class mix in every fold – important for small, imbalanced datasets.",
+  q: ["10-fold", "every fold must keep"], terms: ["k-fold cross-validation"] });
+
+VIS.push({ c:"IMT4133", t:"l5", id:"neuron", icon:"🧠", title:"One artificial neuron",
+  draw: () => { let s = "";
+    [["x₁", "w₁", 30], ["x₂", "w₂", 84], ["x₃", "w₃", 138]].forEach(([x, w, y], i) => { s += part("x", "Inputs", `<circle cx="28" cy="${y}" r="17" class="vbox"/>` + T(28, y, x, { b:1 }), i) + part("w", "Weights", arrow(46, y, 148, 84 + (y - 84) * 0.25, "flow") + T(96, y - 8 + (84 - y) * 0.35, w, { fs:11, b:1, c:"vct" }), i); });
+    s += part("sum", "Net input", `<circle cx="172" cy="84" r="26" class="vbox vC"/>` + T(172, 84, "Σ + b", { b:1, c:"vw" }), 3);
+    s += part("b", "Bias", box(146, 132, 52, 26, "bias b", { t:"warn", fs:10.5 }) + arrow(172, 131, 172, 111), 4);
+    s += `<g class="st" style="--i:5">${arrow(199, 84, 238, 84, "flow")}</g>` + part("f", "Activation", box(240, 64, 58, 40, "f(net)", { b:1 }), 5);
+    s += `<g class="st" style="--i:6">${arrow(299, 84, 326, 84, "flow")}</g>` + part("y", "Output", `<circle cx="342" cy="84" r="15" class="vbox"/>` + T(342, 84, "y", { b:1 }), 6);
+    return SVG(360, 168, s, "Neuron with three inputs, weights, sum with bias, activation and output"); },
+  info: { x:"Inputs: the feature values of one example.", w:"Weights: how important each input is. Learning = adjusting the weights.", sum:"Net input: net = Σ wᵢxᵢ + b. Example: (−0.3·0.7) + (3.1·0.1) + (0.5·0.3) = 0.25 (bias 0).",
+    b:"Bias: shifts the output, so the dividing line does not have to pass through the origin.", f:"Activation function: identity (line fitting), threshold/step (perceptron) or sigmoid (S-curve between 0 and 1).", y:"The output: a number, a class or a probability." },
+  fact: "A single perceptron draws ONE straight line, which is why it can learn AND but not XOR.",
+  q: ["perceptron has inputs", "bias", "activation function", "Linear unit", "AND perceptron"], terms: ["Net input", "Weight (neuron)", "Bias", "Activation function", "Sigmoid function", "Perceptron", "Delta rule"] });
+
+VIS.push({ c:"IMT4133", t:"l5", id:"xor", icon:"❌", title:"AND is separable, XOR is not",
+  draw: () => { const pl = (k, ox, title, ones, line, i) => { const P = (a, b) => [ox + 30 + a * 90, 120 - b * 90];
+      let s = frame(ox, 4, 170, 150) + T(ox + 85, 18, title, { b:1, fs:12 });
+      [[0,0],[0,1],[1,0],[1,1]].forEach(([a, b]) => { const [x, y] = P(a, b), one = ones.some(o => o[0] === a && o[1] === b); s += dot(x, y, one ? "vdoto" : "vdotb", 8) + T(x, y + 18, `(${a},${b})`, { fs:9.5, c:"vmt" }); });
+      return part(k, title, s + line, i); };
+    return SVG(360, 176, pl("and", 4, "AND", [[1,1]], `<line x1="64" y1="18" x2="160" y2="110" class="vlineC"/>`, 0) + pl("xor", 186, "XOR", [[0,1],[1,0]], T(271, 166, "no single line works", { fs:10.5, b:1, c:"vbadt" }), 1), "AND and XOR truth tables as points"); },
+  info: { and:"AND: only (1,1) gives 1. One straight line separates it from the rest, so a single perceptron can learn it (e.g. weights 0.5, 0.5, bias −0.8).",
+    xor:"XOR: (0,1) and (1,0) give 1. No single straight line separates the green from the red points – XOR is not linearly separable. A multilayer perceptron with a hidden layer can learn it." },
+  fact: "Minsky and Papert showed this XOR limit of single perceptrons in 1969 – often linked to the first “AI winter”.",
+  q: ["XOR", "hidden layers"], terms: ["XOR problem", "Linearly separable", "Multilayer perceptron (MLP)"] });
+
+VIS.push({ c:"IMT4133", t:"l5", id:"gd", icon:"⛰️", title:"Gradient descent: rolling downhill", x:"May 2026 Q2, Exam 2021 Q2",
+  draw: () => { const X = w => 20 + w * 32, L = w => 0.35 * (w - 7) * (w - 7) + 4 * Math.exp(-((w - 3) ** 2)) * -1 + 3, Y = v => 160 - v * 9;
+    let d = ""; for (let w = 1.2; w <= 10.001; w += 0.1) d += (d ? " L" : "M") + X(w).toFixed(1) + " " + Y(L(w)).toFixed(1);
+    let s = `<path d="${d}" class="vlineC"/><line x1="16" y1="164" x2="344" y2="164" class="vline"/>` + T(330, 176, "weight w", { fs:10, c:"vmt" }) + T(30, 14, "error", { fs:10, c:"vmt" });
+    const steps = [9.6, 8.6, 7.8, 7.3, 7.05]; s += steps.map((w, i) => `<g class="st" style="--i:${i}">${dot(X(w), Y(L(w)) - 7, i === steps.length - 1 ? "vdot" : "vdot2", 6)}</g>`).join("");
+    s += part("step", "Step", T(300, 34, "w ← w − η · ∂L/∂w", { b:1, fs:11.5 }), 1);
+    s += part("glob", "Global minimum", T(X(7.05), Y(L(7.05)) - 26, "global minimum", { fs:10.5, b:1 }), 2);
+    s += part("loc", "Local minimum", dot(X(3.4), Y(L(3.4)), "vdotb", 5) + T(X(3.4), Y(L(3.4)) + 18, "local minimum", { fs:10.5, b:1, c:"vbadt" }), 3);
+    return SVG(360, 182, s, "Ball rolling down an error curve with a local and a global minimum"); },
+  info: { step:"Each step moves the weight opposite to the gradient: w ← w − η·∂L/∂w. Example: w = 3, slope 2, η = 0.1 → new w = 2.8.",
+    glob:"The lowest point of the error: the best weights. Steps get smaller as the slope flattens.",
+    loc:"A local minimum: the slope is zero here too, so gradient descent can get stuck if it starts on the wrong side. The η (learning rate) sets the step size: too small is slow, too large overshoots." },
+  fact: "If the error INCREASES over iterations, the learning rate is usually too large and the steps overshoot.",
+  q: ["gradient", "learning rate", "local minimum", "iterations", "w = 3", "1st iteration"], terms: ["Gradient", "Gradient descent", "Learning rate (η or μ)", "Local minimum", "Momentum", "Backpropagation", "Epoch"] });
+
+VIS.push({ c:"IMT4133", t:"l6", id:"tree", icon:"🌳", title:"Decision tree anatomy", x:"Mock 2026 Q3c",
+  draw: () => { let s = part("root", "Root", box(110, 4, 140, 38, "Failed logins > 5?", { t:"C", tc:"vw", b:1 }), 0);
+    s += part("edge", "Edges", `<g>${arrow(150, 43, 80, 76)}${arrow(210, 43, 280, 76)}</g>` + T(100, 56, "yes", { fs:10.5, b:1 }) + T(262, 56, "no", { fs:10.5, b:1 }), 1);
+    s += part("node", "Node", box(10, 78, 140, 38, "Login at night?", { b:1 }), 2) + part("leaf", "Leaf", box(222, 78, 128, 38, "✅ Normal", { t:"ok", b:1 }), 3);
+    s += `<g class="st" style="--i:3">${arrow(55, 117, 40, 146)}${arrow(105, 117, 130, 146)}</g>` + T(36, 132, "yes", { fs:10 }) + T(130, 132, "no", { fs:10 });
+    s += part("leaf", "Leaf", box(4, 148, 92, 34, "🚨 Attack", { t:"bad", b:1 }), 4) + part("leaf", "Leaf", box(104, 148, 92, 34, "⚠️ Check", { t:"warn", b:1 }), 4);
+    s += T(280, 160, "Each root-to-leaf path = one IF…THEN rule", { fs:10, c:"vmt", w:20 });
+    return SVG(360, 190, s, "Example decision tree for login events"); },
+  info: { root:"Root: the first question, on the most informative feature.", edge:"Edges: the answer branches (here yes / no).", node:"Internal node: another test on one attribute.",
+    leaf:"Leaves: the final class. In a regression tree the leaves hold numbers instead. Pruning removes unreliable, too-specific branches to prevent overfitting." },
+  fact: "Decision trees are symbolic learning: an investigator can explain every decision as readable IF…THEN rules.",
+  q: ["decision tree", "pruning", "regression tree", "SYMBOLIC", "symbolic and statistical", "explained as"], terms: ["Decision tree", "Pruning", "Regression tree", "Symbolic learning", "Statistical learning"] });
+
+VIS.push({ c:"IMT4133", t:"l6", id:"knn", icon:"🏘️", title:"k-nearest neighbours (k = 3)", x:"Mock 2026 Q3b",
+  draw: () => { let s = frame(4, 4, 352, 170);
+    const red = [[150,70],[205,98],[70,40],[100,60]], green = [[178,122],[260,140],[300,60],[320,120],[40,140]];
+    s += red.map(([x, y]) => dot(x, y, "vdotb", 6)).join("") + green.map(([x, y]) => dot(x, y, "vdoto", 6)).join("");
+    s += part("new", "New point", `<circle cx="180" cy="95" r="10" class="vbox vC"/>` + T(180, 95, "?", { b:1, c:"vw" }), 0);
+    s += part("k", "k = 3", `<circle cx="180" cy="95" r="38" class="vline vdash" style="stroke:var(--c);stroke-width:2"/>`, 1);
+    s += part("vote", "Vote", rect(232, 10, 118, 40, "C") + T(291, 30, "2 attack, 1 normal → attack", { fs:10.5, b:1, c:"vw", w:15 }), 2);
+    s += T(70, 162, "🔴 attack   🟢 normal", { fs:10.5 });
+    return SVG(360, 180, s, "k-NN with three nearest neighbours voting"); },
+  info: { new:"A new, unlabelled data point that we want to classify.", k:"Find the k = 3 closest training points, usually by Euclidean distance. Scale the features first!",
+    vote:"Majority vote: attack, attack, normal → attack. For regression, take the average instead (6, 8, 10 → 8)." },
+  fact: "k-NN is a lazy learner: it builds no model and does all the work at prediction time – slow on 5 million KDD Cup records.",
+  q: ["How does k-NN", "k = 3", "lazy", "k-NN challenging"], terms: ["k-nearest neighbours (k-NN)", "Lazy learning"] });
+
+VIS.push({ c:"IMT4133", t:"l6", id:"svm", icon:"🛣️", title:"SVM: the widest road",
+  draw: () => { let s = frame(4, 4, 352, 170);
+    s += [[60,40],[90,70],[50,90],[120,40],[130,92]].map(([x, y]) => dot(x, y, "vdotb", 6)).join("") + [[230,110],[270,80],[300,140],[250,150],[200,148]].map(([x, y]) => dot(x, y, "vdoto", 6)).join("");
+    s += part("b", "Boundary", `<line x1="100" y1="170" x2="250" y2="10" class="vlineC"/>` + T(262, 22, "g(x) = 0", { fs:10.5, b:1 }), 0);
+    s += part("m", "Margin", `<line x1="68" y1="170" x2="218" y2="10" class="vline vdash"/><line x1="132" y1="170" x2="282" y2="10" class="vline vdash"/>` + T(70, 150, "margin", { fs:10.5, c:"vmt" }), 1);
+    s += part("sv", "Support vectors", `<circle cx="130" cy="92" r="10" class="vline" style="stroke:var(--c);stroke-width:2"/><circle cx="200" cy="148" r="10" class="vline" style="stroke:var(--c);stroke-width:2"/>`, 2);
+    return SVG(360, 180, s, "SVM decision boundary with margin and support vectors"); },
+  info: { b:"The decision boundary g(x) = wᵀx + w₀ = 0. g > 0 → one class, g < 0 → the other.", m:"The SVM chooses the boundary with the LARGEST margin to the nearest points of each class.",
+    sv:"Support vectors: the points closest to the boundary. They alone decide where it goes. A kernel lets the SVM draw curved boundaries." },
+  fact: "SVMs work well for text classification with very many features.",
+  q: ["SVM", "linear discriminant", "perceptron criterion", "very many features"], terms: ["Support vector machine (SVM)", "Support vectors", "Kernel", "Linear discriminant function"] });
+
+VIS.push({ c:"IMT4133", t:"l6", id:"dist", icon:"📐", title:"Euclidean vs. Manhattan distance",
+  draw: () => { const X = v => 40 + v * 50, Y = v => 170 - v * 24; let s = "";
+    for (let i = 0; i <= 5; i++) s += `<line x1="${X(i)}" y1="${Y(0)}" x2="${X(i)}" y2="${Y(6.5)}" class="vline" style="opacity:.3"/>`;
+    for (let j = 0; j <= 6; j++) s += `<line x1="${X(0)}" y1="${Y(j)}" x2="${X(5)}" y2="${Y(j)}" class="vline" style="opacity:.3"/>`;
+    s += part("man", "Manhattan", `<polyline points="${X(1)},${Y(2)} ${X(4)},${Y(2)} ${X(4)},${Y(6)}" class="vlineC2" style="stroke:var(--warn)"/>` + T(X(2.5), Y(2) + 14, "3 + 4 = 7", { fs:11, b:1 }), 0);
+    s += part("euc", "Euclidean", `<line x1="${X(1)}" y1="${Y(2)}" x2="${X(4)}" y2="${Y(6)}" class="vlineC"/>` + T(X(2.1), Y(4.6), "√(3² + 4²) = 5", { fs:11, b:1 }), 1);
+    s += dot(X(1), Y(2), "vdot", 6) + T(X(1) - 22, Y(2), "(1,2)", { fs:10.5 }) + dot(X(4), Y(6), "vdot", 6) + T(X(4) + 26, Y(6), "(4,6)", { fs:10.5 });
+    s += T(318, 60, "🚕 taxi", { fs:11 }) + T(318, 84, "🐦 crow", { fs:11 });
+    return SVG(360, 180, s, "Distance between (1,2) and (4,6) on a grid"); },
+  info: { man:"Manhattan distance: walk along the grid, |4 − 1| + |6 − 2| = 3 + 4 = 7. Like a taxi in city blocks.", euc:"Euclidean distance: the straight line, √(3² + 4²) = 5. “As the crow flies.”" },
+  fact: "Hamming distance counts differing positions in strings: 10110 vs 10011 → 2.",
+  q: ["Euclidean distance between", "Manhattan distance between"], terms: ["Manhattan distance", "Euclidean distance", "Hamming distance"] });
+
+VIS.push({ c:"IMT4133", t:"l7", id:"kmeans", icon:"🍕", title:"K-means in four steps",
+  draw: () => { const A = [[30,40],[44,30],[38,56],[54,48]], B = [[94,96],[108,84],[100,110],[118,100]];
+    const panel = (k, ox, title, body, i) => part(k, title, frame(ox, 4, 84, 130) + T(ox + 42, 18, title, { fs:10, b:1 }) + body, i);
+    const pts = (ox, colA, colB) => A.map(([x, y]) => dot(ox + x * 0.6, 20 + y * 0.9, colA, 3.6)).join("") + B.map(([x, y]) => dot(ox + x * 0.6, 20 + y * 0.9, colB, 3.6)).join("");
+    const star = (x, y) => `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" transform="rotate(45 ${x} ${y})" class="vbox vC"/>`;
+    let s = panel("s1", 4, "1. Choose K", pts(4, "vdot2", "vdot2"), 0);
+    s += panel("s2", 92, "2. Seeds", pts(92, "vdot2", "vdot2") + star(92 + 30, 90) + star(92 + 60, 50), 1);
+    s += panel("s3", 180, "3. Assign", pts(180, "vdotb", "vdoto") + star(180 + 30, 90) + star(180 + 60, 50), 2);
+    s += panel("s4", 268, "4. Move", pts(268, "vdotb", "vdoto") + star(268 + 26, 62) + star(268 + 64, 106), 3);
+    s += T(180, 148, "Repeat steps 3–4 until the assignments stop changing", { fs:10.5, c:"vmt" });
+    return SVG(360, 156, s, "Four panels showing the K-means steps"); },
+  info: { s1:"1. Choose the number of clusters K. Hard to guess right.", s2:"2. Place K random cluster seeds (centres).", s3:"3. Assign every point to its nearest centre (squared Euclidean distance).",
+    s4:"4. Move each centre to the mean of its points. Example: points 2 and 4 → centroid 3; points 10 and 12 → centroid 11." },
+  fact: "K-means costs k · n · i · O(d): clusters × points × iterations × distance cost. Canopy clustering first makes it fast on big data.",
+  q: ["K-means steps", "K-means, K = 2", "complexity of K-means", "good clustering"], terms: ["K-means", "Centroid", "Cluster", "Intra-cluster similarity", "Inter-cluster similarity", "Hard clustering"] });
+
+VIS.push({ c:"IMT4133", t:"l7", id:"dendro", icon:"🌿", title:"Dendrogram: cut to choose clusters",
+  draw: () => { const xs = [30, 70, 120, 160, 220, 260, 310], base = 160; let s = xs.map((x, i) => dot(x, base, "vdot", 5) + T(x, base + 14, String.fromCharCode(65 + i), { fs:10.5 })).join("");
+    const m = (x1, x2, h1, h2, h) => `<polyline points="${x1},${h1} ${x1},${h} ${x2},${h} ${x2},${h2}" class="vline" style="stroke:var(--c);stroke-width:2"/>`;
+    s += `<g class="st" style="--i:1">${m(30, 70, base, base, 136)}${m(120, 160, base, base, 130)}${m(220, 260, base, base, 140)}</g>`;
+    s += `<g class="st" style="--i:2">${m(50, 140, 136, 130, 96)}${m(240, 310, 140, base, 110)}</g>`;
+    s += `<g class="st" style="--i:3">${m(95, 275, 96, 110, 40)}</g>`;
+    s += part("low", "Low cut", `<line x1="10" y1="122" x2="350" y2="122" class="va vab" style="stroke-dasharray:6 4"/>` + T(334, 114, "4", { b:1, fs:12, c:"vbadt" }), 4);
+    s += part("high", "High cut", `<line x1="10" y1="70" x2="350" y2="70" class="va" style="stroke-dasharray:6 4"/>` + T(334, 62, "2", { b:1, fs:12, c:"vct" }), 5);
+    s += T(60, 20, "Agglomerative ↑ (merge)   Divisive ↓ (split)", { fs:10.5, c:"vmt", a:"start" });
+    return SVG(360, 182, s, "Dendrogram with a low and a high cut line"); },
+  info: { low:"A LOW cut crosses many branches: 4 clusters ({A,B}, {C,D}, {E,F}, {G}).", high:"A HIGHER cut crosses fewer branches: 2 clusters ({A–D} and {E–G}). Higher cut → fewer, bigger clusters." },
+  fact: "Hierarchical clustering needs no K in advance – you choose the number of clusters afterwards by where you cut.",
+  q: ["dendrogram", "agglomerative", "hierarchical"], terms: ["Dendrogram", "Hierarchical clustering", "Agglomerative clustering", "Divisive clustering"] });
+
+VIS.push({ c:"IMT4133", t:"l7", id:"canopy", icon:"⛺", title:"Canopy clustering: T1 and T2",
+  draw: () => { let s = frame(4, 4, 352, 168);
+    s += part("t1", "T1", `<circle cx="160" cy="88" r="72" class="vring" style="opacity:.6"/>` + T(160, 26, "T1 (loose, bigger)", { fs:10.5, b:1 }), 0);
+    s += part("t2", "T2", `<circle cx="160" cy="88" r="34" class="vbox" style="opacity:.9"/>` + T(160, 112, "T2 (tight)", { fs:10, b:1 }), 1);
+    s += part("c", "Centre", dot(160, 88, "vdot", 6), 2);
+    s += [[150,74],[176,96],[140,100]].map(([x, y]) => dot(x, y, "vdot2", 4)).join("") + [[110,50],[220,70],[200,140],[100,130]].map(([x, y]) => dot(x, y, "vdoto", 4.5)).join("") + [[280,60],[300,130],[320,90]].map(([x, y]) => dot(x, y, "vdot2", 4.5)).join("");
+    s += T(282, 160, "outside: other canopies", { fs:10, c:"vmt" });
+    return SVG(360, 176, s, "Two circles T1 and T2 around a canopy centre"); },
+  info: { t1:"Points within T1 (the loose, bigger radius) join this canopy. Canopies can overlap.", t2:"Points within T2 (the tight, smaller radius) are removed from the set, so they cannot become new canopy centres.",
+    c:"A canopy centre, picked from the remaining points. Distances use a CHEAP measure." },
+  fact: "Hybrid clustering: cheap canopies first, then expensive K-means only within each canopy.",
+  q: ["canopy"], terms: ["Canopy clustering"] });
+
+VIS.push({ c:"IMT4133", t:"srch", id:"ga", icon:"🧬", title:"The genetic algorithm loop", x:"May 2026 Q4, Exam 2021 Q2",
+  draw: () => V.cycle([
+    { k:"pop", l:"Population of chromosomes" }, { k:"fit", l:"Fitness: score each one" }, { k:"sel", l:"Selection: roulette wheel" },
+    { k:"cro", l:"Crossover: mix parents" }, { k:"mut", l:"Mutation: flip bits" } ], { R:104, bw:120, center:{ k:"gen", l:"New generation" }, label:"Genetic algorithm cycle" }),
+  info: { pop:"A population of candidate solutions (chromosomes), e.g. bit strings like 10110010.", fit:"The fitness function scores each chromosome, e.g. f(x) = number of 1s.",
+    sel:"Selection: fitter chromosomes are picked more often. Roulette wheel: P(i) = fᵢ / Σf.", cro:"Crossover: two parents swap parts after a cut point to make children.",
+    mut:"Mutation: random bit flips keep diversity and help escape local optima.", gen:"The children form the next generation. Repeat until fitness stops improving." },
+  fact: "A GA is a heuristic search: unlike exhaustive search it does not test all 2¹⁰⁰⁰ subsets, and unlike gradient descent it needs no gradient.",
+  q: ["genetic algorithm", "GA converge", "exhaustive and heuristic", "2¹⁰⁰⁰"], terms: ["Genetic algorithm (GA)", "Exhaustive search", "Heuristic search", "Search space", "Chromosome", "Elitism"] });
+
+VIS.push({ c:"IMT4133", t:"srch", id:"bits", icon:"✂️", title:"Crossover and mutation, bit by bit", x:"May 2026 Q5",
+  draw: () => { const bitsRow = (y, label, bits, cut, tones) => T(4, y + 12, label, { fs:11, b:1, a:"start" }) + bits.split("").map((b, i) => `<rect x="${78 + i * 30 + (cut && i >= cut ? 8 : 0)}" y="${y}" width="27" height="24" rx="4" class="vbox${tones ? " v" + tones[i] : ""}"/>` + T(91.5 + i * 30 + (cut && i >= cut ? 8 : 0), y + 12, b, { b:1, c: tones && tones[i] === "C" ? "vw" : "" })).join("");
+    const A = "CCCCCCCC".split(""), B = "wwwwwwww".split("");
+    let s = part("par", "Parents", bitsRow(6, "A", "10110010", 4, A) + bitsRow(36, "B", "11100001", 4, B), 0);
+    s += `<g class="st" style="--i:1">${arrow(200, 64, 200, 80, "flow")}${T(270, 72, "cut after bit 4", { fs:10, c:"vmt" })}</g>`;
+    s += part("kid", "Children", bitsRow(84, "Child 1", "10110001", 4, [..."CCCC", ..."wwww"]) + bitsRow(114, "Child 2", "11100010", 4, [..."wwww", ..."CCCC"]), 1);
+    s += `<g class="st" style="--i:2">${arrow(200, 142, 200, 158, "flow")}${T(270, 150, "flip bit 6", { fs:10, c:"vmt" })}</g>`;
+    s += part("mut", "Mutation", bitsRow(162, "Mutated", "10110101", 0, ["", "", "", "", "", "bad", "", ""]), 2);
+    return SVG(360, 194, s, "Single-point crossover and mutation example"); },
+  info: { par:"Parents A = 1011|0010 and B = 1110|0001. Fitness = number of 1s = 4 each, so each has roulette probability 4/16 = 0.25.",
+    kid:"Single-point crossover after bit 4: child 1 = 1011 + 0001 = 10110001, child 2 = 1110 + 0010 = 11100010.",
+    mut:"Mutation at bit 6 (counted from the left, starting at 1): 10110001 → 10110101. State your counting assumption in the exam." },
+  fact: "If every chromosome has the same fitness, roulette-wheel selection is just a fair lottery.",
+  q: ["Fitness f\\(x\\)", "roulette", "crossover", "Mutate", "role of mutation"], terms: ["Fitness function", "Roulette-wheel selection", "Single-point crossover", "Mutation"] });
+})();
+</script>
+
 <!-- =====================================================================
      APP LOGIC (design + behaviour). No course content below this line.
      ===================================================================== -->
@@ -2820,6 +3947,43 @@ TERMS.push({ code: "IMT4133", chapters: [
     b.chapters.forEach(ch => ch.terms.forEach(tm => c.terms.push(Object.assign({}, tm, { t: ch.t, id: "T-" + c.code + "-" + ch.t + "-" + hash(tm.n), course: "T:" + c.code }))));
   });
   const termsOf = (c, tid) => c.terms.filter(tm => tm.t === tid);
+
+  /* ---------- visuals (diagrams from the VISUALS block) ---------- */
+  const VISL = (typeof VIS !== "undefined" ? VIS : []).map(v => Object.assign(v, { rx: (v.q || []).map(p => new RegExp(p, "i")), uid: v.c + "-" + v.id }));
+  const visCache = {};
+  const visOfTopic = (c, tid) => VISL.filter(v => v.c === c.code && v.t === tid);
+  function visFor(c, q){
+    if (!q) return null;
+    if (q.term){ const tm = c.terms.find(x => x.id === q.id); return tm ? VISL.find(v => v.c === c.code && (v.terms || []).includes(tm.n)) || null : null; }
+    return VISL.find(v => v.c === c.code && v.t === q.t && v.rx.some(r => r.test(q.q))) || null;
+  }
+  function visHTML(v, compact){
+    if (!visCache[v.uid]) { try { visCache[v.uid] = v.draw(); } catch(err){ visCache[v.uid] = ""; } }
+    if (!visCache[v.uid]) return "";
+    const hasParts = v.info && Object.keys(v.info).length;
+    return `<figure class="vis${compact ? " compact" : ""}" data-vis="${esc(v.uid)}">
+      <figcaption><span class="v-ico" aria-hidden="true">${esc(v.icon || "📊")}</span><b>${esc(v.title)}</b>${v.x ? `<span class="pill star">⭐ ${esc(v.x)}</span>` : ""}</figcaption>
+      ${visCache[v.uid]}
+      ${hasParts ? `<p class="v-info" aria-live="polite">👆 Tap a part of the model to see what it means.</p>` : ""}
+      ${v.fact ? `<p class="v-fact"><b>💡 Did you know?</b> ${esc(v.fact)}</p>` : ""}</figure>`;
+  }
+  function keyModels(c, tid){
+    const list = visOfTopic(c, tid); if (!list.length) return "";
+    return `<details class="keymodels" open><summary><h2>🧩 Key models <span class="pill">${list.length}</span></h2></summary>
+      <div class="vgrid">${list.map(v => visHTML(v)).join("")}</div></details>`;
+  }
+  function showPart(g){
+    const fig = g.closest(".vis"); if (!fig) return;
+    const v = VISL.find(x => x.uid === fig.dataset.vis), key = g.dataset.part, info = fig.querySelector(".v-info");
+    fig.querySelectorAll(".vp.on").forEach(n => n.classList.remove("on"));
+    fig.querySelectorAll(`.vp[data-part="${key}"]`).forEach(n => n.classList.add("on"));
+    if (v && info && v.info && v.info[key]) info.textContent = v.info[key];
+  }
+  function confetti(){
+    const cols = ["c", "ok", "warn", "c", "bad"];
+    return `<div class="confetti" aria-hidden="true">${Array.from({ length: 36 }, (_, i) =>
+      `<i class="cf-${cols[i % cols.length]}" style="left:${(i * 37) % 100}%;animation-delay:${(i % 9) * 0.12}s;--r:${(i * 47) % 360}deg"></i>`).join("")}</div>`;
+  }
 
   /* ---------- storage (per browser) ---------- */
   let store = { ans:{}, miss:{}, shuffle:true };
@@ -2991,7 +4155,7 @@ TERMS.push({ code: "IMT4133", chapters: [
       const qs = c.questions.filter(q => q.t === t.id), ts = stats(qs), stars = qs.filter(q=>q.x).length;
       return `<button class="card topic-card" data-go="${slug(c.code)}-${t.id}">
         <span class="num">${esc(t.label || "Lecture " + (i+1))}</span><h3>${esc(t.title)}</h3><span class="file">Slides: ${esc(t.file)}</span>
-        <div class="btnrow"><span class="pill">${qs.length} questions</span>${stars?`<span class="pill star">⭐ ${stars} from exams</span>`:""}</div>
+        <div class="btnrow"><span class="pill">${qs.length} questions</span>${stars?`<span class="pill star">⭐ ${stars} from exams</span>`:""}${visOfTopic(c, t.id).length?`<span class="pill ghost">🧩 ${visOfTopic(c, t.id).length} models</span>`:""}</div>
         ${bar(ts)}${statLine(ts)}</button>`;
     }).join("");
     app.innerHTML = `
@@ -3057,6 +4221,7 @@ TERMS.push({ code: "IMT4133", chapters: [
       ${nav([{label:"Home",h:""},{label:c.code,h:slug(c.code)},{label:"Terms · " + t.title,h:slug(c.code)+"-terms-"+t.id}], slug(c.code))}
       <header class="hero"><span class="eyebrow">${esc(c.code)} · Terms quiz · ${esc(t.label || "Lecture " + (idx+1))}</span><h1>${esc(t.title)}</h1>
         <p class="muted">${items.length} key terms</p>${bar(s)}${statLine(s)}</header>
+      ${keyModels(c, t.id)}
       <section class="modes">
         ${termBlock("Whole chapter","All terms in this chapter", items, "ch")}
         ${termBlock("Former exam terms","Only ⭐ terms in this chapter", items.filter(tm => tm.x), "chexam")}
@@ -3077,6 +4242,7 @@ TERMS.push({ code: "IMT4133", chapters: [
       ${nav([{label:"Home",h:""},{label:c.code,h:slug(c.code)},{label:t.title,h:slug(c.code)+"-"+t.id}], slug(c.code))}
       <header class="hero"><span class="eyebrow">${esc(c.code)} · ${esc(t.label || "Lecture " + (idx+1))}</span><h1>${esc(t.title)}</h1>
         <p class="muted">Slides: ${esc(t.file)}</p><div class="btnrow">${kinds}</div>${bar(s)}${statLine(s)}</header>
+      ${keyModels(c, t.id)}
       <section class="modes">
         ${modeBlock("Whole topic","All questions in this topic", qs, "topic")}
         ${modeBlock("Former exam questions","Only ⭐ questions in this topic", examQs, "topicexam")}
@@ -3170,7 +4336,7 @@ TERMS.push({ code: "IMT4133", chapters: [
       if (!session.revealed) body += `<div class="btnrow"><button class="btn" data-act="reveal">Show model answer</button></div>`;
       else {
         body += `<div class="feedback neutral"><strong>Key points to include</strong><ul class="kp">${q.kp.map(k=>`<li>${esc(k)}</li>`).join("")}</ul></div>
-          <div class="model"><strong>Model answer</strong><p>${esc(q.m)}</p></div>`;
+          <div class="model"><strong>Model answer</strong><p>${esc(q.m)}</p></div>${(() => { const v = visFor(c, q); return v ? visHTML(v, true) : ""; })()}`;
         body += session.answered ? `<div class="btnrow"><button class="btn" data-act="next">${session.i+1 < session.list.length ? "Next question →" : "See score"}</button></div>`
           : `<p class="note">Compare with your outline. Did you cover the key points?</p><div class="btnrow"><button class="btn" data-self="1">I covered them</button><button class="btn alt" data-self="0">I missed some</button></div>`;
       }
@@ -3186,6 +4352,7 @@ TERMS.push({ code: "IMT4133", chapters: [
         body += `<div class="feedback ${ok?"ok":"bad"}"><strong>${ok?"Correct":"Not quite"}</strong>
           ${ok?"":`<p>Correct answer: <b>${esc(q.o[q.a])}</b></p>`}${q.e ? `<p>${esc(q.e)}</p>` : ""}
           ${q.chk?`<p class="note">This answer is marked “Needs checking”: confirm it with the slides or lecturer.</p>`:""}</div>
+          ${(() => { const v = visFor(c, q); return v ? visHTML(v, true) : ""; })()}
           <div class="btnrow"><button class="btn" data-act="next">${session.i+1 < session.list.length ? "Next question →" : "See score"}</button></div>`;
       } else body += `<p class="note">Tip: press 1–${q.o.length} on a keyboard.</p>`;
     }
@@ -3204,14 +4371,17 @@ TERMS.push({ code: "IMT4133", chapters: [
     const actions = session.flipped
       ? `<div class="btnrow"><button class="btn" data-know="1">I knew it</button><button class="btn alt" data-know="0">I didn't know</button></div>`
       : `<div class="btnrow"><button class="btn" data-act="flip">Show answer</button>${session.i>0?`<button class="btn alt" data-act="prev">← Previous</button>`:""}</div>`;
-    app.innerHTML = `${sessionNav(c)}${progress()}${card}${actions}`;
+    const fv = session.flipped ? visFor(c, q) : null;
+    app.innerHTML = `${sessionNav(c)}${progress()}${card}${fv ? visHTML(fv, true) : ""}${actions}`;
   }
 
   function renderResult(c){
     const n = session.results.length, ok = session.results.filter(r=>r.ok).length;
     const wrong = session.results.filter(r=>!r.ok);
     const pct = n ? Math.round(ok/n*100) : 0;
-    const verdict = pct >= 90 ? "Excellent. You are exam-ready on this set." : pct >= 70 ? "Good. Review the ones you missed." : pct >= 50 ? "Getting there. Practise your mistakes next." : "Keep going. Use flashcards, then quiz again.";
+    const chapterRun = !!session.topic && ["topic", "ch"].includes(session.scope) && n >= 3;
+    const party = chapterRun && pct >= 80;
+    const verdict = party ? "🎉 Chapter mastered! Great work – try the next chapter." : pct >= 90 ? "Excellent. You are exam-ready on this set." : pct >= 70 ? "Good. Review the ones you missed." : pct >= 50 ? "Getting there. Practise your mistakes next." : "Keep going. Use flashcards, then quiz again.";
     const list = wrong.length ? wrong.map(r => {
       const q = r.q, t = topicOf(c,q.t);
       const ans = q.k === "essay" ? "See key points in the model answer" : q.o[q.a];
@@ -3223,8 +4393,8 @@ TERMS.push({ code: "IMT4133", chapters: [
     const missBtn = session.terms
       ? `<button class="btn alt" data-tstart="${session.dir}" data-tscope="${session.topic ? "chmiss" : "miss"}" ${missCount?"":"disabled"}>Practice my mistakes (${missCount})</button>`
       : `<button class="btn alt" data-start="${session.mode}" data-scope="miss" ${missCount?"":"disabled"}>Practice my mistakes (${missCount})</button>`;
-    app.innerHTML = `${sessionNav(c)}
-      <section class="card"><span class="eyebrow">${esc(session.label)} · ${session.mode==="quiz"?"Quiz":"Flashcards"} finished</span>
+    app.innerHTML = `${party ? confetti() : ""}${sessionNav(c)}
+      <section class="card${party ? " party" : ""}"><span class="eyebrow">${esc(session.label)} · ${session.mode==="quiz"?"Quiz":"Flashcards"} finished</span>
         <div class="countdown"><span class="score">${ok}/${n}</span><span class="muted">${pct}%</span></div><p>${verdict}</p>
         <div class="btnrow"><button class="btn" data-act="again">Try this set again</button>
         ${missBtn}
@@ -3267,6 +4437,7 @@ TERMS.push({ code: "IMT4133", chapters: [
 
   /* ---------- events ---------- */
   app.addEventListener("click", e => {
+    const vp = e.target.closest(".vp"); if (vp){ showPart(vp); return; }
     const el = e.target.closest("button, a"); if (!el) return;
     const d = el.dataset;
     if (d.go !== undefined){ e.preventDefault(); go(d.go); return; }
@@ -3310,6 +4481,8 @@ TERMS.push({ code: "IMT4133", chapters: [
   });
   app.addEventListener("input", e => { if (e.target.id === "essay-draft" && session) session.draft = e.target.value; });
   document.addEventListener("keydown", e => {
+    const vp = e.target.closest && e.target.closest(".vp");
+    if (vp && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); showPart(vp); return; }
     if (!session || session.done || session.mode !== "quiz" || e.target.tagName === "TEXTAREA") return;
     const q = curQ();
     if (!session.answered && q.o && /^[1-9]$/.test(e.key)){ const pos = Number(e.key)-1; if (pos < session.order.length) answer(session.order[pos]); }
