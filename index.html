@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Skole Exam Trainer</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,6 +68,7 @@ button.card:hover{border-color:var(--c);transform:translateY(-1px)}
 .pill.star{background:var(--warn-bg);color:var(--warn)} .pill.chk{background:var(--bad-bg);color:var(--bad)}
 .pill.ghost{background:var(--surface-2);color:var(--muted)}
 .card > .pill{align-self:flex-start}
+.qmeta .pill{white-space:normal}
 .topic-card .num{font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
 .topic-card .file{font-size:.8rem;color:var(--muted);overflow-wrap:anywhere}
 .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
@@ -107,6 +108,14 @@ textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:
 .backup h3{margin-top:6px}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.9rem}
 .note{font-size:.85rem;color:var(--muted)}
+.jump{display:flex;gap:8px;flex-wrap:wrap}
+.section{display:flex;flex-direction:column;gap:14px;padding-top:18px;border-top:2px solid var(--line);scroll-margin-top:12px}
+.section > .eyebrow{margin-bottom:-8px}
+.glossary{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px}
+.glossary summary{cursor:pointer;font-weight:600;font-family:var(--f-display)}
+.glossary dl{margin:12px 0 0;display:flex;flex-direction:column;gap:10px}
+.glossary dt{font-weight:600} .glossary dd{margin:2px 0 0;color:var(--muted);font-size:.93rem}
+.term-front{font-family:var(--f-display);font-size:1.6rem;font-weight:700;line-height:1.2}
 footer{font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
 </style>
@@ -126,8 +135,14 @@ footer{font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px}
        chk = true → shown as "Needs checking"
        essay only: kp = key points to include, m = model answer
      To add a course: push one more object with the same format.
+
+     TERMS DATA (one block per course, after the question blocks)
+       TERMS.push({ code, chapters:[{ t: topic id, terms:[{ n, d, ex?, x?, chk? }] }] })
+       n = term   d = short definition   ex = simple example (optional)
+       x = former exam tag (⭐)   chk = true → shown as "Needs checking"
+       Chapters use the same ids as the topics, so they follow the lecture order.
      ===================================================================== -->
-<script>const COURSES = [];</script>
+<script>const COURSES = []; const TERMS = [];</script>
 <script>
 /* ================================================================
    COURSE: IMT4110 – Scientific Methodology and Communication
@@ -2135,6 +2150,651 @@ COURSES.push({
 });
 </script>
 
+<script>
+/* ===== TERMS · IMT4110 – Scientific Methodology and Communication =====
+   Chapters = topic ids (lecture order). n = term, d = definition, ex = example,
+   x = former exam tag (⭐), chk = true → "Needs checking". */
+TERMS.push({ code: "IMT4110", chapters: [
+  { t: "intro", terms: [
+    { n: "Research", d: "A systematic process of collecting, analysing and interpreting information to answer a question and increase understanding.", ex: "Reading 10 articles on phone use is not research; measuring whether phone use lowers exam scores is.", x: "Ex-4, Add-1" },
+    { n: "Cycle of scientific inquiry", d: "The research process seen as a circle: answering one problem usually reveals new problems to study.", x: "Add-1" },
+    { n: "Empirical", d: "Based on observation or measured data, not only on opinion or logic.", ex: "A survey of 500 students is empirical; an argument from authority is not." },
+    { n: "Theory", d: "An organised explanation of why something happens; it can be tested and makes predictions." },
+    { n: "Deductive reasoning", d: "Going from a general theory to a specific prediction (top-down).", ex: "“Stress lowers performance” → “stressed students will score lower”." },
+    { n: "Inductive reasoning", d: "Going from many specific observations to a general conclusion (bottom-up).", ex: "Seeing many users skip warnings → “users get used to warnings”." },
+    { n: "Falsifiability", d: "A scientific claim must be possible to prove wrong; we can never prove a hypothesis true, only fail to disprove it.", ex: "“All swans are white” is disproved by one black swan.", x: "Add-2, Ord-23" },
+    { n: "Replication", d: "Repeating a study to see if the same result appears; needs detailed reporting of the method." },
+    { n: "Product development vs. research", d: "Building a product is not research by itself; it becomes research when it answers a question, is evaluated with data and gives new, documented knowledge.", ex: "Building a password manager = development; testing if it reduces password reuse = research.", x: "Ex-4" },
+    { n: "Literature review", d: "A systematic search and critical summary of earlier research on a topic, showing what is known and what is missing.", x: "Lit" },
+    { n: "Peer review", d: "Experts check an article before it is published; a key quality sign, but no guarantee of truth.", x: "Lit" },
+    { n: "IMRaD", d: "Standard structure of a research article: Introduction, Method, Results and Discussion.", x: "Lit" },
+    { n: "Confirmation bias", d: "Searching only for sources or results that support what you already believe.", x: "Lit" }
+  ]},
+  { t: "var", terms: [
+    { n: "Research question", d: "The specific, testable question a study answers, stating a relationship between variables.", ex: "“Does phone use in lectures lower exam scores among NTNU students?”", x: "Add-2" },
+    { n: "Hypothesis (H1)", d: "A testable prediction of the result, based on theory or earlier research.", ex: "“Students who use phones in lectures score lower.”", x: "Add-2" },
+    { n: "Variable", d: "Any characteristic that can take different values, such as age, stress score or password length." },
+    { n: "Independent variable (IV)", d: "The cause or predictor: the variable the researcher changes or groups by.", ex: "Phone use (yes/no).", x: "Ex-9" },
+    { n: "Dependent variable (DV)", d: "The outcome that is measured; it is affected by the IV.", ex: "Exam score." },
+    { n: "Operationalisation", d: "Turning an abstract concept into something you can observe and measure.", ex: "“Stress” → score on a 10-item stress questionnaire." },
+    { n: "Mediating variable", d: "Explains HOW the IV affects the DV; it sits between them (IV → mediator → DV).", ex: "Phone use → less attention → lower score." },
+    { n: "Moderating variable", d: "Changes the strength or direction of the relationship between the IV and the DV.", ex: "Phone use hurts first-year students more than master’s students." },
+    { n: "Delimitations", d: "What the study deliberately does not cover (its chosen boundaries)." },
+    { n: "Limitations", d: "Weaknesses in a study that the researcher could not avoid and that limit the conclusions." }
+  ]},
+  { t: "cause", terms: [
+    { n: "Correlation", d: "Two variables change together; measured by r from –1 to +1.", ex: "Height and weight rise together (positive correlation).", x: "Ex-1" },
+    { n: "Causation", d: "One variable actually produces a change in another; correlation alone does not prove it.", x: "Ex-1, Add-3" },
+    { n: "Confounding (third) variable", d: "A hidden variable that affects both the IV and the DV and creates a false relationship.", ex: "Ice-cream sales and drowning correlate; hot weather causes both.", x: "Ex-1, Add-3" },
+    { n: "Direction problem (reverse causality)", d: "Even if A and B are related, we may not know whether A causes B or B causes A.", ex: "Do violent games cause aggression, or do aggressive people choose violent games?", x: "Ex-1" },
+    { n: "Covariation", d: "First condition for causality: the variables must be related (vary together)." },
+    { n: "Temporal order", d: "Condition for causality: the cause must come before the effect." },
+    { n: "No alternative explanation", d: "Condition for causality: third variables must be ruled out, best done with a controlled experiment." },
+    { n: "Spurious relationship", d: "A relationship between two variables that is not causal but explained by a third variable.", ex: "Shoe size and reading skill in children (both explained by age).", chk: true }
+  ]},
+  { t: "relval", terms: [
+    { n: "Reliability", d: "Consistency: the measure gives the same result under the same conditions.", ex: "A scale that shows 70 kg every time you step on it.", x: "Ex-12" },
+    { n: "Validity", d: "Accuracy: the instrument measures what it claims to measure.", ex: "A scale that always shows 65 kg when you weigh 70 kg is reliable but not valid.", x: "Ex-12" },
+    { n: "Test-retest reliability", d: "The same people take the same test twice and get similar scores." },
+    { n: "Inter-rater reliability", d: "Two or more observers score the same thing and agree." },
+    { n: "Internal consistency (Cronbach’s alpha)", d: "Items that measure the same concept give similar answers; alpha above about 0.7 is usually acceptable." },
+    { n: "Face validity", d: "The measure looks right on the surface; the weakest type of validity." },
+    { n: "Content validity", d: "The measure covers all important parts of the concept.", ex: "An awareness test that covers phishing, passwords and physical security." },
+    { n: "Construct validity", d: "The measure truly captures the abstract concept (construct) it targets, such as motivation." },
+    { n: "Criterion validity", d: "The measure correlates with an outside standard, now (concurrent) or in the future (predictive).", ex: "An entrance test that predicts later grades." },
+    { n: "Internal validity", d: "How sure we are that the IV, and nothing else, caused the change in the DV.", x: "Add-11, Ex-9, Add-3" },
+    { n: "External validity", d: "How well results generalise to other people, settings and times.", x: "Ex-7, Ex-10, Add-7" },
+    { n: "Maturation", d: "Threat to internal validity: participants change naturally over time.", ex: "Children read better just by growing older.", x: "Add-11" },
+    { n: "History (threat)", d: "Threat to internal validity: an outside event during the study affects the results.", ex: "A big data breach in the news during a security-training study.", x: "Add-11" },
+    { n: "Statistical regression", d: "Threat to internal validity: extreme scores move toward the average on a retest.", x: "Add-11" },
+    { n: "Attrition (mortality)", d: "Threat to internal validity: participants drop out unevenly from the groups.", x: "Add-11" },
+    { n: "Hawthorne effect", d: "People behave differently because they know they are being studied." }
+  ]},
+  { t: "survey", terms: [
+    { n: "Population", d: "The whole group you want to draw conclusions about.", ex: "All university students in Norway.", x: "Ex-5, Ex-10" },
+    { n: "Sample", d: "The smaller group you actually study, chosen from the population.", x: "Ex-5, Ex-10" },
+    { n: "Representative sample", d: "A sample whose characteristics match the population; more important than size.", x: "Ex-5, Ex-10, Add-7" },
+    { n: "Sampling frame", d: "The actual list the sample is drawn from, such as a student register." },
+    { n: "Self-selection bias", d: "People choose themselves to take part, so those with strong interest or opinions are over-represented.", ex: "Only very angry or very happy customers answer a feedback form.", x: "Ex-6, Ex-10" },
+    { n: "Non-response bias", d: "Bias that occurs when the people who do not answer differ from those who do.", x: "Ex-6" },
+    { n: "Sampling error", d: "The natural, random difference between a sample result and the true population value; it shrinks as the sample grows." },
+    { n: "Simple random sampling", d: "Everyone in the population has an equal chance of being chosen.", x: "Add-7" },
+    { n: "Stratified random sampling", d: "The population is split into subgroups (strata) and a random sample is taken from each in the right proportion.", ex: "60% bachelor and 40% master students, as in the population.", x: "Add-7" },
+    { n: "Convenience sampling", d: "Non-probability sampling of whoever is easiest to reach.", ex: "Asking your classmates.", x: "Add-7" },
+    { n: "Snowball sampling", d: "Participants recruit other participants.", ex: "Finding hackers through other hackers." },
+    { n: "Leading question", d: "A question that suggests the “right” answer and biases answers toward the hypothesis.", ex: "“How bad is it to work here?” instead of “What is it like to work here?”", x: "Ord-23" },
+    { n: "Social desirability bias", d: "Participants answer in the way that makes them look good.", ex: "Saying “I never reuse passwords” when they do." },
+    { n: "Demand characteristics", d: "Participants guess the purpose of the study and change their behaviour.", x: "Ord-23" },
+    { n: "Cross-sectional design", d: "Different people (e.g. age groups) are measured once, at the same time.", x: "Add-10" },
+    { n: "Longitudinal design", d: "The same people are measured many times over a long period.", x: "Add-10" },
+    { n: "Age–cohort confound", d: "In a cross-sectional study, differences between age groups may come from their generation, not their age.", ex: "Older people score lower on IT skills because they grew up without computers.", x: "Add-10" }
+  ]},
+  { t: "scales", terms: [
+    { n: "Nominal scale", d: "Categories only, with no order.", ex: "Gender, nationality, operating system." },
+    { n: "Ordinal scale", d: "Categories with an order, but the gaps between them are not equal.", ex: "Education level; small/medium/large." },
+    { n: "Interval scale", d: "Equal gaps between values, but no true zero.", ex: "Temperature in Celsius; Likert sums are usually treated as interval." },
+    { n: "Ratio scale", d: "Equal gaps and a true zero, so “twice as much” makes sense.", ex: "Age, reaction time, number of logins." },
+    { n: "Likert scale", d: "A rating scale, for example from 1 = strongly disagree to 5 = strongly agree." },
+    { n: "Mean", d: "The average: the sum of all values divided by the number of values; sensitive to outliers.", x: "Add-5" },
+    { n: "Median", d: "The middle value when the data are sorted; not affected by outliers.", ex: "Incomes 300k, 350k, 400k, 450k, 10M → median 400k.", x: "Add-5" },
+    { n: "Mode", d: "The most frequent value; the only measure of centre for nominal data.", x: "Add-5" },
+    { n: "Standard deviation (SD)", d: "The typical distance of values from the mean, in the same units as the data.", x: "SPSS" },
+    { n: "Normal distribution", d: "A symmetric bell-shaped curve where mean = median = mode; about 68% of values lie within ±1 SD.", x: "Add-8" },
+    { n: "Skewness", d: "An asymmetric distribution; with a long tail to the right the mean is larger than the median." },
+    { n: "Outlier", d: "An extreme value far from the rest that can distort the mean and SD." }
+  ]},
+  { t: "exp", terms: [
+    { n: "Experiment", d: "The researcher manipulates the IV, controls other factors and measures the effect on the DV." },
+    { n: "Control group", d: "A group equal to the experimental group that does not get the treatment, showing what would have happened anyway.", ex: "Group A gets phishing training, group B does not; both get the same fake phishing email.", x: "Ex-9, Add-11" },
+    { n: "Random assignment", d: "Every participant has an equal chance of ending up in each group, making the groups equal on average.", x: "Ex-9, Add-11" },
+    { n: "True experiment", d: "A design with both random assignment and a control group; highest internal validity." },
+    { n: "Quasi-experiment", d: "A design with a comparison group but no random assignment, for example two existing classes." },
+    { n: "Solomon four-group design", d: "Four randomised groups, two with and two without a pretest, that measure whether the pretest itself changes the results.", x: "Ex-11" },
+    { n: "Factorial design", d: "Studies two or more IVs at the same time in all combinations (e.g. 2 × 2 = 4 groups).", ex: "Training (yes/no) × reminder emails (yes/no) on phishing clicks.", x: "Ord-23" },
+    { n: "Main effect", d: "The effect of one IV on the DV, averaged over the levels of the other IV." },
+    { n: "Interaction effect", d: "The effect of one IV depends on the level of another IV; only factorial designs show it.", x: "Ord-23" },
+    { n: "Between-subjects design", d: "Each participant is in only one condition." },
+    { n: "Within-subjects design", d: "Each participant is tested in all conditions; needs fewer people but has order effects." },
+    { n: "Counterbalancing", d: "Varying the order of conditions across participants to cancel out order effects." },
+    { n: "Double-blind", d: "Neither the participants nor the person measuring know who is in which group." },
+    { n: "Placebo", d: "A fake treatment that looks real, so that expectations alone do not cause the effect." }
+  ]},
+  { t: "hyp", terms: [
+    { n: "Null hypothesis (H0)", d: "States that there is no effect or no difference; it is what statistics actually test.", x: "Add-2, SPSS" },
+    { n: "Inferential statistics", d: "Methods that use sample data to draw conclusions about a population.", x: "Add-4" },
+    { n: "Descriptive statistics", d: "Numbers and graphs that describe the sample itself, without generalising.", x: "Add-4" },
+    { n: "p-value", d: "The probability of getting a result at least this extreme if H0 is true.", ex: "p = 0.048 is significant at α = 0.05 but not at α = 0.01.", x: "SPSS" },
+    { n: "Significance level (α)", d: "The threshold chosen before the test, usually 0.05; the accepted risk of a Type I error.", x: "SPSS" },
+    { n: "Statistical significance", d: "A result is unlikely to be caused by chance alone (p ≤ α); it does not mean the effect is large.", x: "Ex-2, SPSS" },
+    { n: "Type I error", d: "Rejecting H0 when it is true: a false positive.", ex: "Concluding a training works when it does not.", x: "Ex-2, SPSS" },
+    { n: "Type II error", d: "Keeping H0 when it is false: a false negative, missing a real effect.", x: "Ex-2" },
+    { n: "Statistical power", d: "The chance of finding an effect that really exists (1 – β); larger samples increase it." },
+    { n: "Practical significance", d: "Whether an effect is big enough to matter in real life, not just statistically significant.", ex: "Login 0.1 s faster with p < 0.001: significant but meaningless.", x: "Add-9, SPSS" },
+    { n: "Effect size", d: "How big a difference or relationship is, independent of sample size (e.g. Cohen’s d)." },
+    { n: "Degrees of freedom (df)", d: "The number of values free to vary; for an independent t-test df = n1 + n2 – 2.", x: "SPSS" },
+    { n: "Independent-samples t-test", d: "Compares the means of two separate groups on an interval or ratio variable.", x: "SPSS" },
+    { n: "Levene’s test", d: "Checks whether two groups have equal variances, an assumption of the t-test.", x: "SPSS" },
+    { n: "ANOVA", d: "Compares the means of three or more groups." },
+    { n: "Chi-square test", d: "Tests whether two categorical (nominal) variables are related, using counts." },
+    { n: "Confidence interval", d: "A range that is likely to contain the true population value, e.g. a 95% CI." }
+  ]},
+  { t: "ethics", terms: [
+    { n: "Informed consent", d: "Participants are told the purpose, procedure, risks and their rights before they agree to take part.", ex: "A consent form explaining what data a phishing study logs.", x: "Ex-3" },
+    { n: "Voluntary participation", d: "No pressure to join, and participants can withdraw at any time without penalty." },
+    { n: "Deception", d: "Deliberately misleading participants about the true purpose because knowing it would change their behaviour.", ex: "Saying a study is about email usability while testing phishing clicks.", x: "Ex-3, Ord-23" },
+    { n: "Debriefing", d: "After taking part, participants are told the true purpose, deception is corrected and they may withdraw their data.", x: "Ex-3, Ord-23" },
+    { n: "Anonymity", d: "Nobody, not even the researcher, can link the data to a person.", ex: "An online survey that collects no names, emails or IP addresses." },
+    { n: "Confidentiality", d: "The researcher knows who said what but keeps it secret and protected.", ex: "Names replaced by codes in interview reports." },
+    { n: "Protection from harm", d: "Participants must not be exposed to unnecessary physical or psychological risk." },
+    { n: "Cost–benefit analysis", d: "The benefit of the research must outweigh the costs and risks to participants." },
+    { n: "Ethics committee (IRB)", d: "An independent board that approves research with human participants; in Norway, Sikt and REK." },
+    { n: "Fabrication and falsification", d: "Inventing data (fabrication) or changing data (falsification): serious research misconduct.", x: "Add-6" },
+    { n: "Plagiarism", d: "Using other people’s words or ideas without giving credit." },
+    { n: "Publication bias", d: "Significant results are published more often than non-significant ones, making effects look stronger." }
+  ]}
+]});
+</script>
+
+<script>
+/* ===== TERMS · IMT4115 – Introduction to Information Security Management ===== */
+TERMS.push({ code: "IMT4115", chapters: [
+  { t: "ch1", terms: [
+    { n: "CIA triad", d: "The three core security properties: confidentiality, integrity and availability.", ex: "Ransomware attacks availability; a leaked patient register breaks confidentiality." },
+    { n: "Confidentiality", d: "Only authorised people can read or access the information." },
+    { n: "Integrity", d: "Data is correct and is not changed without authorisation." },
+    { n: "Availability", d: "Data and systems can be used when they are needed." },
+    { n: "McCumber Cube", d: "A model with three dimensions: information states × CIA × safeguards (policy, education, technology)." },
+    { n: "Six Ps of InfoSec management", d: "Planning, policy, programs, protection, people and project management." },
+    { n: "Communities of interest", d: "Three groups that share responsibility for security: InfoSec management, IT management and general business management." },
+    { n: "Due care", d: "Taking the reasonable protective measures a prudent organisation would take (doing the right things).", ex: "Installing a firewall and having a patch policy.", x: "R20-Q6" },
+    { n: "Due diligence", d: "Continuously checking and maintaining the protective measures to verify that they work.", ex: "Regular audits that patches are actually applied.", x: "R20-Q6" },
+    { n: "Defence in depth", d: "Several layers of protection (policy, people, technology), so one failing layer does not expose everything." },
+    { n: "BLUF (Bottom Line Up Front)", d: "Writing to management by starting with the conclusion and the action needed, then the background.", x: "R22-Q6" },
+    { n: "Cyber as an operational problem", d: "Treating cyber incidents as a whole-organisation risk owned by management, not only an IT problem.", x: "E20-Q4" }
+  ]},
+  { t: "ch2", terms: [
+    { n: "Law vs. ethics", d: "Laws are rules enforced by the state with penalties; ethics are socially accepted norms of right and wrong." },
+    { n: "Liability", d: "Legal responsibility for damage, for example when an organisation fails due care." },
+    { n: "Long-arm jurisdiction", d: "A court can reach parties outside its own region.", ex: "GDPR applies to non-EU firms handling EU residents’ data." },
+    { n: "Ignorance (unethical behaviour)", d: "Breaking rules because you do not know them; prevented with education, training and clear policy.", ex: "A new employee installs pirated software without knowing it is forbidden.", x: "E22-Q6, E23-Q4" },
+    { n: "Accident (unethical behaviour)", d: "Honest mistakes by people with access; prevented with controls, planning and least privilege.", ex: "An admin deletes a database by mistake.", x: "E22-Q6, E23-Q4" },
+    { n: "Intent (unethical behaviour)", d: "Deliberate wrongdoing; prevented with deterrence, monitoring and sanctions.", ex: "An employee sells customer data.", x: "E22-Q6, E23-Q4" },
+    { n: "Deterrence", d: "Punishment only prevents bad behaviour if there is fear of the penalty, a high chance of being caught and a high chance the penalty is applied.", x: "E22-Q6, E23-Q4" },
+    { n: "Personal data", d: "Any information that can identify a person, such as a name or an IP address." },
+    { n: "Special categories of personal data", d: "Sensitive data such as health, religion, ethnicity or biometrics, with stricter rules." },
+    { n: "Data controller", d: "The party that decides why and how personal data is processed.", ex: "A hospital." },
+    { n: "Data processor", d: "The party that processes personal data on behalf of the controller.", ex: "A cloud provider." },
+    { n: "DPIA", d: "Data Protection Impact Assessment: a risk assessment required before high-risk processing of personal data." },
+    { n: "DPO", d: "Data Protection Officer: advises on and monitors GDPR compliance." },
+    { n: "Data minimisation", d: "GDPR principle: collect only the personal data that is needed for the purpose." },
+    { n: "Privacy by design and by default", d: "Build privacy into systems from the start, with default settings that collect as little as possible." },
+    { n: "Breach notification (72 hours)", d: "A personal data breach must be reported to the supervisory authority within 72 hours." }
+  ]},
+  { t: "ch3", terms: [
+    { n: "Strategic planning", d: "Defining the organisation’s long-term direction and allocating the resources needed to reach it.", x: "E22-Q1" },
+    { n: "Mission statement", d: "What the organisation does and for whom." },
+    { n: "Vision statement", d: "What the organisation wants to become in the long run.", ex: "“In Norway, it is safe to use digital services.”" },
+    { n: "Values statement", d: "The principles and qualities the organisation stands for, such as openness and trust." },
+    { n: "Objectives", d: "Specific, measurable targets (SMART) that break broad goals down." },
+    { n: "Tactical planning", d: "Medium-term planning (1–3 years) by middle managers that turns strategy into projects.", ex: "A yearly plan to implement SIEM." },
+    { n: "Operational planning", d: "Short-term planning (days to months) of daily tasks.", ex: "A weekly patch schedule." },
+    { n: "InfoSec governance", d: "The board and executive management give strategic direction, ensure objectives are met, manage risk and use resources responsibly." },
+    { n: "GRC", d: "Governance, risk management and compliance integrated into one view from board level." },
+    { n: "Top-down implementation", d: "Security initiated and funded by top management; the most successful approach." },
+    { n: "Bottom-up implementation", d: "Security started by technical staff without management backing; often fails for lack of authority and budget." },
+    { n: "SecSDLC", d: "Security Systems Development Life Cycle: investigation → analysis → logical design → physical design → implementation → maintenance." },
+    { n: "Implementation plan", d: "Turns the strategy into a roadmap of prioritised projects with owners, resources and deadlines.", x: "E22-Q1, R20-Q1, R22-Q4" },
+    { n: "Balanced scorecard", d: "A tool to follow up objectives from several perspectives: financial, customer, internal processes, learning and growth." }
+  ]},
+  { t: "ch4", terms: [
+    { n: "Policy", d: "A set of high-level rules from management that says what behaviour is required or forbidden.", x: "E20-Q1, E21-Q1" },
+    { n: "Standard", d: "A more detailed, mandatory requirement that supports a policy.", ex: "“Passwords must be at least 14 characters.”" },
+    { n: "Guideline", d: "Recommended, non-mandatory advice on how to comply." },
+    { n: "Procedure", d: "Step-by-step instructions to carry out a task.", ex: "How to reset a user’s password after identity checks." },
+    { n: "EISP", d: "Enterprise Information Security Policy: the top-level, organisation-wide policy that sets direction, scope and tone for security.", x: "E21-Q1" },
+    { n: "ISSP", d: "Issue-Specific Security Policy: covers one technology or issue and how employees must use it.", ex: "Acceptable use of email, BYOD or AI tools.", x: "E21-Q1" },
+    { n: "SysSP", d: "System-Specific Security Policy: rules for one system, with managerial guidance and technical specifications.", ex: "The firewall rule set for the payroll server.", x: "E21-Q1" },
+    { n: "Bull’s-eye model", d: "Security is built from the outside in: policy → networks → systems → applications." },
+    { n: "Enforceable policy criteria", d: "A policy must be disseminated, reviewed, comprehended, complied with and uniformly enforced.", x: "E20-Q1, R21-Q2" },
+    { n: "Uniform enforcement", d: "The same rules and consequences apply to everyone, including managers.", x: "E20-Q1, R21-Q2" },
+    { n: "Access control list (ACL)", d: "A list attached to an object saying which users can access it." },
+    { n: "Capability table", d: "A list attached to a user saying which objects that user can access." },
+    { n: "Policy owner", d: "The person responsible for creating, revising and distributing a policy." },
+    { n: "Sunset clause", d: "A date when a policy expires unless it is renewed." }
+  ]},
+  { t: "rbl", terms: [
+    { n: "Deduction (writing mode)", d: "Outline an argument from what you know, then research to fill the gaps; the slides call it the best in practice." },
+    { n: "Induction (writing mode)", d: "Research the topic first, then form the argument from the research; common but you risk losing your own voice." },
+    { n: "Abduction (writing mode)", d: "Make clear the assumptions (warrant) that let you move from data to argument, deepening critique." },
+    { n: "Warrant", d: "The underlying assumption that connects the data to the argument." },
+    { n: "Abstract and conclusions", d: "The parts an examiner reads first to form an overall impression, so they need the most care." }
+  ]},
+  { t: "ch5", terms: [
+    { n: "Information security program", d: "All the organisation’s security activities, people, policies, technology and budget managed as a whole.", x: "R21-Q3" },
+    { n: "Placement of the security function", d: "Where the security unit reports; outside IT reduces conflicts of interest between speed and control." },
+    { n: "Definers", d: "Security staff who set policy and manage risk, such as the CISO and managers." },
+    { n: "Builders", d: "Technical security staff who design and implement solutions." },
+    { n: "Administrators", d: "Security staff who operate and monitor controls day to day." },
+    { n: "CISO", d: "Chief Information Security Officer: owns security strategy, policy and budget and reports to top management.", x: "E21-Q3" },
+    { n: "Job rotation and mandatory vacation", d: "Moving staff between tasks or forcing time off so fraud or errors become visible." },
+    { n: "SETA", d: "Security Education, Training and Awareness: a program to reduce human-caused incidents.", x: "R20-Q3, E23-Q3" },
+    { n: "Security awareness", d: "The “what” of SETA: helping all employees recognise threats, e.g. posters and phishing tests.", x: "R20-Q3, E23-Q3" },
+    { n: "Security training", d: "The “how” of SETA: job skills for staff with security tasks, e.g. hands-on workshops.", x: "R20-Q3, E23-Q3" },
+    { n: "Security education", d: "The “why” of SETA: deep understanding for security professionals, e.g. degrees and certifications.", x: "R20-Q3, E23-Q3" },
+    { n: "Theory of Planned Behaviour", d: "Behaviour is predicted by intention, shaped by attitude, subjective norms and perceived behavioural control.", ex: "Locking the screen because it matters, colleagues do it and it is easy." },
+    { n: "Protection Motivation Theory", d: "People protect themselves when they see a serious, likely threat and believe they can carry out an effective protective action." },
+    { n: "General Deterrence Theory", d: "People avoid bad behaviour if punishment is certain, severe and swift." },
+    { n: "Organisational culture (Schein)", d: "Shared assumptions in three levels: artifacts, espoused values and basic assumptions." },
+    { n: "Identification-based trust", d: "The highest level of trust in information sharing, based on shared values and goals.", x: "E21-Q6" },
+    { n: "Calculus-based trust", d: "The lowest level of trust, based on rules, contracts and sanctions.", x: "E21-Q6" },
+    { n: "Traffic Light Protocol (TLP)", d: "Labels for how far shared information may spread: RED, AMBER, GREEN and CLEAR.", ex: "TLP:AMBER = own organisation, need-to-know.", x: "E21-Q6" }
+  ]},
+  { t: "ch6", terms: [
+    { n: "Risk", d: "The chance that a threat exploits a vulnerability and harms an asset; often likelihood × impact." },
+    { n: "Risk assessment", d: "Risk identification + risk analysis + risk evaluation." },
+    { n: "Information asset", d: "Anything of value: data, software, hardware, people, procedures or networks." },
+    { n: "Asset classification", d: "Labelling information by sensitivity, e.g. public, internal, confidential, secret.", x: "R20-Q2" },
+    { n: "Asset categorisation", d: "Rating the impact on C, I and A if an asset is compromised: low, moderate or high.", x: "R20-Q2" },
+    { n: "Weighted table analysis", d: "Scoring each asset on weighted criteria to rank assets objectively.", x: "R20-Q2" },
+    { n: "TVA worksheet", d: "A table pairing each asset with its threats and vulnerabilities to prioritise controls." },
+    { n: "Risk matrix (heat map)", d: "A likelihood × impact grid coloured green/yellow/red to present and prioritise risks.", x: "R20-Q2" },
+    { n: "Threat", d: "Any potential danger to an asset." },
+    { n: "Threat agent", d: "The person or thing that carries out a threat, e.g. criminals, insiders or nature." },
+    { n: "Vulnerability", d: "A weakness in a system, process or person that a threat can exploit.", ex: "No MFA on remote access." },
+    { n: "Qualitative risk analysis", d: "Rates risk with scales like low/medium/high; fast but subjective." },
+    { n: "Quantitative risk analysis", d: "Rates risk in money and probabilities (e.g. ALE, FAIR); precise but needs good data." },
+    { n: "OCTAVE", d: "A self-directed, workshop-based qualitative risk method run by internal teams.", x: "E20-Q2, R21-Q1" },
+    { n: "FAIR", d: "A quantitative method that expresses risk in money: loss event frequency × loss magnitude.", x: "E20-Q2, R21-Q1" },
+    { n: "Delphi technique", d: "Experts rate risks anonymously in rounds until they agree; useful when data is scarce.", x: "E20-Q2, R21-Q1" },
+    { n: "STRIDE", d: "Microsoft threat-modelling method: spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege." },
+    { n: "Socio-technical risk analysis", d: "Looks at both technical and human/organisational causes of risk.", ex: "Østre Toten 2021: culture and awareness were not considered." }
+  ]},
+  { t: "ch7", terms: [
+    { n: "Defence (avoidance)", d: "Risk treatment that prevents the vulnerability from being exploited.", ex: "Patching, firewall, MFA.", x: "R21-Q1" },
+    { n: "Transference", d: "Risk treatment that shifts the risk to others.", ex: "Cyber insurance or outsourcing.", x: "R21-Q1" },
+    { n: "Mitigation", d: "Risk treatment that reduces the impact if the event happens.", ex: "IR plan, DR plan, backups.", x: "R21-Q1" },
+    { n: "Acceptance", d: "Consciously doing nothing about a risk after evaluating it.", ex: "A low-value test server.", x: "R21-Q1" },
+    { n: "Termination", d: "Stopping the risky activity or removing the asset.", ex: "Shutting down an old, unsupported web service.", x: "R21-Q1" },
+    { n: "Residual risk", d: "The risk that remains after controls are applied." },
+    { n: "Risk appetite", d: "How much risk the organisation is willing to accept to reach its goals." },
+    { n: "SLE", d: "Single loss expectancy = asset value × exposure factor." },
+    { n: "ARO", d: "Annualised rate of occurrence: how often the loss is expected per year." },
+    { n: "ALE", d: "Annualised loss expectancy = SLE × ARO.", ex: "SLE 100,000 NOK × 2 per year = 200,000 NOK/year." },
+    { n: "Cost-benefit analysis (CBA)", d: "ALE before control – ALE after control – annual cost of the control; positive means worth it." },
+    { n: "Feasibility of controls", d: "Checking that a control is economically, organisationally, operationally, technically and politically feasible.", x: "R21-Q1" }
+  ]},
+  { t: "ch8", terms: [
+    { n: "Security management framework", d: "A structured blueprint of policies, controls and processes for running InfoSec.", x: "E23-Q1" },
+    { n: "ISMS", d: "Information Security Management System: policies, processes, roles and controls for managing security risk continuously." },
+    { n: "PDCA", d: "Plan–Do–Check–Act: the continuous improvement cycle used in ISO standards." },
+    { n: "ISO/IEC 27001", d: "The certifiable standard that sets the requirements for an ISMS.", x: "E23-Q1" },
+    { n: "ISO/IEC 27002", d: "Guidance for security controls (2022: 93 controls in 4 themes)." },
+    { n: "NIST CSF 2.0", d: "Voluntary US framework with six functions: Govern, Identify, Protect, Detect, Respond, Recover.", x: "E23-Q1, E20-Q6" },
+    { n: "NSM Basic Principles", d: "Norwegian framework in four categories: identify and map, protect and maintain, detect, handle and recover.", x: "E23-Q1" },
+    { n: "Bell-LaPadula", d: "Confidentiality model: no read up, no write down.", x: "E23-Q1" },
+    { n: "Biba", d: "Integrity model: no read down, no write up.", x: "E23-Q1" },
+    { n: "Clark-Wilson", d: "Integrity model where users change data only through controlled programs (access triple) with separation of duties.", x: "E23-Q1" },
+    { n: "Brewer-Nash (Chinese Wall)", d: "Prevents conflicts of interest: after accessing one client’s data you cannot access a competitor’s.", ex: "A consultant for Bank A cannot see Bank B’s files.", x: "E23-Q1" },
+    { n: "Common Criteria", d: "International standard (ISO/IEC 15408) for certifying security products with Target of Evaluation, Protection Profiles and EAL1–7.", x: "E23-Q1" },
+    { n: "Least privilege", d: "Users get only the access they need to do their job.", x: "E20-Q3" },
+    { n: "Separation of duties", d: "Critical tasks need more than one person.", x: "E20-Q3" },
+    { n: "Data access control", d: "Controls access to individual files, records or fields.", ex: "File permissions, database rights.", x: "E20-Q3" },
+    { n: "Logical access control", d: "Controls access to networks and resources through software.", ex: "Firewalls, VPN, passwords.", x: "E20-Q3" }
+  ]},
+  { t: "ch9", terms: [
+    { n: "Benchmarking", d: "Comparing your security practices with other organisations or standards.", x: "E20-Q6" },
+    { n: "Best practices", d: "Practices proven to work well in comparable organisations." },
+    { n: "Baselining", d: "Measuring the current level so it can be compared against later." },
+    { n: "Gap analysis", d: "The difference between the current state and the target state." },
+    { n: "Security metrics", d: "Quantified measures of security results.", ex: "Patch time, phishing click rate, incidents per month." },
+    { n: "Maturity model", d: "A scale describing how developed the security processes are.", ex: "CMMI levels 1 Initial to 5 Optimising; NIST CSF tiers.", x: "E20-Q6" },
+    { n: "CSIRT", d: "Computer Security Incident Response Team: handles incidents (isolate, mitigate, recover).", x: "R22-Q5, E23-Q6" },
+    { n: "CERT", d: "Computer Emergency Response Team: coordinates, advises and warns a sector or nation.", ex: "NorCERT, HelseCERT.", x: "R22-Q5, E23-Q6" },
+    { n: "SOC", d: "Security Operations Center: monitors 24/7, detects and triages alerts.", x: "R22-Q5, E23-Q6" },
+    { n: "RFC 2350", d: "The standard for what a CSIRT should publish about itself: contacts, services, PGP keys, hours.", x: "R22-Q5, E23-Q6" }
+  ]},
+  { t: "ch10", terms: [
+    { n: "Contingency planning (CP)", d: "Planning for unexpected adverse events: BIA + IR plan + DR plan + BC plan.", x: "E20-Q5, R21-Q4, E22-Q5" },
+    { n: "CPMT", d: "Contingency Planning Management Team: leads all CP work with a champion, a project manager and members from the business.", x: "E20-Q5, R21-Q4, E22-Q5" },
+    { n: "Business impact analysis (BIA)", d: "Investigates which business processes are most critical and what happens if they stop.", x: "E21-Q5" },
+    { n: "Recovery criticality", d: "Ranking business processes by how fast they must be restored.", ex: "Hospital: patient journal = critical; payroll = essential.", x: "E21-Q5" },
+    { n: "MTD", d: "Maximum Tolerable Downtime: the longest a process can be down before the damage is unacceptable.", x: "R22-Q1, R21-Q6" },
+    { n: "RTO", d: "Recovery Time Objective: the target time to restore a system after a disruption." },
+    { n: "RPO", d: "Recovery Point Objective: how much data loss (in time) is acceptable; decides backup frequency.", ex: "RPO = 1 hour → back up at least hourly." },
+    { n: "WRT", d: "Work Recovery Time: time to test and return to normal work after the technical restore; MTD = RTO + WRT." },
+    { n: "Incident response (IR) plan", d: "Actions to detect, contain, eradicate and recover from an incident at the primary site.", x: "E21-Q4, R20-Q4" },
+    { n: "Disaster recovery (DR) plan", d: "Restoring systems, data and facilities after a disaster, usually at the primary site.", x: "E21-Q4, R20-Q4" },
+    { n: "Business continuity (BC) plan", d: "Keeps critical business functions running, often at an alternate site, while the primary site is recovered.", x: "E21-Q5" },
+    { n: "Hot site", d: "A fully equipped alternate site that is ready within hours; the most expensive option." },
+    { n: "Cold site", d: "An alternate site with only space and power; cheap but slow to start." },
+    { n: "3-2-1 backup rule", d: "Keep 3 copies of data on 2 different media, with 1 copy offsite or offline." },
+    { n: "Full interruption test", d: "The most realistic and most risky plan test: operations at the primary site are actually stopped." }
+  ]},
+  { t: "ch11", terms: [
+    { n: "Security maintenance model", d: "A W&M model for managing security continuously after implementation, in five areas.", x: "E21-Q2, E22-Q2, R22-Q1, R20-Q5, R21-Q5, E23-Q2" },
+    { n: "External monitoring", d: "Watching the outside world for new threats and vulnerabilities (CERTs, vendors, news) to get early warning.", x: "E21-Q2, E22-Q2" },
+    { n: "Internal monitoring", d: "Knowing your own environment: SOC, SIEM, logs, asset and configuration inventory.", x: "E21-Q2, E22-Q2" },
+    { n: "Planning and risk assessment (maintenance)", d: "Keeping plans and risk assessments current, e.g. with root cause analysis.", x: "E21-Q2, E22-Q2" },
+    { n: "Vulnerability assessment and remediation", d: "Finding and fixing weaknesses with scans, penetration tests and patching.", x: "E21-Q2, E22-Q2" },
+    { n: "Readiness and review", d: "Checking that strategy, policies and plans still fit, through internal control, management review and exercises.", x: "E21-Q2, E22-Q2" },
+    { n: "Configuration and change management", d: "A controlled process to approve, document and track system changes so no new weaknesses are introduced." },
+    { n: "Appreciative inquiry", d: "Building on what already works well, rather than only on faults, to motivate improvement." },
+    { n: "Crisis management team (CMT)", d: "Top managers who make strategic decisions in a crisis, separate from the technical IR team." },
+    { n: "Escalation", d: "Raising an incident to a higher management level when it grows beyond the team’s authority or capacity." },
+    { n: "Tabletop exercise", d: "A discussion-based exercise where the team walks through a scenario to test plans and roles." },
+    { n: "After-action review", d: "An evaluation after an incident or exercise: what happened, what worked and what must change." },
+    { n: "Resilience", d: "The ability to withstand, adapt to and recover quickly from disruptions." }
+  ]}
+]});
+</script>
+
+<script>
+/* ===== TERMS · IMT4113 – Introduction to Information Security (final part, no cryptography) ===== */
+TERMS.push({ code: "IMT4113", chapters: [
+  { t: "inet", terms: [
+    { n: "S/MIME", d: "Secure/MIME: a standard that adds signing and encryption to email messages.", x: "2024 Q12, 2025 Q23" },
+    { n: "Radix-64", d: "Encoding that turns binary data into printable ASCII characters (6 bits per character) so it survives email transport.", x: "2025 Q14, 2024 Q11" },
+    { n: "Clear-signed message", d: "S/MIME mode with integrity but no confidentiality: only the signature is radix-64 encoded, so the message stays readable.", x: "2024 Q12" },
+    { n: "Enveloped data", d: "S/MIME mode that encrypts the content, giving confidentiality." },
+    { n: "DKIM", d: "DomainKeys Identified Mail: the sending domain signs email at the MSA so the receiving side can check integrity and origin.", x: "2024 Q12, 2025 Q23" },
+    { n: "MUA", d: "Mail User Agent: the email program the user works in." },
+    { n: "MTA", d: "Mail Transfer Agent: a server that relays email between domains." },
+    { n: "TLS record protocol", d: "The TLS layer that gives confidentiality and integrity to application data." },
+    { n: "Handshake protocol", d: "The TLS protocol where client and server authenticate and agree on keys and algorithms." },
+    { n: "Heartbeat protocol", d: "A TLS extension that sends periodic signals to check that the connection is alive.", x: "2025 Q3" },
+    { n: "Heartbleed", d: "A bug in OpenSSL’s heartbeat where a missing length check leaked server memory.", x: "2024 Q13, 2025 Q3" },
+    { n: "HTTPS", d: "HTTP over TLS, normally on port 443." },
+    { n: "IPsec", d: "Security at the IP layer: authentication, confidentiality and key management for all traffic.", x: "2024 Q2, 2025 Q11" },
+    { n: "AH", d: "Authentication Header: the IPsec protocol that gives integrity and authentication, but no encryption." },
+    { n: "ESP", d: "Encapsulating Security Payload: the IPsec protocol that gives confidentiality (and optionally integrity)." },
+    { n: "Security Association (SA)", d: "A one-way relationship between sender and receiver that sets the IPsec security services; identified by the SPI.", x: "2025 Q3" },
+    { n: "Transport mode", d: "IPsec mode that protects only the payload of the IP packet; used end to end." },
+    { n: "Tunnel mode", d: "IPsec mode that protects the whole original IP packet inside a new one; used for VPNs between gateways." }
+  ]},
+  { t: "auth", terms: [
+    { n: "Kerberos", d: "An authentication service that uses a trusted third party so users can access network services with one login." },
+    { n: "Authentication server (AS)", d: "The Kerberos server that checks the user and issues a ticket-granting ticket.", x: "2024 Q14" },
+    { n: "Ticket-granting server (TGS)", d: "The Kerberos server that issues service tickets in exchange for a TGT.", x: "2024 Q14" },
+    { n: "TGT", d: "Ticket-Granting Ticket: proves the user has authenticated and is used to ask for service tickets.", x: "2025 Q6, 2025 Q7" },
+    { n: "Authenticator (Kerberos)", d: "A short-lived message from the client with its identity and a timestamp, proving it owns the ticket and preventing replay.", x: "2024 Q1" },
+    { n: "Realm", d: "A Kerberos domain: the clients and servers registered with one Kerberos server." },
+    { n: "X.509", d: "The most widely accepted standard format for public-key certificates.", x: "2025 Q1" },
+    { n: "Certificate Authority (CA)", d: "A trusted party that signs certificates, binding a public key to an identity.", x: "2024 Q15" },
+    { n: "CRL", d: "Certificate Revocation List: a CA-signed list of certificates that are no longer valid.", x: "2025 Q6, 2024 Q15" },
+    { n: "OCSP", d: "Online Certificate Status Protocol: asks a server in real time whether a certificate is still valid." },
+    { n: "PKI", d: "Public Key Infrastructure: the hardware, software, people, policies and procedures to create, manage and revoke certificates.", x: "2025 Q6, 2025 Q1" },
+    { n: "Root CA", d: "The top CA in a hierarchy; its certificate is self-signed and stored in the trust store." },
+    { n: "Trust store", d: "The list of root CA certificates that a browser or OS trusts." },
+    { n: "DigiNotar", d: "A Dutch CA that was breached in 2011 and issued fake certificates, e.g. for google.com.", x: "2024 Q15" }
+  ]},
+  { t: "ac", terms: [
+    { n: "Access control matrix", d: "A table with subjects as rows, objects as columns and access rights in the cells." },
+    { n: "Access control list (ACL)", d: "A column of the access matrix: for one object, which subjects have which rights.", x: "2024 Q24" },
+    { n: "Capability ticket", d: "A row of the access matrix: for one subject, which objects it may access and how.", x: "2024 Q24" },
+    { n: "DAC", d: "Discretionary access control: the owner of an object decides who gets access." },
+    { n: "MAC", d: "Mandatory access control: the system enforces access based on security labels and clearances." },
+    { n: "RBAC", d: "Role-based access control: rights are given to roles, and users get rights through their roles.", x: "2024 Q5" },
+    { n: "ABAC", d: "Attribute-based access control: access is decided from attributes of the subject, object and environment; more expressive than RBAC.", x: "2025 Q5" },
+    { n: "Bell-LaPadula", d: "Confidentiality model: no read up, no write down." },
+    { n: "Biba", d: "Integrity model: no read down, no write up." },
+    { n: "Chinese Wall", d: "Model that blocks access to a competitor’s data after you have accessed one company’s data.", x: "2025 Q21" },
+    { n: "HRU model", d: "Harrison-Ruzzo-Ullman: changes the access matrix with six primitive operations and studies whether rights can leak.", x: "2025 Q19" },
+    { n: "Reference monitor", d: "The component that checks every access; it must be tamper-proof, always invoked and small enough to verify.", x: "2025 Q20" },
+    { n: "Precise mechanism", d: "A security mechanism that allows exactly the secure states (R = Q).", x: "2025 Q18" },
+    { n: "Policy decision point (PDP)", d: "In XACML, the component that evaluates policies and decides permit or deny." },
+    { n: "Policy enforcement point (PEP)", d: "In XACML, the component that intercepts the request and enforces the PDP’s decision." },
+    { n: "Repeatability", d: "Evaluation property: the same evaluator gets the same result when repeating the evaluation.", x: "2025 Q24" },
+    { n: "Reproducibility", d: "Evaluation property: a different evaluator gets the same result.", x: "2025 Q24" }
+  ]},
+  { t: "mal", terms: [
+    { n: "Malware", d: "A program inserted into a system, usually covertly, to harm the confidentiality, integrity or availability of its data or programs." },
+    { n: "Virus", d: "Malware that infects other programs or files by inserting a copy of itself, and runs when they run." },
+    { n: "Worm", d: "Malware that copies itself to other machines over the network on its own." },
+    { n: "Trojan horse", d: "A program that looks useful but has a hidden harmful function.", ex: "A “PDF for a prize claim” that installs malware.", x: "2025 Q17" },
+    { n: "Trigger (logic bomb)", d: "The condition that makes malware run its payload.", ex: "Activating on the night of Black Friday.", x: "2025 Q17, 2024 Q20" },
+    { n: "Payload", d: "What the malware does besides spreading, such as deleting or stealing data." },
+    { n: "Virus phases", d: "Dormant → propagation → triggering → execution.", x: "2025 Q17" },
+    { n: "Polymorphic virus", d: "A virus that changes its appearance (e.g. its encryption) with each infection to avoid signatures." },
+    { n: "Metamorphic virus", d: "A virus that rewrites its whole code with each infection, changing both appearance and behaviour." },
+    { n: "Macro virus", d: "A virus in the macro code of documents, such as Office files." },
+    { n: "Hit-list scanning", d: "Worm strategy: start from a prepared list of vulnerable machines.", x: "2024 Q20" },
+    { n: "Topological scanning", d: "Worm strategy: use information on the infected machine (e.g. contacts) to find new targets.", x: "2024 Q20" },
+    { n: "Botnet", d: "A network of infected machines (bots) controlled by an attacker through command and control (C2).", ex: "Mirai infected IoT devices with default passwords.", x: "2024 Q16" },
+    { n: "Ransomware", d: "Malware that encrypts the victim’s data and demands payment to restore it." },
+    { n: "Rootkit", d: "Malware that hides itself and keeps privileged access, in user mode or kernel mode." },
+    { n: "Backdoor", d: "A secret entry point that bypasses normal authentication." },
+    { n: "Keylogger", d: "Spyware that records keystrokes to steal passwords and other data." },
+    { n: "APT", d: "Advanced Persistent Threat: a skilled, well-funded attacker that stays hidden for a long time; tracked in MITRE ATT&CK.", x: "2024 Q6" },
+    { n: "Fileless malware", d: "Malware that runs in memory or through built-in tools without writing files to disk." },
+    { n: "Cryptojacking", d: "Secretly using a victim’s computer to mine cryptocurrency." }
+  ]},
+  { t: "bof", terms: [
+    { n: "Buffer overflow", d: "More input is put into a buffer than it can hold, overwriting other information.", x: "2024 Q7, 2025 Q9" },
+    { n: "Stack overflow", d: "A buffer overflow on the stack that can overwrite the saved frame pointer and return address." },
+    { n: "Return address", d: "The address where the program continues after a function; the classic target of a stack overflow." },
+    { n: "Shellcode", d: "Machine code supplied by the attacker, often placed in the overflowed buffer, traditionally to start a shell." },
+    { n: "NOP sled", d: "A run of NOP instructions before the shellcode, so a jump anywhere into it slides to the shellcode." },
+    { n: "Compile-time defence", d: "Hardens new programs: safe languages, safe coding, safe libraries and stack protection.", x: "2025 Q9" },
+    { n: "Run-time defence", d: "Detects and aborts attacks in existing programs: non-executable memory, ASLR and guard pages.", x: "2025 Q9" },
+    { n: "Stack canary", d: "A random value placed before the return address; if it changes, the program aborts." },
+    { n: "Non-executable memory (NX)", d: "Marks the stack and heap as non-executable so injected code cannot run." },
+    { n: "ASLR", d: "Address Space Layout Randomisation: places the stack, heap and libraries at random addresses for each process.", x: "2024 Q21" },
+    { n: "Guard pages", d: "Illegal memory pages placed between critical regions; any access aborts the process." },
+    { n: "Unsafe C functions", d: "Functions like gets() and strcpy() that copy data without checking the buffer size." }
+  ]},
+  { t: "ids", terms: [
+    { n: "Intrusion detection system (IDS)", d: "A system that monitors events or traffic to detect attacks or misuse." },
+    { n: "Misuse (signature) detection", d: "Detects attacks by matching known attack patterns.", x: "2025 Q16" },
+    { n: "Anomaly detection", d: "Detects behaviour that differs from a learned normal profile; can find new attacks but gives more false alarms.", x: "2025 Q16" },
+    { n: "HIDS", d: "Host-based IDS: monitors events on one host, such as logs and system calls.", x: "2025 Q16" },
+    { n: "NIDS", d: "Network-based IDS: monitors network traffic.", x: "2025 Q16" },
+    { n: "Aho-Corasick", d: "A pattern-matching machine that searches for many signatures at once, using goto, failure and output functions.", x: "2025 Q16" },
+    { n: "Snort", d: "An open-source signature-based NIDS with rule actions such as alert, log and pass.", x: "2025 Q16" },
+    { n: "Base-rate fallacy", d: "When attacks are rare, even a low false-positive rate means most alarms are false.", x: "2024 Q10, 2025 Q16" },
+    { n: "Bayesian detection rate", d: "P(intrusion | alarm): the share of alarms that are real attacks.", x: "2025 Q16" },
+    { n: "Algorithmic attack", d: "Input crafted to trigger the worst-case performance of the IDS algorithm so it slows down or misses traffic.", x: "2024 Q25" }
+  ]},
+  { t: "sw", terms: [
+    { n: "CWE", d: "Common Weakness Enumeration: MITRE’s list of software weaknesses.", x: "2025 Q10, 2024 Q9" },
+    { n: "Defensive programming", d: "Writing software that keeps working safely under attack: never assume, check all input and handle every error." },
+    { n: "Injection attack", d: "Input data influences the flow of execution, e.g. by being run as a command or query.", ex: "Adding “; rm -rf” to a shell command.", x: "2025 Q2, 2024 Q22" },
+    { n: "SQL injection", d: "Input is inserted into an SQL query so the attacker changes what the query does." },
+    { n: "OS command injection", d: "Input is passed to a system shell, so the attacker can run their own commands.", x: "2024 Q22" },
+    { n: "Cross-site scripting (XSS)", d: "Input from one user containing script is shown to another user and runs in their browser." },
+    { n: "Reflected XSS", d: "The malicious script is in the request (e.g. a link) and reflected straight back in the response.", x: "2025 Q2" },
+    { n: "Stored XSS", d: "The malicious script is saved on the server (e.g. in a database) and shown to later visitors.", x: "2025 Q2" },
+    { n: "Improper authentication", d: "The server trusts data or identity claims without properly verifying them.", ex: "A game that accepts any score sent by the client.", x: "2024 Q8" },
+    { n: "Input fuzzing", d: "Testing a program with large amounts of random input to find bugs; simple, but misses bugs that need very specific input.", x: "2025 Q13" },
+    { n: "Least privilege", d: "Run programs with only the privileges they need, to limit damage if they are exploited." },
+    { n: "Privilege escalation", d: "Exploiting a flaw to gain more privileges than intended." }
+  ]},
+  { t: "os", terms: [
+    { n: "OS hardening", d: "Securing the base OS: patch, remove unneeded services, configure users and permissions, add controls, and test." },
+    { n: "Defence in depth", d: "Multiple layered countermeasures, so attacks missed by one are caught by another." },
+    { n: "Application whitelisting", d: "Only approved applications are allowed to run." },
+    { n: "CIS Benchmarks", d: "Consensus-based configuration guides for hardening specific systems.", x: "2024 Q9" },
+    { n: "Logging", d: "Recording events so that, after a breach, administrators can quickly find out what happened." },
+    { n: "Backup", d: "Making copies of data at regular intervals." },
+    { n: "Archive", d: "Keeping copies of data for a long time to meet legal and operational requirements." },
+    { n: "Virtualisation", d: "Running software in a simulated environment, a virtual machine, on shared physical hardware." },
+    { n: "Hypervisor", d: "Middleware between the hardware and the virtual machines that brokers resources." },
+    { n: "Type 1 hypervisor", d: "Native virtualisation: runs directly on the hardware; better performance and security.", ex: "VMware ESXi, KVM.", x: "2025 Q4, 2024 Q23" },
+    { n: "Type 2 hypervisor", d: "Hosted virtualisation: runs on top of a host OS; easier to use but less secure.", ex: "VirtualBox.", x: "2025 Q4, 2024 Q23" },
+    { n: "Container", d: "Application virtualisation: runs on the host OS kernel and gives an isolated environment for applications.", x: "2025 Q4" }
+  ]},
+  { t: "dos", terms: [
+    { n: "Denial of service (DoS)", d: "An attack that makes a service unavailable to legitimate users." },
+    { n: "DDoS", d: "Distributed DoS: the attack comes from many machines, often a botnet." },
+    { n: "SYN flood", d: "Sending many TCP SYN packets without completing the handshake, filling the server’s connection table." },
+    { n: "Amplification attack", d: "Small spoofed requests to a service that sends large replies to the victim.", ex: "DNS or Memcached amplification.", x: "2024 Q17" },
+    { n: "Reflection", d: "The attacker spoofs the victim’s IP address so third-party servers send their replies to the victim.", x: "2024 Q17" },
+    { n: "Slowloris", d: "Keeping many HTTP connections open by sending headers very slowly, using up the server’s connections." },
+    { n: "Slow read attack", d: "Reading the server’s response very slowly so connections stay open." },
+    { n: "RUDY", d: "R-U-Dead-Yet: sending a POST body extremely slowly to tie up the server." },
+    { n: "Deauthentication attack", d: "Sending forged Wi-Fi deauthentication frames to disconnect clients." },
+    { n: "Phlashing", d: "Permanent DoS that damages hardware, for example with malicious firmware updates." },
+    { n: "Denial of wallet", d: "Making a cloud service scale up so the victim gets huge bills." },
+    { n: "Booter (stresser)", d: "A paid DDoS-for-hire service." },
+    { n: "Route-based packet filtering", d: "Routers drop packets whose source address could not arrive by that route, which stops spoofed DDoS traffic.", x: "2024 Q3, 2025 Q8" }
+  ]}
+]});
+</script>
+
+<script>
+/* ===== TERMS · IMT4133 – Data Science for Security and Forensics ===== */
+TERMS.push({ code: "IMT4133", chapters: [
+  { t: "l1", terms: [
+    { n: "Artificial intelligence (AI)", d: "Making computers do things that seem smart: understand data, learn from it and make decisions.", ex: "A chess program or a spam filter.", x: "Mock 2026 Q1a, May 2026 Q1" },
+    { n: "Machine learning (ML)", d: "A part of AI where the computer learns patterns from data instead of following hand-written rules.", ex: "Show 10,000 labelled emails and let it learn what spam looks like.", x: "Mock 2026 Q1a, May 2026 Q1" },
+    { n: "Deep learning (DL)", d: "A part of ML that uses neural networks with many layers and finds useful features by itself.", ex: "Face unlock on a phone.", x: "Mock 2026 Q1a, May 2026 Q1" },
+    { n: "Feature (attribute)", d: "One measurable property of an example: a column in the dataset.", ex: "A car’s weight and horsepower." },
+    { n: "Label (class)", d: "The correct answer for an example." },
+    { n: "Model", d: "A compact summary of the data that represents reality and can make predictions." },
+    { n: "Generalise", d: "Work well on new, unseen data: the whole goal of ML." },
+    { n: "Classification", d: "Predicting a category.", ex: "Is this fish a salmon or a cod?", x: "May 2026 Q1, Mock 2026 Q1b" },
+    { n: "Regression", d: "Predicting a number.", ex: "How many GB of traffic will hit a server tomorrow.", x: "May 2026 Q1, Mock 2026 Q1b" },
+    { n: "Clustering", d: "Grouping similar examples without knowing the answers in advance.", x: "Exam 2021 Q1" },
+    { n: "Supervised learning", d: "Learning from data that has labels (the answers)." },
+    { n: "Unsupervised learning", d: "Finding structure in data without labels." },
+    { n: "False positive", d: "The model said yes, but the answer was no: a false alarm.", ex: "A smoke alarm going off when you make toast.", x: "Mock 2026 Q1c" },
+    { n: "False negative", d: "The model said no, but the answer was yes: a miss.", ex: "A spam filter lets a phishing email through.", x: "Mock 2026 Q1c" },
+    { n: "Adversarial machine learning", d: "Tricking an ML model with carefully changed input, or defending against such tricks.", ex: "Stickers on a stop sign make a car read “45 speed limit”." },
+    { n: "Data poisoning", d: "Attackers inject false or malicious data into the training data." },
+    { n: "AI winter", d: "A period when interest and funding for AI collapsed because the hype was not met.", x: "May 2026 Q1, Exam 2021 Q1" },
+    { n: "Rule-based system", d: "Uses fixed, hand-made rules that react but do not learn or adapt.", ex: "A spam filter built from a list of banned words.", x: "Mock 2026 Q1a" }
+  ]},
+  { t: "l2", terms: [
+    { n: "Data preprocessing", d: "Cleaning and transforming raw data so it is ready for analysis.", x: "Mock 2026 Q2a" },
+    { n: "Feature engineering", d: "Choosing, transforming and creating features so models learn better." },
+    { n: "Missing value", d: "A feature value that is not there for a record." },
+    { n: "Duplicate record", d: "The same observation appears more than once and gets too much influence.", ex: "42% of UNSW-NB15 training records were copies.", x: "Mock 2026 Q2b" },
+    { n: "Noise", d: "Small, random, unwanted variation in measurements." },
+    { n: "Outlier", d: "A value very different from most others; in security it may be the actual attack.", ex: "A DoS flow with 8,070 packets when most have 4.", x: "Mock 2026 Q2b" },
+    { n: "Imputation", d: "Filling a missing value with a sensible estimate.", x: "Mock 2026 Q2b" },
+    { n: "Constant imputation", d: "Filling missing values with a fixed value.", ex: "Blank ct_ftp_cmd in UNSW-NB15 → 0.", x: "Mock 2026 Q2b" },
+    { n: "Category harmonisation", d: "Merging different spellings of the same category.", ex: "“backdoors” → “backdoor”." },
+    { n: "One-hot encoding", d: "Turning one category column into several 0/1 columns, one per category.", ex: "udp → TCP=0, UDP=1, ICMP=0.", x: "Mock 2026 Q2b" },
+    { n: "Normalisation (min-max)", d: "(x − min) / (max − min): puts values between 0 and 1.", ex: "x = 30, min 10, max 50 → 0.5.", x: "Mock 2026 Q2c" },
+    { n: "Standardisation (z-score)", d: "(x − mean) / standard deviation: the mean becomes 0 and the spread becomes 1.", x: "Mock 2026 Q2c" },
+    { n: "Log transformation", d: "Changing a feature with a logarithm to reduce skew." },
+    { n: "Domain-based feature construction", d: "Creating new features using knowledge of the field.", ex: "ct_dst_ltm: connections to the same destination in the last minute." },
+    { n: "Forensic image", d: "An exact bit-by-bit copy of a storage device." },
+    { n: "Working copy", d: "The copy of the evidence you actually analyse, so the original stays unchanged.", x: "Mock 2026 Q2d" },
+    { n: "Hash verification", d: "Comparing digital fingerprints (e.g. SHA-256); matching hashes prove a copy is identical.", x: "Mock 2026 Q2d" },
+    { n: "Chain of custody", d: "A record of who handled the evidence, when and how." }
+  ]},
+  { t: "l3", terms: [
+    { n: "Relevant feature", d: "A feature that is useful for the problem you want to solve.", ex: "spkts (source packets) for spotting attacks." },
+    { n: "Irrelevant feature", d: "A feature that tells nothing useful about the target.", ex: "record_id, just a row number.", x: "Exam 2021 Q3" },
+    { n: "Redundant feature", d: "A feature that repeats information already in other features.", ex: "total_pkts = spkts + dpkts.", x: "Exam 2021 Q3" },
+    { n: "Variance", d: "How spread out one feature is around its mean (average squared distance)." },
+    { n: "Covariance", d: "Whether two features move together (+), opposite (−) or not at all; its size depends on the units." },
+    { n: "Correlation (Pearson)", d: "Covariance scaled to between −1 and +1, so it is easy to compare." },
+    { n: "Cosine similarity", d: "Similarity based on the angle between two vectors: 1 = same direction, 0 = unrelated." },
+    { n: "Entropy", d: "How mixed the class labels are: a 50/50 split of two classes = 1, all the same = 0." },
+    { n: "Information gain", d: "How much a feature reduces entropy when you split on it.", ex: "“Is it alive?” removes more doubt than “Is it purple?”", x: "Exam 2021 Q3" },
+    { n: "Feature selection", d: "Keeping a subset of the original features and removing the rest.", x: "Exam 2021 Q3" },
+    { n: "Feature extraction", d: "Creating new features from the original ones.", ex: "PCA.", x: "Exam 2021 Q3" },
+    { n: "Curse of dimensionality", d: "With many features, data spreads out, distances lose meaning and much more data is needed.", x: "Exam 2021 Q1" },
+    { n: "PCA", d: "Principal Component Analysis: creates new features (components) that capture the most variance.", x: "Exam 2021 Q3" },
+    { n: "Principal component", d: "One of the new axes PCA creates; PC1 captures the most variance." },
+    { n: "Eigenvalue", d: "How much variance lies along a principal direction (eigenvector)." },
+    { n: "Explained variance", d: "The share of total variance a component keeps: λ / Σλ.", ex: "PC1 keeps 9 / 10 = 90%." }
+  ]},
+  { t: "l4", terms: [
+    { n: "Feature space", d: "A space where each feature is an axis and every example is a dot." },
+    { n: "Synthetic data", d: "Data you generate yourself, so you know the true pattern." },
+    { n: "Polynomial curve fitting", d: "Fitting a curve y = w₀ + w₁x + w₂x² + … through data points." },
+    { n: "Order (M)", d: "The highest power in a polynomial; a higher M gives a more flexible curve." },
+    { n: "Error function", d: "A formula that scores how well the model fits; learning means minimising it." },
+    { n: "RMS error", d: "Root-mean-square error: the square root of the mean squared error, in the original units." },
+    { n: "Underfitting", d: "The model is too simple to capture the pattern: poor on both training and test data.", x: "May 2026 Q1, Exam 2021 Q1" },
+    { n: "Overfitting", d: "The model is too complex and memorises noise: great on training data, poor on new data.", x: "May 2026 Q1, Exam 2021 Q1" },
+    { n: "Regularisation", d: "Adding a penalty for large weights to the error function so the model stays simple.", x: "May 2026 Q1, Exam 2021 Q1" },
+    { n: "Confusion matrix", d: "A table counting true positives, false negatives, false positives and true negatives." },
+    { n: "Accuracy", d: "(TP + TN) / all: the share of all predictions that are correct." },
+    { n: "Precision", d: "TP / (TP + FP): when the model says yes, how often it is right." },
+    { n: "Recall (sensitivity)", d: "TP / (TP + FN): of all real positives, how many were found." },
+    { n: "Specificity", d: "TN / (TN + FP): of all real negatives, how many were correctly left alone." },
+    { n: "F1-score", d: "One number that balances precision and recall: 2·P·R / (P + R)." },
+    { n: "Class imbalance", d: "One class is much rarer than the other, so accuracy can be misleading.", ex: "96% accuracy on cancer but only 30% of real cases found.", x: "Exam 2021 Q1" },
+    { n: "k-fold cross-validation", d: "Split data into k parts; each part takes a turn as the test set." },
+    { n: "ROC curve", d: "A plot of true positive rate against false positive rate at different thresholds." }
+  ]},
+  { t: "l5", terms: [
+    { n: "Artificial neural network (ANN)", d: "A model made of many simple, connected units (neurons) that learn from data." },
+    { n: "Net input", d: "The weighted sum of a neuron’s inputs: Σ wᵢxᵢ." },
+    { n: "Weight (neuron)", d: "How important an input is; learning means adjusting these values." },
+    { n: "Bias", d: "An extra constant that shifts a neuron’s output, so the line does not have to pass through the origin." },
+    { n: "Activation function", d: "Turns the net input into the neuron’s output." },
+    { n: "Sigmoid function", d: "An S-shaped curve that squeezes any number into the range 0–1." },
+    { n: "Perceptron", d: "One artificial neuron with a threshold activation; it draws one straight line between classes." },
+    { n: "Delta rule", d: "Weight update Δw = η · δ · x, where δ = target − output." },
+    { n: "Linearly separable", d: "The classes can be split by one straight line." },
+    { n: "XOR problem", d: "Output 1 when exactly one input is 1; not linearly separable, so one perceptron cannot learn it." },
+    { n: "Multilayer perceptron (MLP)", d: "A network with an input layer, one or more hidden layers and an output layer." },
+    { n: "Gradient", d: "The slope of the loss function: which way, and how steeply, the error increases.", x: "May 2026 Q2, Exam 2021 Q2" },
+    { n: "Gradient descent", d: "Repeatedly changing the weights opposite to the gradient to reduce the error.", ex: "w = 3, slope 2, η = 0.1 → new w = 2.8.", x: "May 2026 Q2, Exam 2021 Q2" },
+    { n: "Learning rate (η or μ)", d: "The size of each weight-update step: too small is slow, too large overshoots.", x: "May 2026 Q2" },
+    { n: "Local minimum", d: "A low point of the error that is not the lowest overall; gradient descent can get stuck there.", x: "May 2026 Q2" },
+    { n: "Backpropagation", d: "Computes the gradients by sending the error backwards from the output layer to the input layer." },
+    { n: "Epoch", d: "One full pass through all the training examples." },
+    { n: "Momentum", d: "Adds part of the previous weight change to the current one to move faster and smoother." }
+  ]},
+  { t: "l6", terms: [
+    { n: "Symbolic learning", d: "Learning with rules and trees that humans can read.", x: "May 2026 Q3, Mock 2026 Q3a" },
+    { n: "Statistical learning", d: "Learning numeric models that use probability to handle uncertainty.", x: "May 2026 Q3, Mock 2026 Q3a" },
+    { n: "Decision tree", d: "A tree of questions about features that ends in a class label.", ex: "The game 20 Questions.", x: "Mock 2026 Q3c" },
+    { n: "Pruning", d: "Removing unreliable, too-specific branches of a tree to prevent overfitting.", x: "Mock 2026 Q3c, Exam 2021 Q4" },
+    { n: "Regression tree", d: "Like a decision tree, but the leaves hold numbers instead of classes.", x: "Exam 2021 Q4" },
+    { n: "Association rules", d: "Patterns of the form “if A happens, B also happens”.", ex: "People who buy fish and chips also buy soda." },
+    { n: "Support", d: "How often the items appear together in all transactions.", ex: "{bread, milk} in 3 of 10 baskets = 30%." },
+    { n: "Confidence", d: "How reliable a rule is: support(A and B) / support(A)." },
+    { n: "One-vs-all (OVA)", d: "Solving a multi-class problem with one binary classifier per class.", ex: "4 classes → 4 classifiers.", x: "Exam 2021 Q4" },
+    { n: "One-vs-one", d: "Solving a multi-class problem with one binary classifier for every pair of classes.", ex: "4 classes → 6 classifiers.", x: "Exam 2021 Q4", chk: true },
+    { n: "Linear discriminant function", d: "g(x) = wᵀx + w₀; g > 0 → class 1, g < 0 → class 2.", x: "May 2026 Q3" },
+    { n: "Logistic regression", d: "Uses a sigmoid to output a probability between 0 and 1." },
+    { n: "k-nearest neighbours (k-NN)", d: "Finds the k closest training points and takes a majority vote.", ex: "Neighbours attack, attack, normal → attack.", x: "Mock 2026 Q3b" },
+    { n: "Lazy learning", d: "No model is built in advance; the work happens only when a new example arrives.", x: "Mock 2026 Q3b" },
+    { n: "Support vector machine (SVM)", d: "Finds the boundary with the largest margin between the classes." },
+    { n: "Support vectors", d: "The points closest to the SVM boundary; they alone decide where it goes." },
+    { n: "Kernel", d: "A trick that lets an SVM draw curved boundaries by working in a higher-dimensional space." },
+    { n: "Manhattan distance", d: "Distance along a grid: |x₁−x₂| + |y₁−y₂|.", ex: "How a taxi drives through city blocks." }
+  ]},
+  { t: "l7", terms: [
+    { n: "Cluster", d: "A group of similar data objects." },
+    { n: "Intra-cluster similarity", d: "How similar items inside a cluster are; it should be high." },
+    { n: "Inter-cluster similarity", d: "How similar different clusters are; it should be low." },
+    { n: "Euclidean distance", d: "Straight-line distance between two points (“as the crow flies”)." },
+    { n: "Mahalanobis distance", d: "Distance that takes the data’s spread and direction into account." },
+    { n: "Hamming distance", d: "The number of positions where two strings differ.", ex: "10110 vs 10011 → 2." },
+    { n: "Partitioning clustering", d: "Splitting data into a fixed number (K) of groups at once." },
+    { n: "Hierarchical clustering", d: "Builds a tree of clusters, from small groups to big ones." },
+    { n: "Dendrogram", d: "The tree diagram from hierarchical clustering; cutting it higher gives fewer clusters." },
+    { n: "Agglomerative clustering", d: "Bottom-up: start with every point alone and repeatedly merge the two closest clusters." },
+    { n: "Divisive clustering", d: "Top-down: start with one big cluster and split it repeatedly." },
+    { n: "Hard clustering", d: "Each point belongs to exactly one cluster." },
+    { n: "Soft clustering", d: "A point can belong to several clusters to some degree." },
+    { n: "K-means", d: "Choose K centres, assign each point to the nearest centre, move each centre to the mean, and repeat." },
+    { n: "Centroid", d: "The centre (mean) of a cluster." },
+    { n: "Canopy clustering", d: "A fast, rough first pass that makes overlapping groups with a cheap distance before K-means." },
+    { n: "Gaussian Mixture Model (GMM)", d: "Soft, probability-based clustering that assumes each cluster is a bell-shaped curve." }
+  ]},
+  { t: "srch", terms: [
+    { n: "Exhaustive search", d: "Checks every possible solution; guaranteed to find the best but often far too slow.", x: "May 2026 Q4" },
+    { n: "Heuristic search", d: "Uses rules of thumb to find a good solution fast, without a guarantee of the best.", ex: "Greedy feature selection.", x: "May 2026 Q4" },
+    { n: "Search space", d: "All possible solutions to a problem.", ex: "2¹⁰⁰⁰ possible subsets of 1,000 features.", x: "May 2026 Q4" },
+    { n: "Genetic algorithm (GA)", d: "A heuristic search that evolves a population of solutions with selection, crossover and mutation, without needing a gradient.", x: "Exam 2021 Q2" },
+    { n: "Chromosome", d: "One candidate solution in a GA, often written as a bit string.", ex: "10110010." },
+    { n: "Fitness function", d: "Scores how good each chromosome is.", ex: "f(x) = number of 1s.", x: "May 2026 Q5a" },
+    { n: "Roulette-wheel selection", d: "Parents are picked with probability fᵢ / Σf, so fitter chromosomes are picked more often.", x: "May 2026 Q5b" },
+    { n: "Single-point crossover", d: "Two parents swap their bits after one cut point to make two children.", ex: "1011|0010 + 1110|0001 → 10110001 and 11100010.", x: "May 2026 Q5c" },
+    { n: "Mutation", d: "Randomly flipping bits to keep diversity in the population and help escape local optima.", x: "May 2026 Q5d" },
+    { n: "Elitism", d: "Copying the best chromosomes unchanged into the next generation so good solutions are not lost.", x: "Exam 2021 Q2", chk: true }
+  ]}
+]});
+</script>
+
 <!-- =====================================================================
      APP LOGIC (design + behaviour). No course content below this line.
      ===================================================================== -->
@@ -2142,7 +2802,7 @@ COURSES.push({
 (function(){
   "use strict";
   const STORE_KEY = "skoleExam.v1";
-  const TYPE_LABEL = { mc:"Multiple choice", def:"Definition", case:"Scenario", tf:"True / false", calc:"Calculation", essay:"Essay" };
+  const TYPE_LABEL = { mc:"Multiple choice", def:"Definition", case:"Scenario", tf:"True / false", calc:"Calculation", essay:"Essay", td:"Term → definition", dt:"Definition → term", card:"Term card" };
   const app = document.getElementById("app");
 
   /* ---------- helpers ---------- */
@@ -2155,6 +2815,14 @@ COURSES.push({
   COURSES.forEach(c => (c.questions||[]).forEach(q => { q.id = c.code + "-" + q.t + "-" + hash(q.q); q.course = c.code; }));
   const courseBy = code => COURSES.find(c => slug(c.code) === slug(code));
   const topicOf = (c, id) => c.topics.find(t => t.id === id);
+
+  // terms: flatten each course's TERMS block; every term gets a stable id
+  COURSES.forEach(c => { c.terms = []; });
+  (typeof TERMS !== "undefined" ? TERMS : []).forEach(b => {
+    const c = courseBy(b.code); if (!c) return;
+    b.chapters.forEach(ch => ch.terms.forEach(tm => c.terms.push(Object.assign({}, tm, { t: ch.t, id: "T-" + c.code + "-" + ch.t + "-" + hash(tm.n), course: "T:" + c.code }))));
+  });
+  const termsOf = (c, tid) => c.terms.filter(tm => tm.t === tid);
 
   /* ---------- storage (per browser) ---------- */
   let store = { ans:{}, miss:{}, shuffle:true };
@@ -2175,6 +2843,7 @@ COURSES.push({
     return { total: qs.length, answered, correct };
   }
   function mistakes(c){ const ids = store.miss[c.code] || []; return c.questions.filter(q => ids.includes(q.id)); }
+  function termMistakes(c){ const ids = store.miss["T:" + c.code] || []; return c.terms.filter(tm => ids.includes(tm.id)); }
 
   /* ---------- backup (export / import) ---------- */
   let backupMsg = "", backupOk = true, showCode = false;
@@ -2295,7 +2964,7 @@ COURSES.push({
       const s = stats(c.questions);
       return `<button class="card course-card c-${c.color}" data-go="${slug(c.code)}">
         <span class="code">${esc(c.code)}</span><h3>${esc(c.name)}</h3>
-        <p class="stat">Exam ${esc(fmtDate(c.exam))}</p>${countdown(c.exam)}${bar(s)}${statLine(s)}</button>`;
+        <p class="stat">Exam ${esc(fmtDate(c.exam))}</p>${countdown(c.exam)}${bar(s)}${statLine(s)}${c.terms.length ? `<p class="stat">+ ${c.terms.length} key terms in the Terms quiz</p>` : ""}</button>`;
     }).join("");
     const total = active.reduce((n,c)=>n+c.questions.length,0);
     app.innerHTML = `
@@ -2332,16 +3001,72 @@ COURSES.push({
       ${nav([{label:"Home",h:""},{label:c.code,h:slug(c.code)}], "")}
       <header class="hero"><span class="eyebrow">${esc(c.code)} · ${esc(c.examInfo)}</span><h1>${esc(c.name)}</h1>
         <p class="muted">Exam ${esc(fmtDate(c.exam))}</p>${countdown(c.exam)}${bar(s)}${statLine(s)}</header>
+        ${jumpLinks(c)}
+      ${shuffleToggle()}
+      <section class="section" id="topic-quiz"><span class="eyebrow">Section 1</span><h2>Topic quiz</h2>
+        <p class="note">Exam-style questions per lecture: multiple choice, scenarios, calculations and essays.</p>
       <section class="modes">
         ${modeBlock("All topics","Everything in this course", c.questions, "all")}
         ${modeBlock("Former exam questions only","Questions marked ⭐", examQs, "exam")}
         ${modeBlock("Practice my mistakes","Questions you got wrong last time", miss, "miss")}
       </section>
-      ${shuffleToggle()}
-      <h2>Topics</h2><section class="grid">${topics}</section>
+      <h3>Topics</h3><section class="grid">${topics}</section></section>
+      ${termsSection(c)}
       <div class="confirm">${confirmReset
-        ? `<span>Delete all saved answers and mistakes for ${esc(c.code)}?</span><button class="btn" data-reset="yes">Yes, reset</button><button class="btn alt" data-reset="no">Cancel</button>`
+        ? `<span>Delete all saved answers and mistakes for ${esc(c.code)} (topic quiz and terms quiz)?</span><button class="btn" data-reset="yes">Yes, reset</button><button class="btn alt" data-reset="no">Cancel</button>`
         : `<button class="btn alt" data-reset="ask">Reset progress for ${esc(c.code)}</button>`}</div>`;
+  }
+
+  /* ---------- TERMS QUIZ (course section + chapter page) ---------- */
+  function jumpLinks(c){
+    if (!c.terms.length) return "";
+    return `<nav class="jump" aria-label="Sections"><button class="btn alt" data-jump="topic-quiz">Topic quiz</button><button class="btn alt" data-jump="terms-quiz">Terms quiz</button></nav>`;
+  }
+  function termBlock(title, desc, items, scope){
+    const n = items.length, dis = n ? "" : "disabled";
+    return `<div class="mode"><h3>${esc(title)}</h3><p class="note">${esc(desc)} · ${n} term${n===1?"":"s"}</p>
+      <div class="btnrow"><button class="btn" data-tstart="td" data-tscope="${scope}" ${dis}>Term → definition</button>
+      <button class="btn" data-tstart="dt" data-tscope="${scope}" ${dis}>Definition → term</button>
+      <button class="btn alt" data-tstart="card" data-tscope="${scope}" ${dis}>Flashcards</button></div></div>`;
+  }
+  function termsSection(c){
+    if (!c.terms.length) return "";
+    const chapters = c.topics.map((t,i) => {
+      const items = termsOf(c, t.id); if (!items.length) return "";
+      const s = stats(items), stars = items.filter(tm => tm.x).length;
+      return `<button class="card topic-card" data-go="${slug(c.code)}-terms-${t.id}">
+        <span class="num">${esc(t.label || "Lecture " + (i+1))}</span><h3>${esc(t.title)}</h3>
+        <div class="btnrow"><span class="pill">${items.length} terms</span>${stars?`<span class="pill star">⭐ ${stars} from exams</span>`:""}</div>
+        ${bar(s)}${statLine(s)}</button>`;
+    }).join("");
+    const s = stats(c.terms);
+    return `<section class="section" id="terms-quiz"><span class="eyebrow">Section 2</span><h2>Terms quiz</h2>
+      <p class="note">${c.terms.length} key terms, chapter by chapter in lecture order. Wrong options are always other terms from the same chapter.</p>
+      ${bar(s)}${statLine(s)}
+      <section class="modes">
+        ${termBlock("All chapters","Every term in this course", c.terms, "all")}
+        ${termBlock("Former exam terms only","Terms marked ⭐", c.terms.filter(tm => tm.x), "exam")}
+        ${termBlock("Practice my mistakes","Terms you got wrong last time", termMistakes(c), "miss")}
+      </section>
+      <h3>Chapters</h3><section class="grid">${chapters}</section></section>`;
+  }
+  function renderTermChapter(c, t){
+    setTheme(c.color);
+    const items = termsOf(c, t.id), s = stats(items), idx = c.topics.indexOf(t);
+    const miss = termMistakes(c).filter(tm => tm.t === t.id);
+    const list = items.map(tm => `<div><dt>${esc(tm.n)}${tm.x?` <span class="pill star">⭐ ${esc(tm.x)}</span>`:""}${tm.chk?` <span class="pill chk">Needs checking</span>`:""}</dt>
+      <dd>${esc(tm.d)}${tm.ex?`<br><i>Example:</i> ${esc(tm.ex)}`:""}</dd></div>`).join("");
+    app.innerHTML = `
+      ${nav([{label:"Home",h:""},{label:c.code,h:slug(c.code)},{label:"Terms · " + t.title,h:slug(c.code)+"-terms-"+t.id}], slug(c.code))}
+      <header class="hero"><span class="eyebrow">${esc(c.code)} · Terms quiz · ${esc(t.label || "Lecture " + (idx+1))}</span><h1>${esc(t.title)}</h1>
+        <p class="muted">${items.length} key terms</p>${bar(s)}${statLine(s)}</header>
+      <section class="modes">
+        ${termBlock("Whole chapter","All terms in this chapter", items, "ch")}
+        ${termBlock("Former exam terms","Only ⭐ terms in this chapter", items.filter(tm => tm.x), "chexam")}
+        ${termBlock("My mistakes in this chapter","Wrong last time", miss, "chmiss")}
+      </section>
+      ${shuffleToggle()}
+      <details class="glossary"><summary>Show all ${items.length} terms with definitions</summary><dl>${list}</dl></details>`;
   }
 
   /* ---------- TOPIC ---------- */
@@ -2378,7 +3103,40 @@ COURSES.push({
     session = { code:c.code, topic: t ? t.id : null, mode, scope, label, list, i:0, results:[], done:false };
     prepQuestion(); render(); window.scrollTo(0,0);
   }
+  function startTermSession(c, t, dir, scope){
+    let items, label;
+    const all = c.terms, ch = t ? termsOf(c, t.id) : [];
+    if (scope === "all"){ items = all; label = "Terms · all chapters"; }
+    else if (scope === "exam"){ items = all.filter(tm => tm.x); label = "Terms · former exams"; }
+    else if (scope === "miss"){ items = termMistakes(c); label = "Terms · my mistakes"; }
+    else if (scope === "ch"){ items = ch; label = "Terms · " + t.title; }
+    else if (scope === "chexam"){ items = ch.filter(tm => tm.x); label = "Terms · " + t.title + " · exam"; }
+    else { items = termMistakes(c).filter(tm => t && tm.t === t.id); label = "Terms · " + (t ? t.title : "") + " · mistakes"; }
+    if (!items.length) return;
+    const list = store.shuffle ? shuffle(items) : items.slice();
+    session = { code:c.code, topic: t ? t.id : null, terms:true, dir, mode: dir === "card" ? "flash" : "quiz", scope, label, list, i:0, results:[], done:false };
+    prepQuestion(); render(); window.scrollTo(0,0);
+  }
+  // builds a question from a term; wrong options are other real terms from the same chapter
+  function termQuestion(c, tm, dir){
+    const base = { id: tm.id, course: tm.course, t: tm.t, x: tm.x, chk: tm.chk, term: true };
+    const ex = tm.ex ? "Example: " + tm.ex : "";
+    if (dir === "card") return Object.assign(base, { k:"card", q: tm.n, o:[tm.d], a:0, e: ex });
+    let pool = termsOf(c, tm.t).filter(o => o.id !== tm.id && o.n !== tm.n && o.d !== tm.d);
+    const opts = shuffle([tm].concat(shuffle(pool).slice(0, 3)));
+    const a = opts.indexOf(tm);
+    if (dir === "td") return Object.assign(base, { k:"td", q: `What does “${tm.n}” mean?`, o: opts.map(o => o.d), a, e: ex });
+    return Object.assign(base, { k:"dt", q: `Which term matches this definition? “${tm.d}”`, o: opts.map(o => o.n), a, e: ex ? tm.n + ". " + ex : "" });
+  }
+  const curQ = () => session.terms ? session.cur : session.list[session.i];
   function prepQuestion(){
+    if (session.terms){
+      const item = session.list[session.i];
+      session.answered = false; session.chosen = null; session.flipped = false; session.revealed = false; session.draft = "";
+      session.cur = item ? termQuestion(courseBy(session.code), item, session.dir) : null;
+      session.order = session.cur ? session.cur.o.map((_,i)=>i) : [];
+      return;
+    }
     const q = session.list[session.i];
     session.answered = false; session.chosen = null; session.flipped = false; session.revealed = false; session.draft = "";
     if (!q || !q.o) { session.order = []; return; }
@@ -2390,12 +3148,14 @@ COURSES.push({
   /* ---------- QUIZ / FLASH render ---------- */
   function qMeta(c, q){
     const t = topicOf(c, q.t);
-    return `<div class="qmeta"><span class="pill">${esc(t ? t.title : q.t)}</span><span class="pill ghost">${TYPE_LABEL[q.k]}</span>
+    return `<div class="qmeta"><span class="pill">${q.term ? "Terms · " : ""}${esc(t ? t.title : q.t)}</span><span class="pill ghost">${TYPE_LABEL[q.k]}</span>
       ${q.x ? `<span class="pill star">⭐ ${esc(q.x)}</span>` : ""}${q.chk ? `<span class="pill chk">Needs checking</span>` : ""}</div>`;
   }
   function sessionNav(c){
     const crumbs = [{label:"Home",h:""},{label:c.code,h:slug(c.code)}];
-    if (session.topic){ const t = topicOf(c, session.topic); crumbs.push({label:t.title,h:slug(c.code)+"-"+t.id}); }
+    if (session.topic){ const t = topicOf(c, session.topic);
+      crumbs.push(session.terms ? {label:"Terms · " + t.title,h:slug(c.code)+"-terms-"+t.id} : {label:t.title,h:slug(c.code)+"-"+t.id}); }
+    else if (session.terms) crumbs.push({label:"Terms quiz",h:slug(c.code)});
     crumbs.push({label: session.mode === "quiz" ? "Quiz" : "Flashcards", h: location.hash.slice(1)});
     return nav(crumbs, location.hash.slice(1) || "");
   }
@@ -2405,7 +3165,7 @@ COURSES.push({
   }
 
   function renderQuiz(c){
-    const q = session.list[session.i];
+    const q = curQ();
     let body = "";
     if (q.k === "essay"){
       body = `<label class="note" for="essay-draft">Write your key points (optional, not saved):</label>
@@ -2427,7 +3187,7 @@ COURSES.push({
       if (session.answered){
         const ok = session.chosen === q.a;
         body += `<div class="feedback ${ok?"ok":"bad"}"><strong>${ok?"Correct":"Not quite"}</strong>
-          ${ok?"":`<p>Correct answer: <b>${esc(q.o[q.a])}</b></p>`}<p>${esc(q.e)}</p>
+          ${ok?"":`<p>Correct answer: <b>${esc(q.o[q.a])}</b></p>`}${q.e ? `<p>${esc(q.e)}</p>` : ""}
           ${q.chk?`<p class="note">This answer is marked “Needs checking”: confirm it with the slides or lecturer.</p>`:""}</div>
           <div class="btnrow"><button class="btn" data-act="next">${session.i+1 < session.list.length ? "Next question →" : "See score"}</button></div>`;
       } else body += `<p class="note">Tip: press 1–${q.o.length} on a keyboard.</p>`;
@@ -2436,13 +3196,14 @@ COURSES.push({
   }
 
   function renderFlash(c){
-    const q = session.list[session.i];
+    const q = curQ();
     let back = "";
     if (q.k === "essay") back = `<strong>Key points</strong><ul class="kp">${q.kp.map(k=>`<li>${esc(k)}</li>`).join("")}</ul>`;
-    else back = `<p class="qtext">${esc(q.o[q.a])}</p><p class="muted">${esc(q.e)}</p>`;
+    else back = `${q.k==="card"?`<p class="term-front">${esc(q.q)}</p>`:""}<p class="qtext">${esc(q.o[q.a])}</p>${q.e?`<p class="muted">${esc(q.e)}</p>`:""}
+      ${q.chk?`<p class="note">Marked “Needs checking”: confirm it with the slides or lecturer.</p>`:""}`;
     const card = session.flipped
       ? `<button class="qcard flash" data-act="flip" aria-label="Show question"><span class="side">Answer</span>${back}</button>`
-      : `<button class="qcard flash" data-act="flip" aria-label="Show answer"><span class="side">Question · tap to flip</span>${qMeta(c,q)}<p class="qtext">${esc(q.q)}</p></button>`;
+      : `<button class="qcard flash" data-act="flip" aria-label="Show answer"><span class="side">${q.k==="card"?"Term":"Question"} · tap to flip</span>${qMeta(c,q)}<p class="${q.k==="card"?"term-front":"qtext"}">${esc(q.q)}</p></button>`;
     const actions = session.flipped
       ? `<div class="btnrow"><button class="btn" data-know="1">I knew it</button><button class="btn alt" data-know="0">I didn't know</button></div>`
       : `<div class="btnrow"><button class="btn" data-act="flip">Show answer</button>${session.i>0?`<button class="btn alt" data-act="prev">← Previous</button>`:""}</div>`;
@@ -2457,14 +3218,19 @@ COURSES.push({
     const list = wrong.length ? wrong.map(r => {
       const q = r.q, t = topicOf(c,q.t);
       const ans = q.k === "essay" ? "See key points in the model answer" : q.o[q.a];
+      if (q.term){ const tm = c.terms.find(x => x.id === q.id) || {};
+        return `<div class="rev"><span class="note">${esc(t?t.title:"")}${q.x?` · ⭐ ${esc(q.x)}`:""}</span><span><b>${esc(tm.n)}</b></span><span class="ans">${esc(tm.d)}</span></div>`; }
       return `<div class="rev"><span class="note">${esc(t?t.title:"")}${q.x?` · ⭐ ${esc(q.x)}`:""}</span><span>${esc(q.q)}</span><span class="ans">${esc(ans)}</span></div>`;
     }).join("") : `<div class="empty">No mistakes this round.</div>`;
-    const missCount = mistakes(c).length;
+    const missCount = session.terms ? termMistakes(c).filter(tm => !session.topic || tm.t === session.topic).length : mistakes(c).length;
+    const missBtn = session.terms
+      ? `<button class="btn alt" data-tstart="${session.dir}" data-tscope="${session.topic ? "chmiss" : "miss"}" ${missCount?"":"disabled"}>Practice my mistakes (${missCount})</button>`
+      : `<button class="btn alt" data-start="${session.mode}" data-scope="miss" ${missCount?"":"disabled"}>Practice my mistakes (${missCount})</button>`;
     app.innerHTML = `${sessionNav(c)}
       <section class="card"><span class="eyebrow">${esc(session.label)} · ${session.mode==="quiz"?"Quiz":"Flashcards"} finished</span>
         <div class="countdown"><span class="score">${ok}/${n}</span><span class="muted">${pct}%</span></div><p>${verdict}</p>
         <div class="btnrow"><button class="btn" data-act="again">Try this set again</button>
-        <button class="btn alt" data-start="${session.mode}" data-scope="miss" ${missCount?"":"disabled"}>Practice my mistakes (${missCount})</button>
+        ${missBtn}
         <button class="btn alt" data-go="${location.hash.slice(1)}">Done</button></div></section>
       <h2>Review: answers you missed</h2><div class="list">${list}</div>`;
   }
@@ -2480,12 +3246,16 @@ COURSES.push({
       if (session.done) return renderResult(c);
       return session.mode === "quiz" ? renderQuiz(c) : renderFlash(c);
     }
+    if (topicId && topicId.startsWith("terms-")){ const tt = topicOf(c, topicId.slice(6));
+      return tt && termsOf(c, tt.id).length ? renderTermChapter(c, tt) : renderCourse(c); }
     const t = topicId ? topicOf(c, topicId) : null;
     if (topicId && !t) return renderCourse(c);
     t ? renderTopic(c, t) : renderCourse(c);
   }
 
-  function currentCourse(){ const h = location.hash.slice(1).toLowerCase(); const [code, tid] = h.split(/-(.+)/); const c = courseBy(code); return { c, t: c && tid ? topicOf(c, tid) : null }; }
+  function currentCourse(){ const h = location.hash.slice(1).toLowerCase(); let [code, tid] = h.split(/-(.+)/); const c = courseBy(code);
+    if (tid && tid.startsWith("terms-")) tid = tid.slice(6);
+    return { c, t: c && tid ? topicOf(c, tid) : null }; }
   function advance(){
     session.i++;
     if (session.i >= session.list.length){ session.done = true; }
@@ -2493,7 +3263,7 @@ COURSES.push({
     render(); window.scrollTo(0,0);
   }
   function answer(oi){
-    const q = session.list[session.i]; if (session.answered) return;
+    const q = curQ(); if (session.answered) return;
     session.answered = true; session.chosen = oi;
     const ok = oi === q.a; record(q, ok); session.results.push({ q, ok }); render();
   }
@@ -2511,23 +3281,25 @@ COURSES.push({
         if (!v.trim()){ backupOk = false; backupMsg = "Paste a backup code into the box first."; render(); } else restore(v); }
       return;
     }
+    if (d.jump){ const el2 = document.getElementById(d.jump); if (el2) el2.scrollIntoView({ behavior:"smooth", block:"start" }); return; }
     const { c, t } = currentCourse();
+    if (d.tstart){ const dir = d.tstart, scope = d.tscope; session = null; startTermSession(c, t, dir, scope); return; }
     if (d.start){
       // from a result screen, "miss" means mistakes in the same scope (topic or course)
       let scope = d.scope;
       if (session && session.topic && scope === "miss") scope = "topicmiss";
       session = null; startSession(c, t, d.start, scope); return;
     }
-    if (d.reset){ if (d.reset === "ask") confirmReset = true; else { if (d.reset === "yes"){ c.questions.forEach(q => delete store.ans[q.id]); delete store.miss[c.code]; save(); } confirmReset = false; } render(); return; }
+    if (d.reset){ if (d.reset === "ask") confirmReset = true; else { if (d.reset === "yes"){ c.questions.forEach(q => delete store.ans[q.id]); c.terms.forEach(tm => delete store.ans[tm.id]); delete store.miss[c.code]; delete store.miss["T:" + c.code]; save(); } confirmReset = false; } render(); return; }
     if (!session) return;
     if (d.opt !== undefined){ answer(Number(d.opt)); return; }
     if (d.act === "next"){ advance(); return; }
     if (d.act === "reveal"){ const ta = document.getElementById("essay-draft"); if (ta) session.draft = ta.value; session.revealed = true; render(); return; }
     if (d.self !== undefined){ const ta = document.getElementById("essay-draft"); if (ta) session.draft = ta.value;
-      const q = session.list[session.i], ok = d.self === "1"; record(q, ok); session.results.push({ q, ok }); session.answered = true; render(); return; }
+      const q = curQ(), ok = d.self === "1"; record(q, ok); session.results.push({ q, ok }); session.answered = true; render(); return; }
     if (d.act === "flip"){ session.flipped = !session.flipped; render(); return; }
     if (d.act === "prev"){ if (session.i > 0){ session.i--; session.results.pop(); prepQuestion(); render(); } return; }
-    if (d.know !== undefined){ const q = session.list[session.i], ok = d.know === "1"; record(q, ok); session.results.push({ q, ok }); advance(); return; }
+    if (d.know !== undefined){ const q = curQ(), ok = d.know === "1"; record(q, ok); session.results.push({ q, ok }); advance(); return; }
     if (d.act === "again"){ const list = store.shuffle ? shuffle(session.list) : session.list; Object.assign(session, { list, i:0, results:[], done:false }); prepQuestion(); render(); window.scrollTo(0,0); return; }
   });
   app.addEventListener("change", e => {
@@ -2542,7 +3314,7 @@ COURSES.push({
   app.addEventListener("input", e => { if (e.target.id === "essay-draft" && session) session.draft = e.target.value; });
   document.addEventListener("keydown", e => {
     if (!session || session.done || session.mode !== "quiz" || e.target.tagName === "TEXTAREA") return;
-    const q = session.list[session.i];
+    const q = curQ();
     if (!session.answered && q.o && /^[1-9]$/.test(e.key)){ const pos = Number(e.key)-1; if (pos < session.order.length) answer(session.order[pos]); }
     else if (session.answered && e.key === "Enter"){ e.preventDefault(); advance(); }
   });
@@ -2550,5 +3322,6 @@ COURSES.push({
   render();
 })();
 </script>
+
 </body>
 </html>

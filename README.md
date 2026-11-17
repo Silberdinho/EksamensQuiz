@@ -18,12 +18,14 @@ Open `index.html` in a browser. Everything is in one file; no build step.
 - Essay questions (IMT4115) with key points and model answer
 - Shuffle, score at the end of each round, works on phone and computer
 - Progress is saved in the browser (localStorage)
+- **Terms quiz** per course: key terms by chapter (lecture order), term → definition, definition → term and flashcards; wrong options are other terms from the same chapter
 - Back up progress: download a backup file or copy a backup code, and restore it in any browser (home page)
 
 ## Structure of `index.html`
 1. `<head>` – design (CSS tokens, one colour per course)
 2. **Question data** – one `<script>` block per course (`COURSES.push({...})`)
-3. **App logic** – the last `<script>` block (no course content)
+3. **Terms data** – one `<script>` block per course (`TERMS.push({...})`)
+4. **App logic** – the last `<script>` block (no course content)
 
 ### Question format
 ```js
@@ -34,5 +36,13 @@ Open `index.html` in a browser. Everything is in one file; no build step.
   kp: ["key point", ...], m: "model answer" }     // essay only
 ```
 
-## Adding a course (e.g. IMT4133)
-Replace the IMT4133 block: set `status: "active"`, fill in `exam`, `topics` and `questions` in the same format.
+### Terms format
+```js
+TERMS.push({ code: "IMT4110", chapters: [
+  { t: "topic-id", terms: [
+    { n: "Term", d: "Short definition", ex: "Example (optional)", x: "Ex-4", chk: true } ] } ] });
+```
+Chapters use the topic ids, so they follow the lecture order. Each chapter needs at least 4 terms.
+
+## Adding a course
+Push one more `COURSES` block (and optionally a `TERMS` block) in the same format.
