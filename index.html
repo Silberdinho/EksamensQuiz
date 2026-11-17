@@ -159,6 +159,64 @@ textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:
 @keyframes cfFall{0%{opacity:1;transform:translateY(0) rotate(var(--r))}100%{opacity:0;transform:translateY(105vh) rotate(calc(var(--r) + 540deg))}}
 .card.party{border-color:var(--c);box-shadow:0 0 0 3px var(--c-soft)}
 @media (prefers-reduced-motion: reduce){ .vis .st,.vis .flow{animation:none} .confetti{display:none} }
+/* study map (home page): a night-sky constellation; course colours use their bright variants here */
+.studymap{--teal:#4fc7bc;--amber:#f0a35c;--indigo:#9ea4ff;--slate:#a7b2b9;--plum:#e29ad9;--sm-fg:#eef1fb;--sm-muted:#aab3d8;
+  color:var(--sm-fg);border-radius:var(--r);overflow:hidden;border:1px solid #2a3360;
+  background:radial-gradient(130% 95% at 50% 42%,#1e2858 0%,#10173b 52%,#080c1f 100%);box-shadow:0 12px 32px -20px rgba(8,12,31,.9)}
+.studymap > summary{list-style:none;cursor:pointer;position:relative;display:flex;flex-direction:column;gap:2px;padding:14px 44px 6px 16px}
+.studymap > summary::-webkit-details-marker{display:none}
+.studymap > summary::after{content:"▾";position:absolute;right:16px;top:15px;color:var(--sm-muted);font-size:1.1rem}
+.studymap:not([open]) > summary{padding-bottom:14px}
+.studymap:not([open]) > summary::after{content:"▸"}
+.studymap > summary:focus-visible{outline:3px solid #fff;outline-offset:-3px;border-radius:var(--r)}
+.studymap h2{color:#fff;font-size:1.15rem}
+.sm-sub{color:var(--sm-muted);font-size:.85rem;line-height:1.3}
+.sm-stage{padding:0 4px}
+.sm-stage svg{display:block;width:100%;height:auto;max-width:720px;margin:0 auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.sm-stage svg text{font-family:var(--f-body);fill:var(--sm-fg)}
+.sm-stage svg text.sm-short{fill:var(--c)}
+.sm-stage svg text.sm-code{font-weight:700}
+.sm-tw{fill:#fff;opacity:.5;animation:smTw var(--dur,3s) ease-in-out infinite;animation-delay:var(--d,0s)}
+.sm-spoke{stroke:rgba(205,214,255,.22);stroke-width:1.2;stroke-dasharray:2 6;fill:none;transition:stroke .2s}
+.sm-hit{stroke:transparent;stroke-width:22;fill:none}
+.sm-line{stroke-width:2.4;fill:none;stroke-linecap:round;transition:stroke-width .2s}
+.sm-beam{stroke-dasharray:5 5}
+.sm-glow{stroke-width:10;fill:none;opacity:.22;stroke-linecap:round;animation:smGlow 3.6s ease-in-out infinite}
+.sm-spark{stroke:#fff;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-dasharray:1 26;opacity:.85;animation:smSpark 2.6s linear infinite}
+.sm-pill rect{fill:rgba(9,13,34,.9);stroke:rgba(222,228,255,.34);stroke-width:1;transition:stroke .2s}
+.sm-pill text{font-weight:600}
+.sm-link,.sm-pill,.sm-node,.sm-center{cursor:pointer;outline:none;transition:opacity .25s}
+.sm-halo{fill:var(--c);opacity:.14;animation:smPulse 3.4s ease-in-out infinite}
+.sm-track{fill:none;stroke:rgba(255,255,255,.2);stroke-width:3.6}
+.sm-prog{fill:none;stroke:#fff;stroke-width:3.6;stroke-linecap:round;opacity:.95}
+.sm-core{stroke:rgba(255,255,255,.55);stroke-width:1.2;transition:stroke-width .2s}
+.sm-float{animation:smFloat 6s ease-in-out infinite;animation-delay:var(--fl,0s)}
+.sm-node.soon{opacity:.6} .sm-node.soon .sm-core{stroke-dasharray:3 3}
+.sm-cap{fill:rgba(255,255,255,.1);stroke:rgba(255,255,255,.55);stroke-width:1.2;transition:stroke-width .2s}
+.sm-orbit{fill:none;stroke:rgba(255,255,255,.28);stroke-width:1;stroke-dasharray:3 7;animation:smSpark 7s linear infinite}
+.sm-pulse{fill:#fff;pointer-events:none} .sm-cglow,.sm-tw{pointer-events:none}
+.sm-node:hover .sm-core,.sm-node:focus-visible .sm-core,.sm-node.on .sm-core{stroke:#fff;stroke-width:3}
+.sm-link:hover .sm-line,.sm-link:focus-visible .sm-line,.sm-link.on .sm-line{stroke-width:4}
+.sm-pill:hover rect,.sm-pill.on rect,.sm-link:focus-visible + .sm-pill rect{stroke:#fff}
+.sm-center:hover .sm-cap,.sm-center:focus-visible .sm-cap,.sm-center.on .sm-cap{stroke:#fff;stroke-width:2.2}
+svg.sm-focus .sm-link:not(.rel),svg.sm-focus .sm-pill:not(.rel),svg.sm-focus .sm-node:not(.rel){opacity:.28}
+svg.sm-focus .sm-spoke.rel{stroke:rgba(255,255,255,.6)}
+.sm-info{margin:2px 12px 14px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);font-size:.92rem;line-height:1.45;display:flex;flex-direction:column;gap:6px;min-height:3.4em}
+.sm-info p{margin:0} .sm-card{display:flex;flex-direction:column;gap:6px}
+.sm-h{font-family:var(--f-display);font-size:1rem} .sm-h b{color:#fff} .sm-card .sm-h b{color:var(--c)}
+.sm-muted{color:var(--sm-muted)} .sm-muted b{color:var(--sm-fg)}
+.sm-meter{height:6px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden} .sm-meter i{display:block;height:100%;background:var(--c)}
+.sm-chips{display:flex;flex-wrap:wrap;gap:6px}
+.sm-chip{background:rgba(255,255,255,.08);color:var(--sm-fg);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:4px 10px;font-size:.8rem;text-align:left}
+.sm-chip b{color:var(--c)} .sm-chip:hover{border-color:#fff}
+.sm-go{align-self:flex-start;background:var(--c);color:#0b1026;border:none;border-radius:999px;padding:7px 14px;font-weight:700;font-size:.88rem}
+.sm-info button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+@keyframes smTw{0%,100%{opacity:.18}50%{opacity:.95}}
+@keyframes smGlow{0%,100%{opacity:.12}50%{opacity:.34}}
+@keyframes smSpark{to{stroke-dashoffset:-54}}
+@keyframes smPulse{0%,100%{opacity:.1}50%{opacity:.26}}
+@keyframes smFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion: reduce){ .sm-tw,.sm-glow,.sm-spark,.sm-halo,.sm-float,.sm-orbit{animation:none} }
 footer{font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
 </style>
@@ -189,6 +247,10 @@ footer{font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px}
        VIS.push({ c, t: topic id, id, icon, title, x?, draw(), info:{ part: text }, fact?, q:[patterns], terms:[names] })
        draw() returns an SVG made with the small V.* builders; info explains each clickable part.
        q = question-text patterns (same topic) and terms = term names that show this visual after answering.
+
+     STUDY MAP DATA (one block, after the visuals blocks)
+       STUDYMAP = { center:{ label, icon, info }, courses:[{ code, short, icon }], links:[{ a, b, label, info, topics }] }
+       b: "all" links a course to every course. A new course appears on the map automatically; add links for it.
      ===================================================================== -->
 <script>const COURSES = []; const TERMS = [];</script>
 <script>
@@ -3919,6 +3981,49 @@ VIS.push({ c:"IMT4133", t:"srch", id:"bits", icon:"✂️", title:"Crossover and
 })();
 </script>
 
+<script>
+/* =====================================================================
+   STUDY MAP DATA – how the courses link together (box on the home page)
+   center:  the shared theme in the middle (delete it to hide the centre).
+   courses: one star per course. code must match a course above;
+            short = 1–3 word nickname, icon = one emoji.
+            Name, colour, exam date and progress are read from the course data.
+            A course that exists above but is missing here is still added (with a ⭐).
+   links:   a, b   = course codes; b: "all" links a course to every course (through the centre)
+            label  = 2–4 words shown on the line
+            info   = one or two sentences shown when the line is tapped
+            topics = chapters to study, per course (topic ids from the course data)
+   The map lays itself out: add a course and its links, and it makes room automatically.
+   ===================================================================== */
+const STUDYMAP = {
+  center: { label: "Information Security", icon: "🛡️",
+    info: "The theme that ties your courses together: protecting information – with research methods (IMT4110), management (IMT4115), technology (IMT4113) and data science (IMT4133)." },
+  courses: [
+    { code: "IMT4110", short: "Methodology", icon: "🔬" },
+    { code: "IMT4133", short: "Data science", icon: "🤖" },
+    { code: "IMT4115", short: "Security management", icon: "🧭" },
+    { code: "IMT4113", short: "Security technology", icon: "🔐" }
+  ],
+  links: [
+    { a: "IMT4113", b: "IMT4133", label: "Intrusion detection",
+      info: "IMT4113 explains how an IDS works: misuse vs. anomaly detection, false alarms and the base-rate fallacy. IMT4133 builds the detector with machine learning on intrusion data such as UNSW-NB15 and KDD Cup.",
+      topics: { IMT4113: ["ids"], IMT4133: ["l1", "l2", "l6"] } },
+    { a: "IMT4113", b: "IMT4115", label: "Threats & controls",
+      info: "IMT4113 shows how attacks and technical controls work; IMT4115 decides which risks to treat and how. Both cover Bell-LaPadula, Biba, the Chinese Wall, least privilege and MITRE ATT&CK.",
+      topics: { IMT4113: ["ac", "mal"], IMT4115: ["ch6", "ch8"] } },
+    { a: "IMT4115", b: "IMT4110", label: "Ethics & law",
+      info: "Both deal with personal data and right vs. wrong: GDPR and ethics for organisations in IMT4115, informed consent and Sikt for research participants in IMT4110. Deduction and induction also appear in both.",
+      topics: { IMT4115: ["ch2", "rbl"], IMT4110: ["ethics", "intro"] } },
+    { a: "IMT4110", b: "IMT4133", label: "Data & statistics",
+      info: "The same maths in two places: mean, standard deviation, correlation and z-scores. A Type I error in IMT4110 is a false positive in IMT4133.",
+      topics: { IMT4110: ["scales", "hyp"], IMT4133: ["l2", "l3", "l4"] } },
+    { a: "IMT4110", b: "all", label: "Research methods",
+      info: "IMT4110 gives every course its tools for asking good questions, measuring reliably and testing results: evaluating a security product (IMT4113), measuring security maturity (IMT4115) and testing an ML model fairly (IMT4133).",
+      topics: { IMT4110: ["intro", "relval"], IMT4113: ["ac"], IMT4115: ["ch9"], IMT4133: ["l4"] } }
+  ]
+};
+</script>
+
 <!-- =====================================================================
      APP LOGIC (design + behaviour). No course content below this line.
      ===================================================================== -->
@@ -4108,6 +4213,176 @@ VIS.push({ c:"IMT4133", t:"srch", id:"bits", icon:"✂️", title:"Crossover and
   }
   function setTheme(color){ app.className = color ? "c-" + color : "c-teal"; document.body.className = app.className; }
 
+  /* ---------- STUDY MAP (home page; data in the STUDY MAP block) ---------- */
+  const SMAP = (typeof STUDYMAP !== "undefined" && STUDYMAP && Array.isArray(STUDYMAP.links)) ? STUDYMAP : null;
+  let smPointer = "mouse", smSel = null, smUid = 0, smResizeT = 0;
+  const smMQ = q => { try { return window.matchMedia(q).matches; } catch(e){ return false; } };
+  const smWide = () => (app.clientWidth || window.innerWidth || 800) >= 560;
+  const f1 = v => (Math.round(v * 10) / 10).toString();
+  function smWrap(s, n){ const out = []; let cur = ""; String(s).split(" ").forEach(w => { if (cur && (cur + " " + w).length > n){ out.push(cur); cur = w; } else cur = cur ? cur + " " + w : w; }); if (cur) out.push(cur); return out; }
+  function smWhen(dl){ return dl > 1 ? dl + " days left" : dl === 1 ? "1 day left" : dl === 0 ? "exam today!" : "exam done ✓"; }
+  // nodes = courses in the map block (plus any course not listed there); links = only links whose courses exist
+  function smData(){
+    const nodes = [], seen = new Set();
+    const add = (c, e) => { if (!c || seen.has(c.code)) return; seen.add(c.code);
+      nodes.push({ c, code: c.code, short: (e && e.short) || c.name.split(" ").slice(0, 2).join(" "), icon: (e && e.icon) || "⭐" }); };
+    (SMAP.courses || []).forEach(e => add(courseBy(typeof e === "string" ? e : e.code), typeof e === "string" ? null : e));
+    COURSES.forEach(c => add(c, null));
+    const links = SMAP.links.map((l, i) => Object.assign({ id: "l" + i }, l)).filter(l => seen.has(l.a) && (l.b === "all" || seen.has(l.b)) && l.a !== l.b);
+    return { nodes: smOrder(nodes, links), links };
+  }
+  // order the stars around the circle so linked courses sit next to each other and lines cross as little as possible
+  function smOrder(nodes, links){
+    const n = nodes.length; if (n <= 3 || n > 8) return nodes;
+    const idx = code => nodes.findIndex(x => x.code === code);
+    const pairs = links.filter(l => l.b !== "all").map(l => [idx(l.a), idx(l.b)]);
+    let best = null, bestCost = Infinity;
+    const score = perm => { const order = [0].concat(perm), pos = []; order.forEach((ni, p) => { pos[ni] = p; });
+      const L = pairs.map(([a, b]) => [Math.min(pos[a], pos[b]), Math.max(pos[a], pos[b])]); let cost = 0;
+      L.forEach(([a, b]) => { const d = Math.min(b - a, n - (b - a)); cost += (d - 1) * (d - 1) * 4 + d; });
+      for (let i = 0; i < L.length; i++) for (let j = i + 1; j < L.length; j++){ const [a, b] = L[i], [c, d] = L[j];
+        if (a !== c && a !== d && b !== c && b !== d && ((c > a && c < b) !== (d > a && d < b))) cost += 6; }
+      if (cost < bestCost){ bestCost = cost; best = order; } };
+    const permute = (arr, k) => { if (k === arr.length){ score(arr.slice()); return; }
+      for (let i = k; i < arr.length; i++){ [arr[k], arr[i]] = [arr[i], arr[k]]; permute(arr, k + 1); [arr[k], arr[i]] = [arr[i], arr[k]]; } };
+    permute(nodes.map((_, i) => i).slice(1), 0);
+    return best.map(i => nodes[i]);
+  }
+  function smSVG(wide){
+    const { nodes, links } = smData(), n = nodes.length, u = "sm" + (++smUid), motion = !smMQ("(prefers-reduced-motion: reduce)");
+    const extra = Math.max(0, n - 4), W = wide ? 640 : 360, H = (wide ? 372 : 452) + extra * (wide ? 28 : 44), cx = W / 2, cy = (wide ? 186 : 224) + extra * (wide ? 14 : 22), rx = wide ? 238 : 124, ry = (wide ? 106 : 150) + extra * (wide ? 14 : 22);
+    const R = wide ? 20 : 18, fs = wide ? 11 : 10, cw = wide ? 6.3 : 5.8, lh = wide ? 14 : 13, start = n === 2 ? Math.PI : -Math.PI / 2;
+    const P = {}; nodes.forEach((nd, i) => { const a = start + i * 2 * Math.PI / Math.max(n, 1);
+      P[nd.code] = n === 1 ? { x: cx, y: cy - ry } : { x: cx + rx * Math.cos(a), y: cy + ry * Math.sin(a) }; });
+    const C = SMAP.center ? { x: cx, y: cy, hw: wide ? 86 : 76, hh: wide ? 19 : 17 } : null;
+    const col = c => `var(--${(c && c.color) || "slate"})`;
+    const box = (x, y, w, h) => ({ x1: x - w / 2, y1: y - h / 2, x2: x + w / 2, y2: y + h / 2 });
+    const hits = (a, b, m) => a.x1 < b.x2 + m && a.x2 > b.x1 - m && a.y1 < b.y2 + m && a.y2 > b.y1 - m;
+    const over = (a, b) => Math.max(0, Math.min(a.x2, b.x2) - Math.max(a.x1, b.x1)) * Math.max(0, Math.min(a.y2, b.y2) - Math.max(a.y1, b.y1));
+    const obst = C ? [box(C.x, C.y, C.hw * 2 + 8, C.hh * 2 + 8)] : [];
+    // node labels: above the star in the top half, below it otherwise
+    const lab = nodes.map(nd => { const p = P[nd.code], above = n > 1 && p.y < cy - 20, lines = smWrap(nd.short, wide ? 22 : 12);
+      const top = above ? p.y - R - 16 - lines.length * lh : p.y + R + 16;
+      const w = Math.max(nd.code.length * (cw + 1), ...lines.map(s => s.length * cw)) + 6;
+      obst.push(box(p.x, p.y, (R + 10) * 2, (R + 10) * 2), { x1: p.x - w / 2 - 4, y1: top - 11, x2: p.x + w / 2 + 4, y2: top + lines.length * lh + 9 });
+      return { nd, p, top, lines }; });
+    // each link is a gentle curve that bows away from the centre
+    const curve = l => { const A = P[l.a];
+      if (l.b === "all"){ if (!C) return null; const dx = C.x - A.x, dy = C.y - A.y;
+        const s = Math.min(Math.abs(dx) > 1e-6 ? C.hw / Math.abs(dx) : 1e9, Math.abs(dy) > 1e-6 ? C.hh / Math.abs(dy) : 1e9), E = { x: C.x - dx * s, y: C.y - dy * s };
+        return { A, B: E, Q: { x: (A.x + E.x) / 2, y: (A.y + E.y) / 2 } }; }
+      const B = P[l.b], M = { x: (A.x + B.x) / 2, y: (A.y + B.y) / 2 }; let nx = M.x - cx, ny = M.y - cy, d = Math.hypot(nx, ny), bow = wide ? 16 : 12;
+      if (d < 36){ nx = -(B.y - A.y); ny = B.x - A.x; d = Math.hypot(nx, ny) || 1; bow = wide ? 70 : 60; }
+      return { A, B, Q: { x: M.x + nx / d * bow * 2, y: M.y + ny / d * bow * 2 } }; };
+    const at = (k, t) => { const m = 1 - t; return { x: m * m * k.A.x + 2 * m * t * k.Q.x + t * t * k.B.x, y: m * m * k.A.y + 2 * m * t * k.Q.y + t * t * k.B.y,
+      tx: 2 * m * (k.Q.x - k.A.x) + 2 * t * (k.B.x - k.Q.x), ty: 2 * m * (k.Q.y - k.A.y) + 2 * t * (k.B.y - k.Q.y) }; };
+    const dOf = k => `M${f1(k.A.x)} ${f1(k.A.y)} Q${f1(k.Q.x)} ${f1(k.Q.y)} ${f1(k.B.x)} ${f1(k.B.y)}`;
+    // label pills: try spots along the curve until one is free of stars, labels and other pills
+    const placed = [];
+    const pillFor = (l, k) => { const text = l.b === "all" ? l.label + " → all" : l.label, w = text.length * cw + (wide ? 18 : 14), h = wide ? 22 : 20, cands = [];
+      [0.5, 0.42, 0.58, 0.34, 0.66, 0.26, 0.74, 0.2, 0.8].forEach(t => [0, 7, -7, 14, -14, 21, -21, 28, -28, 35, -35].forEach(o => cands.push({ t, o, bad: Math.abs(t - 0.5) * 70 + Math.abs(o) })));
+      cands.sort((p, q) => p.bad - q.bad); let best = null, bestA = Infinity;
+      for (const c of cands){ const pt = at(k, c.t), L = Math.hypot(pt.tx, pt.ty) || 1, x = pt.x - pt.ty / L * c.o, y = pt.y + pt.tx / L * c.o, r = box(x, y, w, h);
+        if (r.x1 < 2 || r.x2 > W - 2 || r.y1 < 2 || r.y2 > H - 2) continue;
+        const a = obst.concat(placed).reduce((s, o) => s + (hits(r, o, 4) ? over(r, o) + 1 : 0), 0);
+        if (a < bestA){ bestA = a; best = { x, y, w, h, text, r }; if (!a) break; } }
+      if (!best){ const pt = at(k, 0.5); best = { x: pt.x, y: pt.y, w, h, text, r: box(pt.x, pt.y, w, h) }; }
+      placed.push(best.r); return best; };
+    const pill = (l, pl) => `<g class="sm-pill" data-sm="l:${l.id}" transform="translate(${f1(pl.x)} ${f1(pl.y)})"><rect x="${f1(-pl.w / 2)}" y="${f1(-pl.h / 2)}" width="${f1(pl.w)}" height="${pl.h}" rx="${pl.h / 2}"/><text text-anchor="middle" dominant-baseline="central" font-size="${fs}">${esc(pl.text)}</text></g>`;
+    // background stars (same pattern every time)
+    let seed = 20261117, stars = ""; const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+    for (let i = 0; i < (wide ? 64 : 44); i++) stars += `<circle cx="${f1(rnd() * W)}" cy="${f1(rnd() * H)}" r="${f1(0.45 + rnd() * 1.15)}" class="sm-tw" style="--d:${f1(-rnd() * 5)}s;--dur:${f1(2.4 + rnd() * 3.2)}s"/>`;
+    let defs = `<radialGradient id="${u}cg"><stop offset="0" stop-color="#ffffff" stop-opacity=".42"/><stop offset=".5" stop-color="#9fb3ff" stop-opacity=".14"/><stop offset="1" stop-color="#9fb3ff" stop-opacity="0"/></radialGradient>`;
+    nodes.forEach((nd, i) => { defs += `<radialGradient id="${u}n${i}" cx="38%" cy="32%" r="78%"><stop offset="0" stop-color="#ffffff"/><stop offset=".4" style="stop-color:${col(nd.c)}"/><stop offset="1" style="stop-color:${col(nd.c)};stop-opacity:.72"/></radialGradient>`; });
+    let spokes = "", lines = "", pills = "", pulses = "";
+    if (C) nodes.forEach(nd => { if (links.some(l => l.b === "all" && l.a === nd.code)) return; const A = P[nd.code];
+      spokes += `<line x1="${f1(C.x)}" y1="${f1(C.y)}" x2="${f1(A.x)}" y2="${f1(A.y)}" class="sm-spoke" data-rel="${esc(nd.code)}"/>`; });
+    links.forEach((l, i) => { const k = curve(l), A = courseBy(l.a), B = l.b === "all" ? null : courseBy(l.b);
+      const aria = esc((B ? A.code + " and " + B.code : A.code + " and all courses") + ": " + l.label);
+      if (!k){ // "all" without a centre: one beam to every other course
+        const beams = nodes.filter(nd => nd.code !== l.a).map(nd => curve({ a: l.a, b: nd.code }));
+        lines += `<g class="sm-link" data-sm="l:${l.id}" tabindex="0" role="button" aria-label="${aria}">${beams.map(bk => `<path d="${dOf(bk)}" class="sm-hit"/><path d="${dOf(bk)}" class="sm-line sm-beam" style="stroke:${col(A)}"/>`).join("")}</g>`;
+        if (beams[0]) pills += pill(l, pillFor(l, beams[0])); return; }
+      const g = `${u}l${i}`, d = dOf(k);
+      defs += `<linearGradient id="${g}" gradientUnits="userSpaceOnUse" x1="${f1(k.A.x)}" y1="${f1(k.A.y)}" x2="${f1(k.B.x)}" y2="${f1(k.B.y)}"><stop offset="0" style="stop-color:${col(A)}"/><stop offset="1" style="stop-color:${B ? col(B) : "#ffffff"}"/></linearGradient>`;
+      lines += `<g class="sm-link" data-sm="l:${l.id}" tabindex="0" role="button" aria-label="${aria}"><path d="${d}" class="sm-hit"/><path d="${d}" class="sm-glow" style="stroke:url(#${g});animation-delay:${f1(-i * 0.7)}s"/><path d="${d}" class="sm-line" style="stroke:url(#${g})"/>${motion ? `<path d="${d}" class="sm-spark" style="animation-delay:${f1(-i * 0.45)}s"/>` : ""}</g>`;
+      pills += pill(l, pillFor(l, k));
+      if (l.b === "all" && motion) nodes.forEach((nd, j) => { if (nd.code === l.a) return; const T = P[nd.code], b = f1(j * 1.1) + "s";
+        pulses += `<circle r="${wide ? 2.8 : 2.5}" class="sm-pulse" opacity="0"><animateMotion dur="4.5s" begin="${b}" repeatCount="indefinite" path="M${f1(k.A.x)} ${f1(k.A.y)} L${f1(C.x)} ${f1(C.y)} L${f1(T.x)} ${f1(T.y)}"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.82;1" dur="4.5s" begin="${b}" repeatCount="indefinite"/></circle>`; }); });
+    const center = C ? `<g class="sm-center" data-sm="c" tabindex="0" role="button" aria-label="${esc(SMAP.center.label)}"><circle cx="${C.x}" cy="${C.y}" r="${wide ? 96 : 80}" fill="url(#${u}cg)" class="sm-cglow"/><ellipse cx="${C.x}" cy="${C.y}" rx="${C.hw + 14}" ry="${C.hh + 12}" class="sm-orbit"/><rect x="${C.x - C.hw}" y="${C.y - C.hh}" width="${C.hw * 2}" height="${C.hh * 2}" rx="${C.hh}" class="sm-cap"/><text x="${C.x}" y="${C.y}" text-anchor="middle" dominant-baseline="central" font-size="${wide ? 13 : 11.5}" font-weight="700">${esc((SMAP.center.icon ? SMAP.center.icon + " " : "") + SMAP.center.label)}</text></g>` : "";
+    const stars2 = lab.map(({ nd, p, top, lines: sl }, i) => { const c = nd.c, soon = c.status === "soon";
+      const sq = stats(c.questions || []), st = stats(c.terms || []), frac = soon ? 0 : (sq.answered + st.answered) / Math.max(1, sq.total + st.total), rr = R + 6, len = 2 * Math.PI * rr;
+      const aria = `${c.code}, ${c.name}. ${soon ? "Coming soon." : "Exam " + fmtDate(c.exam) + ", " + Math.round(frac * 100) + "% answered. Open the course."}`;
+      return `<g class="sm-node c-${c.color || "slate"}${soon ? " soon" : ""}" data-sm="n:${esc(c.code)}" tabindex="0" role="link" aria-label="${esc(aria)}" transform="translate(${f1(p.x)} ${f1(p.y)})">`
+        + `<g class="sm-float" style="--fl:${f1(-i * 1.4)}s"><circle r="${R + 14}" class="sm-halo" style="animation-delay:${f1(-i * 0.9)}s"/><circle r="${rr}" class="sm-track"/>`
+        + (frac > 0 ? `<circle r="${rr}" class="sm-prog" stroke-dasharray="${f1(len * frac)} ${f1(len)}" transform="rotate(-90)"/>` : "")
+        + `<circle r="${R}" class="sm-core" fill="url(#${u}n${i})"/><text text-anchor="middle" dominant-baseline="central" font-size="${wide ? 17 : 15}">${esc(nd.icon)}</text></g>`
+        + `<text y="${f1(top - p.y)}" text-anchor="middle" dominant-baseline="central" font-size="${wide ? 12.5 : 11.5}" class="sm-code">${esc(c.code)}</text>`
+        + sl.map((s, k) => `<text y="${f1(top - p.y + (k + 1) * lh)}" text-anchor="middle" dominant-baseline="central" font-size="${fs}" class="sm-short">${esc(s)}</text>`).join("") + `</g>`; }).join("");
+    return `<svg viewBox="0 0 ${W} ${H}" role="group" aria-label="Study map: how your courses connect"><defs>${defs}</defs><g aria-hidden="true">${stars}</g>${spokes}${lines}${pulses ? `<g aria-hidden="true">${pulses}</g>` : ""}${center}${stars2}${pills}</svg>`;
+  }
+  // text in the panel under the map
+  function smInfo(key){
+    const D = smData();
+    const hint = smMQ("(hover: none)") ? "Tap a star for the course, exam date and your progress – tap it again to open the course. Tap a line to see what two courses share."
+      : "Hover over a star for the course, exam date and your progress – click it to open the course. Hover over or click a line to see what two courses share.";
+    if (!key) return `<p class="sm-muted">✨ ${hint}</p>`;
+    if (key === "c" && SMAP.center){ const up = COURSES.filter(c => c.status !== "soon" && daysLeft(c.exam) >= 0).sort((a, b) => a.exam.localeCompare(b.exam))[0];
+      return `<p class="sm-h">${esc(SMAP.center.icon || "✨")} <b>${esc(SMAP.center.label)}</b></p>${SMAP.center.info ? `<p>${esc(SMAP.center.info)}</p>` : ""}${up ? `<p class="sm-muted">Next exam: <b>${esc(up.code)}</b> on ${esc(fmtDate(up.exam))} (${smWhen(daysLeft(up.exam))}).</p>` : ""}`; }
+    if (key.startsWith("n:")){ const nd = D.nodes.find(x => "n:" + x.code === key); if (!nd) return `<p class="sm-muted">✨ ${hint}</p>`; const c = nd.c;
+      if (c.status === "soon") return `<div class="c-${c.color || "slate"}"><p class="sm-h">${esc(nd.icon)} <b>${esc(c.code)}</b> · ${esc(c.name)}</p><p class="sm-muted">Coming soon.</p></div>`;
+      const sq = stats(c.questions), st = stats(c.terms || []), pct = sq.answered ? Math.round(sq.correct / sq.answered * 100) : 0, frac = (sq.answered + st.answered) / Math.max(1, sq.total + st.total);
+      const ls = D.links.filter(l => l.a === c.code || l.b === c.code || l.b === "all").map(l => l.label);
+      return `<div class="sm-card c-${c.color}"><p class="sm-h">${esc(nd.icon)} <b>${esc(c.code)}</b> · ${esc(c.name)}</p>
+        <p>📅 Exam ${esc(fmtDate(c.exam))} · <b>${smWhen(daysLeft(c.exam))}</b></p>
+        <p>📝 Topic quiz: ${sq.answered}/${sq.total} answered${sq.answered ? ` · ${pct}% correct` : ""}${c.terms && c.terms.length ? ` &nbsp;·&nbsp; 🔤 Terms: ${st.answered}/${st.total}` : ""}</p>
+        <div class="sm-meter" role="img" aria-label="${Math.round(frac * 100)}% of questions and terms answered"><i style="width:${f1(frac * 100)}%"></i></div>
+        ${ls.length ? `<p class="sm-muted">Shares: ${esc(ls.join(" · "))}</p>` : ""}
+        <button class="sm-go" data-go="${slug(c.code)}">Open ${esc(c.code)} →</button></div>`; }
+    const l = D.links.find(x => "l:" + x.id === key); if (!l) return `<p class="sm-muted">✨ ${hint}</p>`;
+    const chips = Object.keys(l.topics || {}).map(code => { const c = courseBy(code); if (!c) return "";
+      return (l.topics[code] || []).map(id => { const t = topicOf(c, id); return t ? `<button class="sm-chip c-${c.color}" data-go="${slug(c.code)}-${t.id}"><b>${esc(c.code)}</b> ${esc(t.title)}</button>` : ""; }).join(""); }).join("");
+    return `<p class="sm-h">🔗 <b>${esc(l.label)}</b> <span class="sm-muted">${esc(l.b === "all" ? l.a + " → all courses" : l.a + " ↔ " + l.b)}</span></p>${l.info ? `<p>${esc(l.info)}</p>` : ""}${chips ? `<p class="sm-muted">Study it here:</p><div class="sm-chips">${chips}</div>` : ""}`;
+  }
+  // highlight the chosen star or line and what it connects to
+  function smMark(key){
+    const svg = app.querySelector(".sm-stage svg"); if (!svg) return;
+    svg.querySelectorAll(".on,.rel").forEach(el => el.classList.remove("on", "rel"));
+    svg.classList.toggle("sm-focus", !!key); if (!key) return;
+    const D = smData(), mark = (sel, cls) => svg.querySelectorAll(sel).forEach(el => el.classList.add(cls));
+    const node = code => mark(`[data-sm="n:${code}"]`, "rel"), link = id => mark(`[data-sm="l:${id}"]`, "rel");
+    mark(`[data-sm="${key}"]`, "on"); mark(`[data-sm="${key}"]`, "rel");
+    if (key === "c"){ D.nodes.forEach(nd => node(nd.code)); mark(".sm-spoke", "rel"); D.links.filter(l => l.b === "all").forEach(l => link(l.id)); return; }
+    if (key.startsWith("n:")){ const code = key.slice(2); mark(`.sm-spoke[data-rel="${code}"]`, "rel");
+      D.links.forEach(l => { if (l.a === code || l.b === code || l.b === "all"){ link(l.id); node(l.a); if (l.b !== "all") node(l.b); } }); return; }
+    const l = D.links.find(x => "l:" + x.id === key); if (!l) return; node(l.a);
+    if (l.b === "all"){ D.nodes.forEach(nd => node(nd.code)); mark(".sm-spoke", "rel"); } else node(l.b);
+  }
+  function smShow(key, select){
+    if (select) smSel = key;
+    const box = app.querySelector(".sm-info"); if (!box) return;
+    box.innerHTML = smInfo(key); smMark(key);
+  }
+  function studyMap(){
+    if (!SMAP) return "";
+    const wide = smWide(), tap = smMQ("(hover: none)");
+    return `<details class="studymap"${store.mapClosed ? "" : " open"}>
+      <summary><h2><span aria-hidden="true">🌌</span> Study Map</h2><span class="sm-sub">How your courses connect · ${tap ? "tap" : "hover over"} a star or a line</span></summary>
+      <div class="sm-stage" data-mode="${wide ? "w" : "n"}">${smSVG(wide)}</div>
+      <div class="sm-info" aria-live="polite">${smInfo(smSel)}</div></details>`;
+  }
+  // map events: hover (mouse), focus (keyboard), open/closed state, phone ↔ computer layout
+  window.addEventListener("hashchange", () => { smSel = null; });
+  document.addEventListener("pointerdown", e => { smPointer = e.pointerType || "mouse"; }, true);
+  app.addEventListener("pointerover", e => { if (e.pointerType !== "mouse") return; const t = e.target.closest && e.target.closest("[data-sm]"); if (t) smShow(t.dataset.sm, false); });
+  app.addEventListener("pointerout", e => { if (e.pointerType !== "mouse") return; const st = e.target.closest && e.target.closest(".sm-stage");
+    if (st && !(e.relatedTarget && st.contains(e.relatedTarget))) smShow(smSel, false); });
+  app.addEventListener("focusin", e => { const t = e.target.closest && e.target.closest("[data-sm]"); if (t) smShow(t.dataset.sm, false); });
+  document.addEventListener("toggle", e => { const t = e.target; if (t && t.classList && t.classList.contains("studymap")){ const closed = !t.open; if (!!store.mapClosed !== closed){ store.mapClosed = closed; save(); } } }, true);
+  window.addEventListener("resize", () => { clearTimeout(smResizeT); smResizeT = setTimeout(() => {
+    const st = app.querySelector(".sm-stage"); if (!st) return; const mode = smWide() ? "w" : "n";
+    if (st.dataset.mode !== mode){ st.dataset.mode = mode; st.innerHTML = smSVG(mode === "w"); smMark(smSel); } }, 150); });
+
   /* ---------- state ---------- */
   let session = null;     // active quiz / flashcard round
   let confirmReset = false;
@@ -4133,9 +4408,11 @@ VIS.push({ c:"IMT4133", t:"srch", id:"bits", icon:"✂️", title:"Crossover and
       <header class="hero"><span class="eyebrow">Information Security · NTNU · Autumn 2026</span>
         <h1>Skole Exam Trainer</h1>
         <p class="muted">${total} questions from former exams, slides and notes. ${next ? `Next up: <b>${esc(next.code)}</b> on ${esc(fmtDate(next.exam))}.` : ""}</p></header>
+      ${studyMap()}
       <section class="grid">${cards}</section>
       ${backupSection()}
       <footer>Progress is saved in this browser. Keep a backup to be safe. ⭐ = based on a former exam question.</footer>`;
+    if (SMAP && smSel) smMark(smSel);
   }
 
   /* ---------- COURSE ---------- */
@@ -4438,6 +4715,10 @@ VIS.push({ c:"IMT4133", t:"srch", id:"bits", icon:"✂️", title:"Crossover and
   /* ---------- events ---------- */
   app.addEventListener("click", e => {
     const vp = e.target.closest(".vp"); if (vp){ showPart(vp); return; }
+    const sm = e.target.closest("[data-sm]");
+    if (sm){ const key = sm.dataset.sm;   // study map: a mouse click (or a 2nd tap) on a star opens the course
+      if (key.startsWith("n:") && (smPointer === "mouse" || smSel === key)){ const mc = courseBy(key.slice(2)); if (mc && mc.status !== "soon"){ go(slug(mc.code)); return; } }
+      smShow(key, true); return; }
     const el = e.target.closest("button, a"); if (!el) return;
     const d = el.dataset;
     if (d.go !== undefined){ e.preventDefault(); go(d.go); return; }
@@ -4483,6 +4764,10 @@ VIS.push({ c:"IMT4133", t:"srch", id:"bits", icon:"✂️", title:"Crossover and
   document.addEventListener("keydown", e => {
     const vp = e.target.closest && e.target.closest(".vp");
     if (vp && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); showPart(vp); return; }
+    const sm = e.target.closest && e.target.closest("[data-sm]");
+    if (sm && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); const key = sm.dataset.sm;
+      if (key.startsWith("n:") && e.key === "Enter"){ const mc = courseBy(key.slice(2)); if (mc && mc.status !== "soon"){ go(slug(mc.code)); return; } }
+      smShow(key, true); return; }
     if (!session || session.done || session.mode !== "quiz" || e.target.tagName === "TEXTAREA") return;
     const q = curQ();
     if (!session.answered && q.o && /^[1-9]$/.test(e.key)){ const pos = Number(e.key)-1; if (pos < session.order.length) answer(session.order[pos]); }

@@ -21,6 +21,7 @@ Open `index.html` in a browser. Everything is in one file; no build step.
 - **Terms quiz** per course: key terms by chapter (lecture order), term → definition, definition → term and flashcards; wrong options are other terms from the same chapter
 - **Key models**: 84 interactive diagrams (SVG, drawn in code) for the most important topics, shown at the top of each chapter, after answering linked questions and on the back of linked flashcards; tap a part of a model to see what it means
 - Celebration when you finish a chapter with 80% or more
+- **Study Map** on the home page: a night-sky constellation of the courses, with lines for shared themes, your progress as a ring around each star, and tap/hover details
 - Back up progress: download a backup file or copy a backup code, and restore it in any browser (home page)
 
 ## Structure of `index.html`
@@ -28,7 +29,8 @@ Open `index.html` in a browser. Everything is in one file; no build step.
 2. **Question data** – one `<script>` block per course (`COURSES.push({...})`)
 3. **Terms data** – one `<script>` block per course (`TERMS.push({...})`)
 4. **Visuals** – a small SVG engine (`V.*` builders) and one block of diagrams per course (`VIS.push({...})`)
-5. **App logic** – the last `<script>` block (no course content)
+5. **Study Map** – one block (`const STUDYMAP = {...}`) with the map's courses and links
+6. **App logic** – the last `<script>` block (no course content)
 
 ### Question format
 ```js
@@ -55,6 +57,19 @@ VIS.push({ c: "IMT4110", t: "topic-id", id: "unique-id", icon: "🔄", title: "T
   fact: "Did you know?",
   q: ["question text pattern"], terms: ["Term name"] });               // where the visual appears after answering
 ```
+
+### Study Map format
+```js
+const STUDYMAP = {
+  center: { label: "Information Security", icon: "🛡️", info: "…" },          // optional
+  courses: [{ code: "IMT4110", short: "Methodology", icon: "🔬" }, …],         // one star per course
+  links: [{ a: "IMT4113", b: "IMT4133", label: "Intrusion detection",          // 2–4 words on the line
+            info: "What the two courses share…",
+            topics: { IMT4113: ["ids"], IMT4133: ["l1"] } },                   // chapters to study
+          { a: "IMT4110", b: "all", label: "Research methods", info: "…" }]    // b: "all" = every course
+};
+```
+To add a course to the map: add `{ code, short, icon }` to `courses` and one or more `links`. Name, colour, exam date and progress come from the course data, and the map arranges itself (stars are spread around the centre, linked courses are placed next to each other, and the box grows with more courses). A course that is missing from `courses` still appears, with a ⭐.
 
 ## Adding a course
 Push one more `COURSES` block (and optionally a `TERMS` block) in the same format.
