@@ -73,3 +73,13 @@ To add a course to the map: add `{ code, short, icon }` to `courses` and one or 
 
 ## Adding a course
 Push one more `COURSES` block (and optionally a `TERMS` block) in the same format.
+
+## Exam prep (IMT4110)
+A guided 30-question run (+ 2 bonus) built from "How to Pass IMT4110", the official exam info and former exams.
+- Opens from the banner on the IMT4110 page (`#imt4110-examprep`).
+- Order: SPSS t-test output (12), sampling and bias (4), interviews (4), hypotheses (4), other key topics (6 + 2 bonus); easy → exam level.
+- Question types: multiple choice, "read the SPSS output" (realistic Group Statistics + Independent Samples Test tables, with the right cells highlighted after answering), scenarios, and "explain in your own words" (key-point check + model answer + self-grading).
+- After each answer: right/wrong, a simple explanation, an everyday example and an exam tip.
+- At the end: score per topic, topics to review, and a second round with only the wrong ones. Progress is saved in the browser.
+- A study sheet with the full t-test template, rescue kit, likely questions, time plan and the 20 key words.
+- Data lives in its own block (`EXAMPREP.push({...})`); field list in the comment at the top of that block. Another course gets the same mode by adding its own block.

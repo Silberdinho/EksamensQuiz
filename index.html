@@ -217,6 +217,50 @@ svg.sm-focus .sm-spoke.rel{stroke:rgba(255,255,255,.6)}
 @keyframes smPulse{0%,100%{opacity:.1}50%{opacity:.26}}
 @keyframes smFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 @media (prefers-reduced-motion: reduce){ .sm-tw,.sm-glow,.sm-spark,.sm-halo,.sm-float,.sm-orbit{animation:none} }
+/* ---- Exam prep mode ---- */
+.ep-banner{background:linear-gradient(135deg,var(--c) 0%,color-mix(in srgb,var(--c) 70%,#000) 100%);color:#fff;border-radius:var(--r);padding:18px 20px;display:flex;flex-direction:column;gap:10px;border:none;text-align:left}
+.ep-banner h2{color:#fff} .ep-banner p{color:rgba(255,255,255,.9)}
+.ep-banner .btn{background:#fff;color:var(--c);border-color:#fff} .ep-banner .btn.alt{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+.ep-topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:10px}
+.ep-topic{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.ep-topic .ep-tn{font-weight:600} .ep-topic .ep-ic{font-size:1.2rem}
+.ep-meter{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden} .ep-meter i{display:block;height:100%;background:var(--c);border-radius:99px}
+.ep-meter.low i{background:var(--bad)} .ep-meter.mid i{background:var(--warn)} .ep-meter.high i{background:var(--ok)}
+.ep-lvl{letter-spacing:1px}
+.ep-box{border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;background:var(--surface-2)}
+.ep-box b.ep-h{font-family:var(--f-display);font-size:.95rem}
+.ep-box.tip{background:var(--c-soft)} .ep-box.tip b.ep-h{color:var(--c)}
+.ep-kp{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ep-kp li{display:flex;gap:8px;align-items:flex-start} .ep-kp .mk{flex:none;width:1.4em;text-align:center;font-weight:700}
+.ep-kp li.hit .mk{color:var(--ok)} .ep-kp li.miss .mk{color:var(--muted)}
+.ep-kp .mk-n{font-size:.78rem;color:var(--ok);font-weight:600}
+.spss{display:flex;flex-direction:column;gap:6px;background:var(--surface-2);border-radius:10px;padding:12px}
+.spss-t{font-weight:700;font-family:var(--f-display)}
+.spss .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;background:#fff;border:1px solid #c9ced3;border-radius:6px}
+table.sp{border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#1c1c1c;width:100%;min-width:560px}
+table.sp.wide{min-width:780px}
+table.sp.gs{min-width:0}
+@media (max-width:600px){ table.sp .dvc{display:none} table.sp.gs th,table.sp.gs td{padding:5px 6px;white-space:normal} }
+table.sp caption{caption-side:top;text-align:left;font-weight:700;padding:8px 10px 6px;color:#1c1c1c;background:#fff}
+table.sp th,table.sp td{border:1px solid #d5d9dd;padding:5px 8px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+table.sp th{background:#eef1f5;font-weight:600;text-align:center;white-space:normal;vertical-align:bottom}
+table.sp td.lbl,table.sp th.lbl{text-align:left;background:#f7f8fa;font-weight:600;white-space:normal}
+table.sp td.hl{background:#ffe680;outline:2px solid #e0a800;outline-offset:-2px;font-weight:700}
+.spss .note{font-size:.85rem}
+.ep-swipe{font-size:.78rem;color:var(--muted)} @media (min-width:820px){ .ep-swipe{display:none} }
+.ep-review{display:flex;flex-direction:column;gap:8px}
+.ep-review h3{display:flex;gap:8px;align-items:center}
+.ep-ok{color:var(--ok);font-weight:700} .ep-bad{color:var(--bad);font-weight:700}
+.ep-sheet{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:var(--r)}
+.ep-sheet summary{cursor:pointer;padding:14px 16px;display:flex;flex-direction:column;gap:2px;font-family:var(--f-display);font-weight:700;font-size:1.05rem;list-style:none}
+.ep-sheet summary::-webkit-details-marker{display:none} .ep-sheet summary::after{content:"Tap to open ▾";font-family:var(--f-body);font-weight:600;font-size:.8rem;color:var(--c)}
+.ep-sheet[open] summary::after{content:"Close ▴"}
+.ep-sheet-b{padding:0 16px 16px;display:flex;flex-direction:column;gap:18px}
+.ep-sec{display:flex;flex-direction:column;gap:8px} .ep-sec h3{color:var(--c)}
+.ep-ol,.ep-ul{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:5px}
+.ep-dl{margin:0;display:grid;grid-template-columns:minmax(0,11em) minmax(0,1fr);gap:6px 14px}
+.ep-dl dt{font-weight:600} .ep-dl dd{margin:0}
+@media (max-width:560px){ .ep-dl{grid-template-columns:minmax(0,1fr)} .ep-dl dd{margin-bottom:6px;color:var(--fg)} .ep-dl dt{color:var(--c)} }
 footer{font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
 </style>
@@ -251,8 +295,13 @@ footer{font-size:.8rem;color:var(--muted);text-align:center;padding-top:12px}
      STUDY MAP DATA (one block, after the visuals blocks)
        STUDYMAP = { center:{ label, icon, info }, courses:[{ code, short, icon }], links:[{ a, b, label, info, topics }] }
        b: "all" links a course to every course. A new course appears on the map automatically; add links for it.
+
+     EXAM PREP DATA (one block per course, after the study map block)
+       EXAMPREP.push({ code, title, intro, topics:[{ id, label, icon }], tables:{ key:{ SPSS output } }, questions:[...] })
+       A course with an EXAMPREP block gets an "Exam prep" banner on its page (route #code-examprep).
+       Field list for questions and tables: see the comment at the top of the block.
      ===================================================================== -->
-<script>const COURSES = []; const TERMS = [];</script>
+<script>const COURSES = []; const TERMS = []; const EXAMPREP = [];</script>
 <script>
 /* ================================================================
    COURSE: IMT4110 – Scientific Methodology and Communication
@@ -4024,6 +4073,392 @@ const STUDYMAP = {
 };
 </script>
 
+<script>
+/* ================= EXAM PREP DATA: IMT4110 =================
+   A 30-question exam run (+ 2 bonus) based on "How to Pass IMT4110", the official exam info and former exams.
+   Questions go from easy (lvl 1) to hard (lvl 3).
+   Fields:  tp = topic id · lvl = 1–3 · k = "mc" | "read" (SPSS output) | "scen" (scenario) | "short" (write in own words)
+            q = question · tbl = SPSS table key · o = options · a = index of right option
+            e = simple explanation · ex = everyday example · tip = exam tip for a long answer
+            hl = SPSS cells to highlight after answering · kp = key points for short answers (w = words that count as "mentioned")
+            m = model answer (short answers) · chk = "Needs checking"
+   sheet = study sheet sections: { h, icon, p?:[text], ol?:[steps], list?:[text], rowsH?, rows?:[[term, text]], after?:[text] } (shown in that order)
+   SPSS numbers are computed so they agree with each other (t, df, p and CI all match the means, SDs and Ns). */
+
+EXAMPREP.push({
+  code: "IMT4110",
+  title: "Exam prep: pass on Thursday",
+  intro: "30 questions + 2 bonus, in the order of the exam guide: SPSS t-test first, then sampling, interviews, hypotheses and other key topics. Easy first, harder at the end. After each answer you get a simple explanation, an everyday example and an exam tip.",
+  topics: [
+    { id: "spss", label: "SPSS t-test output", icon: "📊" },
+    { id: "sample", label: "Sampling and bias", icon: "🎯" },
+    { id: "intv", label: "Interviews and qualitative research", icon: "🎤" },
+    { id: "hyp", label: "Hypotheses", icon: "🧪" },
+    { id: "other", label: "Other key topics", icon: "📚" }
+  ],
+  tables: {
+    A: { title: "Study A: Password managers", dv: "Awareness score", note: "Score on a security-awareness test from 0 to 30. Higher = more aware.",
+         groups: [["Uses password manager", "46", "21.40", "4.200", ".619"], ["No password manager", "54", "19.55", "4.350", ".592"]],
+         lev: [".674", ".414"],
+         rows: [["2.153", "98", ".034", "1.850", ".859", ".145", "3.555"], ["2.160", "96.442", ".033", "1.850", ".857", ".150", "3.550"]] },
+    B: { title: "Study B: VPN training", dv: "Quiz score", note: "Score on a network-security quiz from 0 to 100. Higher = better.",
+         groups: [["VPN course", "28", "64.50", "13.200", "2.495"], ["No course", "64", "59.80", "6.200", ".775"]],
+         lev: ["18.912", ".000"],
+         rows: [["2.331", "90", ".022", "4.700", "2.016", ".694", "8.706"], ["1.799", "32.334", ".081", "4.700", "2.612", "-.619", "10.019"]] },
+    C: { title: "Study C: Two login pages", dv: "Usability score", note: "Usability score from 0 to 100 in a large online test. Higher = easier to use.",
+         groups: [["New login page", "1250", "72.40", "10.100", ".286"], ["Old login page", "1310", "71.30", "10.400", ".287"]],
+         lev: [".402", ".526"],
+         rows: [["2.713", "2558", ".007", "1.100", ".405", ".305", "1.895"], ["2.715", "2557.205", ".007", "1.100", ".405", ".305", "1.895"]] }
+  },
+  questions: [
+  /* ---------- LEVEL 1: warm-up ---------- */
+  { id: "ep01", tp: "spss", lvl: 1, k: "mc",
+    q: "A teacher wants to know if students who drink coffee score differently on an exam than students who don't. She runs a t-test in SPSS. What does a t-test check?",
+    o: ["Whether two variables move together (correlation)", "Whether two groups really are different, or the difference is just luck", "Whether a questionnaire gives the same result every time", "Whether the sample looks like the population"],
+    a: 1,
+    e: "A t-test compares the means (averages) of two groups. It tells you if the difference is big enough to be real, or small enough that it could just be chance.",
+    ex: "Two friends flip a coin 10 times. One gets 6 heads, the other 4. Is one coin \"better\"? Probably not – that's luck. A t-test does this kind of check for group means.",
+    tip: "Open Question 1 with: \"A t-test checks if the difference between two group means is statistically significant, or just caused by chance.\" That one sentence shows the examiner you know the tool." },
+
+  { id: "ep02", tp: "hyp", lvl: 1, k: "mc",
+    q: "What does the null hypothesis (H0) say?",
+    o: ["There is a difference between the groups", "The researcher's own idea is correct", "There is no difference (no effect) between the groups", "The sample is too small"],
+    a: 2,
+    e: "H0 = \"zero effect\". It always says nothing is going on: no difference, no relationship. The t-test tests H0. H1 (the research hypothesis) is what the researcher believes: there IS a difference.",
+    ex: "In court, the defendant is \"innocent until proven guilty\". Innocent = H0. The evidence must be strong enough to reject it.",
+    tip: "Always write both: \"H0 is that there is no difference between [A] and [B]. H1 is that [A] scores higher than [B].\" Examiners look for both words." },
+
+  { id: "ep03", tp: "other", lvl: 1, k: "mc",
+    q: "What is the main difference between quantitative and qualitative research?",
+    o: ["Quantitative uses numbers and statistics; qualitative explores meaning and experiences with words", "Quantitative is always better, because numbers are objective and words are only opinions", "Qualitative uses bigger samples, so its results are easier to generalise to everyone", "There is no difference; they are two names for the same thing"],
+    a: 0,
+    e: "Quantitative = numbers (surveys with scales, experiments, t-tests). Qualitative = words (interviews, observation) to understand how people think and feel. Neither is \"better\"; they answer different questions.",
+    ex: "\"How many students use a password manager?\" → quantitative (count them). \"Why do students NOT use one?\" → qualitative (interview them).",
+    tip: "In a discussion answer, say both have strengths: quantitative can be generalised to many people; qualitative gives depth. Many studies use both (mixed methods)." },
+
+  { id: "ep04", tp: "spss", lvl: 1, k: "mc",
+    q: "You use a significance level of 0.05. SPSS shows Sig. (2-tailed) = .012. What do you do?",
+    o: ["Keep H0: there is no difference", "Nothing: .012 is too small to mean anything", "Read the other row in the table", "Reject H0: there is a significant difference"],
+    a: 3,
+    e: "The one rule: Sig. UNDER 0.05 → reject H0 → \"there is a significant difference\". Sig. OVER 0.05 → keep H0 → \"we cannot show a difference\". .012 is under .05.",
+    ex: "Think of 0.05 as a height limit sign at a car park: under the line, you get in (significant). Over the line, you don't.",
+    tip: "Write the decision as a full sentence: \"I choose a significance level of 0.05. Since .012 is smaller than 0.05, I reject H0.\" Forgetting to say 0.05 out loud is a common lost point." },
+
+  { id: "ep05", tp: "sample", lvl: 1, k: "mc",
+    q: "A researcher wants to learn about all NTNU students, but asks 200 of them. What are \"all NTNU students\" and \"the 200\" called?",
+    o: ["Sample and population", "Population and sample", "Control group and experimental group", "Independent and dependent variable"],
+    a: 1,
+    e: "Population = everyone you want to say something about. Sample = the smaller group you actually study. The sample should be representative, which means it looks like the population.",
+    ex: "Tasting one spoonful of soup (sample) to judge the whole pot (population). Stir first, so the spoonful is representative!",
+    tip: "Use this \"always useful\" sentence: \"The sample should be representative of the population, so the results can be generalised. This is called external validity.\"" },
+
+  { id: "ep06", tp: "intv", lvl: 1, k: "mc",
+    q: "Which of these is a leading question?",
+    o: ["\"What is it like to work here?\"", "\"Can you tell me more about that?\"", "\"How did you start in this job?\"", "\"Working nights is really stressful, isn't it?\""],
+    a: 3,
+    e: "A leading question pushes the person toward a certain answer. \"…isn't it?\" tells them what you expect to hear, so most people just say yes. The other three are open and neutral.",
+    ex: "A waiter asking \"You loved the food, right?\" will hear \"yes\" even if the food was bad.",
+    tip: "In the exam, quote the bad question, name it (\"This is a leading question\") and rewrite it as an open one: \"What is it like to work nights?\"" },
+
+  /* ---------- LEVEL 2: core ---------- */
+  { id: "ep07", tp: "hyp", lvl: 2, k: "scen",
+    q: "Study: \"Does sleep before an exam affect exam scores?\" Students sleep either 4 or 8 hours, then take the same exam. Which is the independent variable (IV) and which is the dependent variable (DV)?",
+    o: ["IV = exam score, DV = hours of sleep", "Both are dependent variables", "IV = hours of sleep, DV = exam score", "IV = the students, DV = the exam"],
+    a: 2,
+    e: "IV = what you change or compare (the cause): sleep. DV = what you measure (the effect): exam score. Trick: the DV \"depends\" on the IV.",
+    ex: "Watering a plant: how much water you give is the IV; how tall it grows is the DV.",
+    tip: "Name the variables early in a long answer: \"The independent variable is sleep (4 vs 8 hours) and the dependent variable is the exam score.\" It makes the rest of your answer clearer." },
+
+  { id: "ep08", tp: "spss", lvl: 2, k: "read", tbl: "A",
+    q: "Look at the Group Statistics table. Which statement is correct?",
+    o: ["The password-manager group has the higher mean, about 1.85 points higher", "The groups are very unequal in size", "The no-password-manager group has the higher mean", "The standard deviation shows the difference between the groups"],
+    a: 0, hl: ["g0.mean", "g1.mean", "g0.n", "g1.n"],
+    e: "Mean 21.40 vs 19.55 → difference 1.85. The groups are 46 and 54, which is about equal. Standard deviation (SD) is NOT the difference between groups: it shows how spread out the scores are inside each group.",
+    ex: "Two classes: one averages 21.4, the other 19.6 on a test. That's the means. If some students got 10 and others 30, the SD is big (scores are spread out).",
+    tip: "Template sentences 2–4: \"There are 46 people in group A and 54 in group B, so the groups are about equal. Group A has a mean of 21.40 and group B 19.55. The SDs are 4.20 and 4.35, which shows the scores are quite spread out.\"" },
+
+  { id: "ep09", tp: "other", lvl: 2, k: "mc",
+    q: "A bathroom scale always shows 2 kg too much, every single time. Is it reliable? Is it valid?",
+    o: ["Reliable and valid", "Not reliable, but valid", "Neither reliable nor valid", "Reliable, but not valid"],
+    a: 3,
+    e: "Reliability = same result every time (consistent). Validity = measures the right thing (correct). The scale is consistent (reliable) but wrong (not valid). A test must be reliable to be valid, but reliable alone is not enough.",
+    ex: "The +2 kg scale is the classic exam example. Another: a clock that is always 10 minutes fast is reliable but not valid.",
+    tip: "Define both in one sentence each, then use the scale example. Add: \"To improve validity we can test the method in a small pilot study first.\"" },
+
+  { id: "ep10", tp: "spss", lvl: 2, k: "scen",
+    q: "Which t-test fits? (1) 40 employees take a phishing test BEFORE training and the SAME 40 take it AFTER. (2) 40 employees with training are compared with 40 different employees without training.",
+    o: ["(1) independent, (2) paired", "(1) paired, (2) independent", "Both paired", "Both independent"],
+    a: 1,
+    e: "Paired (dependent) t-test = the SAME people measured twice (before/after). Independent samples t-test = two DIFFERENT, separate groups. The exam's Question 1 is usually independent: two separate groups.",
+    ex: "Weighing yourself before and after Christmas = paired. Comparing your weight with your friend's = independent.",
+    tip: "Write in your assumptions: \"Since there are two separate groups, an independent samples t-test is used.\" That shows you chose the test on purpose." },
+
+  { id: "ep11", tp: "spss", lvl: 2, k: "read", tbl: "A",
+    q: "Look at Levene's test in the Independent Samples Test table. Which row should you read the t-test from, and why?",
+    o: ["The top row, because it always has the smallest p-value", "The bottom row (equal variances not assumed), because Levene's Sig. .414 is above 0.05", "The top row (equal variances assumed), because Levene's Sig. .414 is above 0.05", "It doesn't matter: always use the bottom row"],
+    a: 2, hl: ["lev.f", "lev.sig", "r0"],
+    e: "Levene's test checks if the two groups have similar spread (variance). Sig. over 0.05 → variances are similar enough → read the TOP row. Sig. under 0.05 → spreads are different → read the BOTTOM row.",
+    ex: "Before comparing two runners' average times, you check that both ran on similar tracks. Levene is that \"same track?\" check.",
+    tip: "Template sentence 5: \"Levene's Sig. is .414, which is above 0.05, so equal variances can be assumed and I read the top row.\" Always say WHY you chose the row." },
+
+  { id: "ep12", tp: "sample", lvl: 2, k: "scen",
+    q: "A student wants to know how Norwegians feel about online banking. She asks the first 100 people she meets in the NTNU cafeteria. What sampling method is this, and what is the problem?",
+    o: ["Convenience sampling; the sample is not representative of all Norwegians", "Stratified sampling; the groups are too small to compare with each other", "Random sampling; no problem, because she picked people without a plan", "Snowball sampling; each person recruits friends, so answers are too similar"],
+    a: 0,
+    e: "Convenience sampling = using the people who are easiest to reach. Students in a cafeteria are young and educated, so they are different from all Norwegians in a systematic way. That is sampling bias.",
+    ex: "Asking only people at a gym \"How often do you exercise?\" will make it look like everyone exercises a lot.",
+    tip: "Name the method, then name the bias: \"This is convenience sampling, which causes sampling bias, so the results have low external validity (we cannot generalise to all Norwegians). Random sampling would be better.\"" },
+
+  { id: "ep13", tp: "intv", lvl: 2, k: "scen",
+    q: "Dr. D interviews Amber, a cocktail waitress. He asks: \"Cocktail waitressing has a bad reputation. How bad is it to work here?\" and \"The customers treat you badly, don't they?\" Amber says the customers are actually nice and help her. Dr. D moves on to his next question. What is the BIGGEST problem?",
+    o: ["The interview is too short to give reliable data about the job", "He did not record the interview, so the data cannot be checked later", "He should have used a questionnaire, because interviews are never valid", "Leading questions and researcher bias: he pushes his own opinion and ignores her answer"],
+    a: 3,
+    e: "His questions already say the job is bad (leading questions). When Amber disagrees, he ignores it: that is researcher bias, trying to confirm his own opinion. So the answers show Dr. D's view, not Amber's real experience → low validity.",
+    ex: "A journalist who has already written the headline and only asks questions that fit it.",
+    tip: "Use the 5 key words: leading questions · researcher bias · validity · ethics · open questions. Quote his exact words and rewrite them as neutral, open questions." },
+
+  { id: "ep14", tp: "spss", lvl: 2, k: "read", tbl: "A",
+    q: "Levene told you to read the top row. Use a significance level of 0.05. What is the correct decision?",
+    o: ["t = 2.153, df = 98, Sig. = .034 → reject H0: there is a significant difference", "t = 2.153, df = 98, Sig. = .034 → keep H0: no difference", "Sig. = .414 → keep H0: no difference", "Sig. = .033 → reject H0, from the bottom row"],
+    a: 0, hl: ["r0.t", "r0.df", "r0.p"],
+    e: ".034 is smaller than 0.05 → reject H0. People with a password manager score significantly higher. Trap: .414 is Levene's Sig., not the t-test's Sig. And we read the top row, not the bottom.",
+    ex: "Sig. .034 means: if password managers made no difference at all, you'd see a gap this big only about 3 times in 100 studies. That's rare enough to believe it's real.",
+    tip: "Template 6–7: \"t is 2.153 and df is 98. Sig. (2-tailed) is .034. I choose a significance level of 0.05. Since .034 is smaller than 0.05, I reject H0.\"" },
+
+  { id: "ep15", tp: "hyp", lvl: 2, k: "mc",
+    q: "A hypothesis says \"Stressed employees click more phishing links.\" Which is the best operationalization of \"stress\"?",
+    o: ["Stress = feeling bad at work", "Stress = whatever each employee thinks stress means", "Stress = score from 0 to 40 on a standard stress questionnaire", "Stress = being very busy"],
+    a: 2,
+    e: "Operationalization = deciding EXACTLY how you measure a vague word. \"Feeling bad\" or \"busy\" can't be measured. A questionnaire score from 0 to 40 can, and other researchers can repeat it.",
+    ex: "\"A good pizza\" is vague. \"Rated 4 or 5 stars by at least 20 customers\" is operationalized.",
+    tip: "Use the \"always useful\" sentence: \"Vague words must be operationalized, which means we decide exactly how to measure them. Without it the hypothesis cannot be tested or repeated.\"" },
+
+  { id: "ep16", tp: "other", lvl: 2, k: "mc",
+    q: "Which of these is NOT part of informed consent?",
+    o: ["Participants know what the study is about", "Participants must finish the study once they have started", "Participants can quit at any time without problems", "Participants agree freely to take part"],
+    a: 1,
+    e: "Informed consent = know + agree + can quit. Forcing people to finish breaks the \"can quit at any time\" rule. Data should also be kept anonymous (in Norway, Sikt helps check this).",
+    ex: "A gym membership you can't cancel would feel wrong. Research participation must always be cancellable.",
+    tip: "Ethics fits into almost every answer: \"Participants must give informed consent: they know what the study is about and can quit at any time.\"" },
+
+  { id: "ep17", tp: "spss", lvl: 2, k: "read", tbl: "B",
+    q: "Study B. Look at Levene's test first, then decide (significance level 0.05). What is correct?",
+    o: ["Levene Sig. .000 < .05 → top row → Sig. .022 → significant difference", "Levene Sig. .000 < .05 → bottom row → Sig. .081 → significant difference", "Levene Sig. .000 → the study failed and nothing can be said", "Levene Sig. .000 < .05 → bottom row → Sig. .081 → no significant difference"],
+    a: 3, hl: ["lev.sig", "r1.t", "r1.df", "r1.p"],
+    e: "Levene's Sig. is under 0.05, so the groups' spreads are different (SD 13.2 vs 6.2) → read the BOTTOM row. There, Sig. (2-tailed) = .081, which is over 0.05 → keep H0. The trap: the top row (.022) looks significant, but it's the wrong row!",
+    ex: "Like reading the right line on a bus timetable: if you read the weekday line on a Sunday, you get the wrong answer even though the numbers look fine.",
+    tip: "Show both steps: \"Levene's Sig. is .000, which is below 0.05, so I read the bottom row. Sig. (2-tailed) is .081, which is above 0.05, so I keep H0. We cannot show a difference.\"" },
+
+  { id: "ep18", tp: "sample", lvl: 2, k: "short",
+    q: "Explain in your own words: what is sampling bias, and why should it be openly discussed in a research report?",
+    kp: [
+      { p: "Define sampling bias: the sample is systematically different from the population", w: ["systematic", "different from the population", "not representative", "representative"] },
+      { p: "Give one cause: self-selection, drop-out, convenience sampling (e.g. only students), online-only surveys", w: ["self-select", "volunteer", "drop", "convenience", "students", "online", "internet", "easy to reach"] },
+      { p: "It's almost unavoidable, so be honest: readers can then judge who the results are valid for", w: ["unavoidable", "honest", "open", "readers", "judge", "limitation"] },
+      { p: "Link to external validity / generalisation", w: ["external validity", "generali"] },
+      { p: "Still try to reduce it, e.g. random sampling", w: ["random"] }
+    ],
+    m: "Sampling bias means the sample is different from the population in a systematic way, so it is not representative. It is almost impossible to avoid: people choose themselves if they want to take part, some drop out, and researchers often use people who are easy to reach, like students. Because of this, the researcher should discuss it openly in the report. Then readers can judge who the results are valid for. This is about external validity, which means whether the results can be generalised. The researcher should still try to reduce bias, for example with random sampling.",
+    e: "Sampling bias is like a skewed lens: what you see is real, but tilted. Being honest about the tilt lets readers correct for it.",
+    ex: "The 1936 US poll asked 2.4 million people, but mostly richer people (car and phone owners), and predicted the wrong winner. A huge sample doesn't fix a biased one.",
+    tip: "If the exam asks \"Do you agree…?\", start with \"I agree\", define the term, give the 1936 example and end with honesty → readers can judge the results." },
+
+  { id: "ep19", tp: "intv", lvl: 2, k: "mc",
+    q: "During an interview, a participant says: \"Actually, the night shifts are the best part.\" What is the best thing for the interviewer to do?",
+    o: ["Ask a follow-up: \"Can you tell me more about that?\"", "Say \"That's surprising, most people hate night shifts\"", "Move on to the next prepared question", "Correct the participant politely"],
+    a: 0,
+    e: "Good interview technique: follow up on what the person says with open, neutral questions. Unexpected answers are often the most interesting data. Saying \"that's surprising\" shows your own opinion (bias), and moving on ignores new information.",
+    ex: "A good doctor who hears \"the pain is worse at night\" asks \"Tell me more\" instead of moving on with the checklist.",
+    tip: "Good interview technique in one list: open questions · follow-up questions · stay neutral · explain the purpose · promise anonymity · record with consent." },
+
+  { id: "ep20", tp: "spss", lvl: 2, k: "mc",
+    q: "An independent samples t-test compares 45 people in group A and 55 in group B. What is df (degrees of freedom) in the \"equal variances assumed\" row?",
+    o: ["100", "99", "98", "55"],
+    a: 2,
+    e: "For an independent samples t-test (top row): df = number of people minus 2 = 45 + 55 − 2 = 98. In the bottom row SPSS adjusts df, so it is often a decimal number.",
+    ex: "If you see df = 98 in the exam table, you can work backwards: about 100 people took part.",
+    tip: "Write: \"t is 2.15 and df is 98 (the number of people minus 2).\" Explaining df in brackets shows understanding without taking much time." },
+
+  { id: "ep21", tp: "other", lvl: 2, k: "mc",
+    q: "Theory of science: which statement matches a positivist view, and which matches a constructivist (interpretive) view?",
+    o: ["Positivist: reality is subjective and personal; constructivist: one objective reality can be measured with numbers", "Positivist: an objective reality can be measured, often with numbers; constructivist: we seek to understand the meaning people give to their experiences", "Both views say that only controlled experiments with random assignment count as real research", "Positivist means qualitative interviews; constructivist means quantitative surveys and statistical tests"],
+    a: 1,
+    e: "Positivism → there is one reality out there that we can measure objectively → quantitative methods, hypothesis testing. Constructivism → people create meaning, so we try to understand their view → qualitative methods like interviews.",
+    ex: "Positivist: \"How many minutes do employees spend on security training?\" Constructivist: \"What does security mean to employees in their daily work?\"",
+    tip: "Link the view to the method: \"A positivist approach fits a t-test study; a constructivist approach fits Dr. D's interview study.\" Connecting topics impresses examiners.",
+    chk: "Wording follows the course slide on 'constructivist research'; check the exact terms your lecturer uses." },
+
+  { id: "ep22", tp: "spss", lvl: 2, k: "read", tbl: "B",
+    q: "Study B, bottom row: the 95% confidence interval of the difference goes from −.619 to 10.019. What does it tell you?",
+    o: ["The interval includes 0, so \"no difference\" is possible → not significant at 0.05", "The difference is significant, because the upper limit 10.019 is far above 0", "The interval shows the lowest and highest score in each of the two groups", "The study has 95% validity, so the result is correct 95 times out of 100"],
+    a: 0, hl: ["r1.lo", "r1.hi"],
+    e: "The confidence interval (CI) is the range where the real difference probably is (95% sure). If the interval includes 0 (it goes from minus to plus), \"no difference\" is possible → not significant. This always agrees with Sig.: .081 > .05.",
+    ex: "A weather forecast says tomorrow will be between −1 °C and +10 °C. You can't be sure it will be above freezing, because 0 is inside the range.",
+    tip: "A bonus sentence that earns points: \"The 95% confidence interval goes from −.619 to 10.019. Since it includes 0, this agrees that the difference is not significant.\"" },
+
+  /* ---------- LEVEL 3: exam level ---------- */
+  { id: "ep23", tp: "hyp", lvl: 3, k: "short",
+    q: "A company believes security posters in the office reduce phishing clicks. Write (1) a good research hypothesis (H1), (2) the null hypothesis (H0), and (3) explain how you would operationalize \"phishing clicks\".",
+    kp: [
+      { p: "H1: a clear, testable claim about a difference, e.g. \"Employees in offices with posters click fewer phishing links than employees in offices without posters\"", w: ["fewer", "less", "lower", "more"] },
+      { p: "H0: no difference, e.g. \"There is no difference in phishing clicks between offices with and without posters\"", w: ["no difference", "not differ", "no effect", "h0"] },
+      { p: "Operationalize: e.g. number of clicks on a fake test-phishing email during one month, from the email system logs", w: ["number", "count", "test email", "fake", "simulat", "log", "per month", "percent", "%"] },
+      { p: "Name IV (posters yes/no) and DV (phishing clicks)", w: ["independent", "dependent", "iv", "dv"] },
+      { p: "Say why: a good hypothesis is testable and based on earlier research; operationalization makes it measurable and repeatable", w: ["testable", "repeat", "replic", "measur", "earlier research"] }
+    ],
+    m: "H1: Employees in offices with security posters click on fewer phishing emails than employees in offices without posters. H0: There is no difference in phishing clicks between offices with and without posters. The independent variable is posters (yes/no), and the dependent variable is phishing clicks. I would operationalize \"phishing clicks\" as the number of clicks on a fake test-phishing email sent to all employees during one month, counted from the email system logs. This makes the hypothesis testable, and other researchers can repeat the study. A t-test tests H0: if Sig. is under 0.05 we reject H0, and H1 is supported, but never fully proven.",
+    e: "A good hypothesis = clear + testable + about a relationship between variables + based on earlier research. H0 is the \"nothing happens\" version. Operationalization turns a fuzzy idea into a number.",
+    ex: "\"Coffee helps\" is not testable. \"Students who drink 2 cups of coffee score higher on a 20-question test than students who drink none\" is.",
+    tip: "End with: \"If the result is significant we reject H0 and H1 is supported. We never fully prove H1.\" That last line shows real understanding." },
+
+  { id: "ep24", tp: "other", lvl: 3, k: "mc",
+    q: "Why should a researcher do a literature review BEFORE starting a study?",
+    o: ["To copy the results of others, so the new study does not need to collect data", "To find enough participants for the sample by contacting earlier authors", "Because Sikt requires it before participants can give informed consent", "To see what is already known, avoid repeating old studies, and find methods and theory to build on"],
+    a: 3,
+    e: "A literature review summarises earlier research. It shows what's already known (so you don't reinvent the wheel), reveals gaps for new research, gives tested methods and measures (good for validity), and helps you build hypotheses on earlier research.",
+    ex: "Before opening a new café, you check which cafés already exist nearby, what works for them and what's missing in the area.",
+    tip: "Link it to other topics: \"Using measures from earlier studies, found in the literature review, makes the study more valid, and hypotheses should be based on earlier research.\"" },
+
+  { id: "ep25", tp: "spss", lvl: 3, k: "mc",
+    q: "A researcher rejects H0 with Sig. = .04. Later it turns out there was no real difference. What happened, and how can the risk be reduced?",
+    o: ["Type II error; use a bigger significance level like 0.10", "Sampling bias; use convenience sampling so more people answer quickly", "Type I error (false alarm); use a stricter level (0.01), repeat the study, use a bigger sample", "Nothing went wrong; a Sig. under 0.05 always proves a real difference"],
+    a: 2,
+    e: "Type I error = false alarm: saying there is a difference when there really isn't. With 0.05 you accept a 5% risk of this. Reduce it with a stricter level (0.01), replication (repeating the study) and a bigger sample.",
+    ex: "A smoke alarm that goes off when you make toast. Making it less sensitive (0.01) gives fewer false alarms.",
+    tip: "This is often the LAST part of Question 1, and students forget it. Template sentence 8: \"A Type I error means saying there is a difference when there really is none. We can reduce this risk by using a stricter level (0.01), by repeating the study, and by using a bigger sample.\"" },
+
+  { id: "ep26", tp: "intv", lvl: 3, k: "short",
+    q: "The Dr. D case (official exam example): Dr. D asks Amber \"Cocktail waitressing has a bad reputation. How bad is it to work here?\" and \"The customers treat you badly, don't they?\" When she says customers are nice and help her, he ignores it. Explain what is wrong and what he should do instead.",
+    kp: [
+      { p: "Leading questions: his questions already say the job is bad; \"…don't they?\" pushes a yes", w: ["leading"] },
+      { p: "Researcher bias: he tries to confirm his own opinion and ignores her positive answer", w: ["bias", "own opinion", "confirm", "ignore"] },
+      { p: "Validity: the answers show Dr. D's view, not Amber's real experience", w: ["valid"] },
+      { p: "Ethics: he may make her feel bad about her job; explain purpose, consent and anonymity", w: ["ethic", "consent", "anonym", "feel bad", "respect"] },
+      { p: "Instead: open, neutral questions (\"What is it like to work here?\") and follow-ups (\"Can you tell me more?\")", w: ["open", "neutral", "follow", "tell me more", "what is it like"] }
+    ],
+    m: "I assume Dr. D wants to learn what it is like to work as a cocktail waitress. The biggest problem is that he asks leading questions. A leading question pushes the person toward a certain answer. \"How bad is it to work here?\" already says the job is bad, and \"…don't they?\" makes Amber likely to say yes. This shows researcher bias: Dr. D tries to confirm his own opinion, and he ignores Amber when she says the customers are nice. Because of this, the answers are not valid: they show Dr. D's opinion, not Amber's real experience. It is also an ethics problem, because he may make her feel bad about her job. Dr. D should ask open, neutral questions like \"What is it like to work here?\" and follow up: \"Can you tell me more about that?\". He should explain the purpose of the interview, get informed consent and promise anonymity. To conclude, neutral questions would give more honest and valid answers.",
+    e: "Good qualitative research lets the participant's own view come through. Leading questions and ignoring answers do the opposite.",
+    ex: "A customer survey asking \"How much did you love our new app?\" will never discover that users hate the new menu.",
+    tip: "If you remember one thing: quote his questions and write \"These are leading questions. He should ask open, neutral questions.\" Then add bias, validity and ethics for extra points." },
+
+  { id: "ep27", tp: "sample", lvl: 3, k: "scen",
+    q: "A study on \"how older people (70+) handle online scams\" is done with an online survey shared on Facebook. 3,000 people answer. The report says: \"With 3,000 answers, our results are valid for all Norwegians over 70.\" What is the main problem?",
+    o: ["3,000 is too few people to say anything about Norwegians over 70", "Sampling bias: only people 70+ who use Facebook can answer, and they choose themselves. Big does not mean representative", "There is no problem: with 3,000 answers the sample is automatically representative of everyone", "The study should have used a t-test instead of a survey, because only t-tests give valid results"],
+    a: 1,
+    e: "The survey misses all older people who are NOT online, who may be the most vulnerable to scams. People also choose themselves (self-selection). A bigger sample does not fix a biased sample. So the claim of being valid for all Norwegians over 70 has weak external validity.",
+    ex: "Like the 1936 US poll: 2.4 million answers, still the wrong winner, because the sample was biased.",
+    tip: "Say: \"Size does not fix bias.\" Then: the researchers should admit the limitation openly, and could add phone or paper surveys to reach people who are offline." },
+
+  { id: "ep28", tp: "other", lvl: 3, k: "scen",
+    q: "A study finds: employees who attended more security courses had fewer security incidents. The manager says: \"The courses cause fewer incidents!\" What is the best response?",
+    o: ["Correlation is not causation: a third variable (motivated people take more courses AND make fewer mistakes) may explain both", "Correct: when two things change together, one of them must be the cause", "Wrong: the study proves the opposite, that the courses lead to more security incidents", "The study is invalid, because security incidents can never be measured with numbers at all"],
+    a: 0,
+    e: "Correlation = two things change together. Causation = one causes the other. Here, motivated employees may both choose more courses and be more careful (third variable). To show cause, use an experiment: random assignment to course/no course (control group). This protects internal validity.",
+    ex: "Ice cream sales and shark attacks go up together. Ice cream doesn't cause shark attacks: hot weather causes both.",
+    tip: "Always-useful sentence: \"To show cause and effect, we need an experiment with a control group and random assignment. A correlation alone does not prove causation.\"" },
+
+  { id: "ep29", tp: "spss", lvl: 3, k: "read", tbl: "C",
+    q: "Study C: 2,560 people tested two login pages. Levene Sig. = .526, top row Sig. (2-tailed) = .007. The new page scores 1.1 points higher on a 0–100 scale. Which conclusion is BEST?",
+    o: ["The difference is significant, so the new page is much better and must be used everywhere", "We must read the bottom row, because the two groups are very large and not equal in size", "The difference is not significant, because 1.1 points is a small difference on a 0–100 scale", "Significant (.007 < .05), but only 1.1 of 100 points; with a huge sample even tiny differences are significant"],
+    a: 3, hl: ["lev.sig", "r0.p", "g0.mean", "g1.mean", "g0.n", "g1.n"],
+    e: "Statistically significant ≠ important. With 2,560 people even a tiny difference gets a small p-value. 1.1 out of 100 is very small. This is the \"discussion\" step in the template: is the difference big enough to matter in real life? Levene .526 > .05 → top row is correct.",
+    ex: "A new running shoe makes you 0.1 seconds faster over 5 km. Measured on thousands of runners it may be \"significant\", but nobody would notice.",
+    tip: "Template sentence 8 earns easy points: \"Even if a difference is significant, it may be too small to matter in real life.\" Compare the difference with the scale (1.1 out of 100)." },
+
+  { id: "ep30", tp: "spss", lvl: 3, k: "short", tbl: "A",
+    q: "Final boss 🏆 Write the full Question 1 answer for Study A using the template: assumptions, groups, means, SD, Levene, t-test, decision, discussion (Type I error) and conclusion.",
+    kp: [
+      { p: "Assumptions: higher score = more aware; H0 no difference; H1 password-manager users score higher; independent samples t-test (two separate groups)", w: ["assume", "h0", "h1", "independent"] },
+      { p: "Groups and means: 46 vs 54 people (about equal); means 21.40 vs 19.55, about 1.85 higher", w: ["46", "54", "21.4", "19.55", "1.85"] },
+      { p: "SD 4.20 and 4.35: scores are quite spread out, so the groups overlap", w: ["4.2", "4.35", "spread", "overlap", "standard deviation"] },
+      { p: "Levene Sig. .414 > 0.05 → top row", w: [".414", "levene", "top row", "equal variances"] },
+      { p: "t = 2.153, df = 98, Sig. (2-tailed) = .034", w: ["2.153", "98", ".034"] },
+      { p: "Decision: significance level 0.05; .034 < 0.05 → reject H0 → significant difference", w: ["0.05", ".05", "reject"] },
+      { p: "Discussion: small difference (1.85 of 30) may matter less in real life; Type I error = false alarm, reduce with 0.01, replication, bigger sample", w: ["type i", "false", "0.01", "repeat", "replic", "bigger sample", "larger sample", "real life"] },
+      { p: "Conclusion: \"To conclude, the results show that…\"", w: ["to conclude", "conclusion", "in conclusion"] }
+    ],
+    m: "I assume that a higher score means more security awareness. The study compares people who use a password manager and people who don't. H0 is that there is no difference between the groups. H1 is that password-manager users score higher. Since there are two separate groups, an independent samples t-test is used. There are 46 people with a password manager and 54 without, so the groups are about equal in size. The password-manager group has a mean of 21.40 and the other group 19.55, so they score about 1.85 points higher. The standard deviations are 4.20 and 4.35, which shows the scores are quite spread out and the groups overlap. Levene's Sig. is .414, which is above 0.05, so I read the top row (equal variances assumed). t is 2.153 and df is 98 (the number of people minus 2). Sig. (2-tailed) is .034, which is the chance of getting a difference this big if there really is no difference. I choose a significance level of 0.05. Since .034 is smaller than 0.05, I reject H0. There is a significant difference. The difference is not very big (1.85 out of 30), so it may matter less in real life. A Type I error means saying there is a difference when there really is none. We can reduce this risk by using a stricter level (0.01), by repeating the study, and by using a bigger sample. To conclude, the results show that people who use a password manager probably have somewhat higher security awareness.",
+    e: "This is exactly what Question 1 on every exam wants. Learn the 9-step template by heart and just fill in the numbers on Thursday.",
+    ex: "Like a recipe: same steps every time, only the ingredients (numbers) change.",
+    tip: "Spend about 50 minutes on Question 1 (09:10–10:00). Don't forget the three easy-to-miss points: say 0.05, say reject/keep H0, and answer the last part (usually Type I error)." },
+  /* ---------- BONUS: two more likely exam questions from the guide ---------- */
+  { id: "ep31", tp: "other", lvl: 3, k: "scen",
+    q: "Bonus 1 · Ethics. Researchers test whether people report a USB stick they find in the hallway. If they tell people the real purpose first, everyone will report it. Can they use deception (not telling the real purpose)? What must they do?",
+    o: ["Yes, if it is really needed, the benefit is bigger than the cost (cost-benefit), and they give a debriefing afterwards", "No, deception is never allowed in research, so the study must be cancelled and redesigned", "Yes, and they never need to tell participants the truth afterwards, since nobody was hurt", "Yes, but only if all participants are students at the same university as the researchers"],
+    a: 0,
+    e: "Deception = not telling the real purpose, because people act differently when they know what is tested. It can be ethical if it is NECESSARY, the benefit is bigger than the cost (cost-benefit), and there is a DEBRIEFING afterwards: tell them the truth and make sure they don't feel bad. Informed consent = know + agree + can quit.",
+    ex: "A surprise party: you lie a little to your friend, but you tell the truth at the party and it's clearly worth it.",
+    tip: "Key words for this question: informed consent · deception · debriefing · cost-benefit. Finish with: \"Deception is OK only when it is necessary and handled carefully.\"" },
+
+  { id: "ep32", tp: "other", lvl: 3, k: "short",
+    q: "Bonus 2 · Factorial design. A study tests coffee (yes/no) AND music (yes/no) on exam scores at the same time, with four groups. Why is it useful to test more than one independent variable at the same time?",
+    kp: [
+      { p: "Factorial design = two or more independent variables tested at the same time, one group per combination (2 × 2 = 4 groups)", w: ["factorial", "combination", "four groups", "4 groups", "2 x 2", "2×2", "2 × 2"] },
+      { p: "INTERACTION effect: the effect of one variable depends on the other (e.g. coffee helps alone, but coffee + music makes students restless)", w: ["interaction", "depends on"] },
+      { p: "Two separate studies could never show the interaction", w: ["separate", "two studies", "could not", "never show"] },
+      { p: "More realistic (many things happen at once) and saves time", w: ["realistic", "real life", "save", "time"] },
+      { p: "Disadvantage: needs many groups and many participants", w: ["many participants", "more participants", "many groups", "disadvantage", "more people"] }
+    ],
+    m: "A factorial design is an experiment where we test two or more independent variables at the same time, with one group for each combination. Here: no coffee/no music, coffee only, music only, and both. The big advantage is that we can see an interaction effect, which means the effect of one variable depends on the other. Maybe coffee helps alone, but coffee and music together make students too restless. Two separate studies could never show this. Factorial designs are also more realistic, because in real life many things happen at once, and they save time. A disadvantage is that we need many groups and many participants. To conclude, the main benefit is the interaction effect.",
+    e: "The key word is INTERACTION. According to the exam guide, the graded D answer from 2023 forgot it.",
+    ex: "Salt makes food taste better, and sugar makes food taste better, but salt + sugar together in coffee? The effect of one depends on the other.",
+    tip: "Write the word \"interaction effect\" and explain it with an example. That single word is what lifts this answer." }
+  ],
+  /* ---------- STUDY SHEET: everything from "How to Pass IMT4110", shown on the exam prep page ---------- */
+  sheet: [
+    { h: "How to pass", icon: "✅",
+      list: ["To pass (E) you only need to show basic understanding. All 5 questions count the same.",
+             "Rule 1: Never leave a question blank. A blank is 0 points; a few correct sentences give points.",
+             "Rule 2: Use the course words (\"leading question\", \"null hypothesis\", \"validity\"). The examiner looks for them.",
+             "Rule 3: Explain each word in one sentence. \"Validity means we measure what we want to measure.\"",
+             "Rule 4: Give one everyday example. Coffee and exam scores works for almost everything."],
+      rowsH: "Your time plan (4 hours)",
+      rows: [["09:00–09:10", "Read all 5 questions. Mark the ones you know."], ["09:10–10:00", "Question 1 (t-test) with the template."], ["10:00–12:40", "The other 4 questions, about 40 minutes each. Start with the easiest."], ["12:40–13:00", "Check: did you write something on every question?"]],
+      after: ["Start every answer with: \"I assume that …\" → \"[Key word] means …\" → \"For example …\". Then add what you know, and finish with \"To conclude …\"."] },
+    { h: "Question 1: the t-test template (learn by heart)", icon: "📊",
+      p: ["The one rule: Sig. under 0.05 → reject H0 → \"significant difference\". Sig. over 0.05 → keep H0 → \"we cannot show a difference\". Levene's Sig. over 0.05 → top row; under 0.05 → bottom row."],
+      ol: ["Assumptions: I assume that a higher score means more ___. H0: no difference. H1: ___. Two separate groups → independent samples t-test.",
+           "The groups: ___ people in A and ___ in B. (Very unequal sizes = weakness: the smaller group may not be representative.)",
+           "The means: A has ___ and B has ___. The difference is about ___; group ___ scores highest.",
+           "Standard deviation: ___ and ___ show how spread out the scores are. (SD much bigger than the difference → the groups overlap a lot.)",
+           "Levene's test: Sig. is ___, above / below 0.05, so I read the top / bottom row.",
+           "The t-test: t is ___ and df is ___ (people minus 2). Sig. (2-tailed) is ___: the chance of a difference this big if there really is none.",
+           "Decision: I choose a significance level of 0.05. Since ___ is smaller / bigger than 0.05, I reject / keep H0.",
+           "Discussion: a significant difference may still be too small to matter in real life. Type I error = saying there is a difference when there is none. Reduce it with 0.01, repeating the study and a bigger sample.",
+           "Conclusion: To conclude, the results show / do not show that ___."],
+      list: ["Easy mistake 1: forgetting to choose 0.05 and say it.", "Easy mistake 2: forgetting to say reject H0 or keep H0.", "Easy mistake 3: forgetting the last part of the question (usually: how to reduce a Type I error)."] },
+    { h: "Rescue kit: when you don't know the answer", icon: "🛟",
+      ol: ["\"I assume the question is about …\"", "Explain every word you recognise, one sentence each.", "Give an everyday example (coffee and exam scores, an app, a survey of students).", "Add 2–3 \"always useful\" sentences that fit.", "\"To conclude …\" in one or two sentences."],
+      rowsH: "\"Always useful\" sentences (learn 4–5)",
+      rows: [["Sample", "The sample should be representative of the population, so the results can be generalised. This is called external validity."],
+             ["Measuring", "The measurement must be reliable (same result every time) and valid (measures what we want to measure)."],
+             ["Cause and effect", "To show cause and effect, we need an experiment with a control group and random assignment. A correlation alone does not prove causation."],
+             ["Defining words", "Vague words must be operationalized, which means we decide exactly how to measure them."],
+             ["Ethics", "Participants must give informed consent: they know what the study is about and can quit at any time."],
+             ["Bias", "The researcher should be aware of their own bias and not push participants toward certain answers."],
+             ["Honesty", "A good study reports its limitations openly, so readers can judge the results."],
+             ["Repeating", "Results are more trustworthy if the study is replicated by others."]] },
+    { h: "The likely questions: words you must use", icon: "🎯",
+      rows: [["A. Dr. D interview", "leading questions · bias · validity · ethics · open questions. One thing: quote his questions → \"These are leading questions. He should ask open, neutral questions.\""],
+             ["B. Good hypothesis", "hypothesis · testable · H0 · H1 · operationalization. One thing: H0 = zero effect, H1 = a difference, operationalization = how we measure it."],
+             ["C. Sampling bias", "population · sample · sampling bias · representative · external validity. One thing: \"I agree\" → explain → example (1936 poll) → honesty lets readers judge."],
+             ["D. Reliability vs validity", "reliability · validity · consistent · measure what we want. One thing: the scale that always shows +2 kg."],
+             ["E. Control groups", "experimental group · control group · random assignment · internal validity. One thing: same, but without the treatment; a coin decides the group."],
+             ["F. Correlation ≠ causation", "correlation · causation · third variable · experiment. One thing: ice cream and shark attacks; hot weather causes both."],
+             ["G. Ethics", "informed consent · deception · debriefing · cost-benefit. One thing: know + agree + can quit; deception only if necessary + debriefing."],
+             ["H. Factorial designs", "factorial design · independent variable · interaction effect. One thing: the word INTERACTION."]] },
+    { h: "The 20 words that will save you", icon: "🔑",
+      rows: [["Variable", "Something that can change (sleep, score, age)"], ["Independent variable (IV)", "What you change or compare. The cause"], ["Dependent variable (DV)", "What you measure. The effect"],
+             ["Hypothesis", "A testable guess about the result"], ["H0 / H1", "No difference / there is a difference"], ["Operationalization", "Deciding exactly how to measure a vague word"],
+             ["Population / Sample", "Everyone / the people you actually study"], ["Representative", "The sample looks like the population"], ["Sampling bias", "The sample is systematically different from the population"],
+             ["Reliability", "Same result if you measure again"], ["Validity", "You measure what you want to measure"], ["Internal validity", "Can we trust that X caused Y?"],
+             ["External validity", "Can the results be generalised to others?"], ["Control group", "Same as the test group, but without the treatment"], ["Random assignment", "Chance decides who goes into which group"],
+             ["Correlation ≠ causation", "Things moving together does not prove one causes the other"], ["Significance level (0.05)", "The limit: Sig. under 0.05 = significant difference"], ["Type I error", "False alarm: saying there is a difference when there isn't"],
+             ["Leading question", "A question that pushes toward a certain answer"], ["Informed consent / Debriefing", "Agree after being informed / tell the truth afterwards"]] }
+  ]
+});
+</script>
+
 <!-- =====================================================================
      APP LOGIC (design + behaviour). No course content below this line.
      ===================================================================== -->
@@ -4378,6 +4813,7 @@ const STUDYMAP = {
   app.addEventListener("pointerout", e => { if (e.pointerType !== "mouse") return; const st = e.target.closest && e.target.closest(".sm-stage");
     if (st && !(e.relatedTarget && st.contains(e.relatedTarget))) smShow(smSel, false); });
   app.addEventListener("focusin", e => { const t = e.target.closest && e.target.closest("[data-sm]"); if (t) smShow(t.dataset.sm, false); });
+  document.addEventListener("toggle", e => { if (e.target && e.target.id === "ep-sheet") epSheetOpen = e.target.open; }, true);
   document.addEventListener("toggle", e => { const t = e.target; if (t && t.classList && t.classList.contains("studymap")){ const closed = !t.open; if (!!store.mapClosed !== closed){ store.mapClosed = closed; save(); } } }, true);
   window.addEventListener("resize", () => { clearTimeout(smResizeT); smResizeT = setTimeout(() => {
     const st = app.querySelector(".sm-stage"); if (!st) return; const mode = smWide() ? "w" : "n";
@@ -4387,8 +4823,8 @@ const STUDYMAP = {
   let session = null;     // active quiz / flashcard round
   let confirmReset = false;
 
-  function go(h){ if (location.hash === "#" + h || (!h && !location.hash)) { session = null; render(); } else location.hash = h; }
-  window.addEventListener("hashchange", () => { session = null; confirmReset = false; render(); });
+  function go(h){ if (location.hash === "#" + h || (!h && !location.hash)) { session = null; epPlaying = false; render(); } else location.hash = h; }
+  window.addEventListener("hashchange", () => { session = null; confirmReset = false; epPlaying = false; epSheetOpen = false; epUI = { revealed:false, draft:"" }; render(); });
 
   /* ---------- HOME ---------- */
   function renderHome(){
@@ -4439,6 +4875,7 @@ const STUDYMAP = {
       ${nav([{label:"Home",h:""},{label:c.code,h:slug(c.code)}], "")}
       <header class="hero"><span class="eyebrow">${esc(c.code)} · ${esc(c.examInfo)}</span><h1>${esc(c.name)}</h1>
         <p class="muted">Exam ${esc(fmtDate(c.exam))}</p>${countdown(c.exam)}${bar(s)}${statLine(s)}</header>
+        ${epBanner(c)}
         ${jumpLinks(c)}
       ${shuffleToggle()}
       <section class="section" id="topic-quiz"><span class="eyebrow">Section 1</span><h2>Topic quiz</h2>
@@ -4679,6 +5116,175 @@ const STUDYMAP = {
       <h2>Review: answers you missed</h2><div class="list">${list}</div>`;
   }
 
+  /* ---------- EXAM PREP (course page banner + #code-examprep; data in the EXAM PREP block) ---------- */
+  const EPS = (typeof EXAMPREP !== "undefined" && Array.isArray(EXAMPREP)) ? EXAMPREP : [];
+  const EP_TYPE = { mc:"Multiple choice", read:"Read the SPSS output", scen:"Scenario", short:"Explain in your own words" };
+  const EP_LVL = { 1:"★☆☆ Easy", 2:"★★☆ Medium", 3:"★★★ Exam level" };
+  let epPlaying = false, epUI = { revealed:false, draft:"" }, epSheetOpen = false;
+  function epOf(c){ return c ? EPS.find(p => p.code === c.code) : null; }
+  function epState(c){ store.ep = store.ep || {}; return store.ep[c.code] || null; }
+  function epQ(p, id){ return p.questions.find(q => q.id === id); }
+  function epTopic(p, id){ return p.topics.find(t => t.id === id) || { label:id, icon:"" }; }
+  function epBanner(c){
+    const p = epOf(c); if (!p) return "";
+    const st = epState(c), inProg = st && !st.done && st.i > 0;
+    const last = st && st.last ? `Last round: <b>${st.last.ok}/${st.last.n}</b>${st.best != null ? ` · best full run: ${st.best}/${p.questions.length}` : ""}` : `${p.questions.length} questions · easy → exam level · simple explanations`;
+    return `<section class="ep-banner"><span class="eyebrow" style="color:rgba(255,255,255,.85)">New · built from the exam guide</span>
+      <h2>🎯 ${esc(p.title)}</h2><p>${last}${inProg ? ` · in progress: question ${st.i+1}/${st.list.length}` : ""}</p>
+      <div class="btnrow"><button class="btn" data-go="${slug(c.code)}-examprep">${inProg ? "Continue exam prep" : "Open exam prep"}</button></div></section>`;
+  }
+  function epTable(p, key, hl, show){
+    const T = p.tables[key]; if (!T) return "";
+    const on = k => show && hl && (hl.includes(k) || hl.includes(k.split(".")[0])) ? " hl" : "";
+    const gs = T.groups.map((g,i) => `<tr><td class="lbl dvc">${i===0?esc(T.dv):""}</td><td class="lbl">${esc(g[0])}</td>
+      <td class="${on("g"+i+".n")}">${esc(g[1])}</td><td class="${on("g"+i+".mean")}">${esc(g[2])}</td><td class="${on("g"+i+".sd")}">${esc(g[3])}</td><td>${esc(g[4])}</td></tr>`).join("");
+    const keys = ["t","df","p","md","se","lo","hi"];
+    const rows = T.rows.map((r,i) => `<tr>${i===0?`<td class="lbl dvc" rowspan="2">${esc(T.dv)}</td>`:""}<td class="lbl">${i===0?"Equal variances assumed":"Equal variances not assumed"}</td>
+      ${i===0?`<td class="${on("lev.f")}">${esc(T.lev[0])}</td><td class="${on("lev.sig")}">${esc(T.lev[1])}</td>`:`<td></td><td></td>`}
+      ${r.map((v,j) => `<td class="${on("r"+i+"."+keys[j])}">${esc(v)}</td>`).join("")}</tr>`).join("");
+    return `<div class="spss"><p class="spss-t">📋 ${esc(T.title)}</p><p class="note">${esc(T.note)}</p>
+      <div class="scroll"><table class="sp gs"><caption>Group Statistics</caption>
+        <thead><tr><th class="lbl dvc"></th><th class="lbl">Group</th><th>N</th><th>Mean</th><th>Std. Deviation</th><th>Std. Error Mean</th></tr></thead><tbody>${gs}</tbody></table></div>
+      <span class="ep-swipe">↔ Swipe the next table sideways to see all columns.</span>
+      <div class="scroll"><table class="sp wide"><caption>Independent Samples Test</caption>
+        <thead><tr><th class="lbl dvc" rowspan="2"></th><th class="lbl" rowspan="2"></th><th colspan="2">Levene's Test for Equality of Variances</th><th colspan="7">t-test for Equality of Means</th></tr>
+        <tr><th>F</th><th>Sig.</th><th>t</th><th>df</th><th>Sig. (2-tailed)</th><th>Mean Difference</th><th>Std. Error Difference</th><th>95% CI of the Difference: Lower</th><th>Upper</th></tr></thead>
+        <tbody>${rows}</tbody></table></div></div>`;
+  }
+  function epMentioned(kp, text){
+    const s = " " + String(text || "").toLowerCase();
+    return (kp.w || []).filter(w => new RegExp("(^|[^a-z0-9])" + w.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).test(s));
+  }
+  function epStart(c, ids, round){
+    store.ep = store.ep || {}; const prev = store.ep[c.code] || {};
+    store.ep[c.code] = { list: ids, i:0, res:{}, round, done:false, best: prev.best != null ? prev.best : null, last: prev.last || null };
+    save(); epPlaying = true; epUI = { revealed:false, draft:"" }; render(); window.scrollTo(0,0);
+  }
+  function epScore(p, st){
+    const by = {}; p.topics.forEach(t => by[t.id] = { ok:0, n:0 });
+    st.list.forEach(id => { const q = epQ(p, id), r = st.res[id]; if (!q) return; by[q.tp].n++; if (r && r.ok) by[q.tp].ok++; });
+    const ok = st.list.filter(id => st.res[id] && st.res[id].ok).length;
+    return { by, ok, n: st.list.length, wrong: st.list.filter(id => !(st.res[id] && st.res[id].ok)) };
+  }
+  function epSheet(p){
+    if (!p.sheet || !p.sheet.length) return "";
+    const sec = p.sheet.map(x => `<div class="ep-sec"><h3>${x.icon || ""} ${esc(x.h)}</h3>
+      ${(x.p||[]).map(t => `<p>${esc(t)}</p>`).join("")}
+      ${x.ol ? `<ol class="ep-ol">${x.ol.map(t => `<li>${esc(t)}</li>`).join("")}</ol>` : ""}
+      ${x.list ? `<ul class="ep-ul">${x.list.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
+      ${x.rowsH ? `<p><b>${esc(x.rowsH)}</b></p>` : ""}${x.rows ? `<dl class="ep-dl">${x.rows.map(r => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl>` : ""}
+      ${(x.after||[]).map(t => `<p>${esc(t)}</p>`).join("")}</div>`).join("");
+    return `<details class="ep-sheet" id="ep-sheet"${epSheetOpen ? " open" : ""}><summary><span>📖 Study sheet: everything from the exam guide</span><span class="note">Template, rescue kit, key words, time plan</span></summary><div class="ep-sheet-b">${sec}</div></details>`;
+  }
+  function epHome(c, p){
+    const st = epState(c), inProg = st && !st.done && st.list.length;
+    const counts = {}; p.questions.forEach(q => counts[q.tp] = (counts[q.tp]||0) + 1);
+    const kinds = {}; p.questions.forEach(q => kinds[q.k] = (kinds[q.k]||0) + 1);
+    const lastBy = st && st.last && st.last.by;
+    const topics = p.topics.map(t => { const L = lastBy && lastBy[t.id] && lastBy[t.id].n ? lastBy[t.id] : null, pct = L ? Math.round(L.ok/L.n*100) : 0;
+      return `<div class="ep-topic"><span class="ep-ic">${t.icon}</span><span class="ep-tn">${esc(t.label)}</span><span class="note">${counts[t.id]||0} questions${L ? ` · last: ${L.ok}/${L.n}` : ""}</span>
+        ${L ? `<div class="ep-meter ${pct>=75?"high":pct>=50?"mid":"low"}"><i style="width:${pct}%"></i></div>` : ""}</div>`; }).join("");
+    const wrongN = st && st.last ? st.last.wrong.length : 0;
+    app.innerHTML = `${nav([{label:"Home",h:""},{label:c.code,h:slug(c.code)},{label:"Exam prep",h:slug(c.code)+"-examprep"}], slug(c.code))}
+      <header class="hero"><span class="eyebrow">${esc(c.code)} · Exam ${esc(fmtDate(c.exam))}</span><h1>🎯 ${esc(p.title)}</h1>
+        <p class="muted">${esc(p.intro)}</p>${countdown(c.exam)}
+        <div class="btnrow">${Object.entries(kinds).map(([k,n]) => `<span class="pill ghost">${n} × ${EP_TYPE[k]}</span>`).join("")}</div></header>
+      <div class="ep-box tip"><b class="ep-h">📌 The one rule for Question 1</b>
+        <p>Levene's Sig. over 0.05 → read the <b>top</b> row. Under 0.05 → the <b>bottom</b> row.</p>
+        <p>Sig. (2-tailed) under 0.05 → <b>reject H0</b> → significant difference. Over 0.05 → <b>keep H0</b>.</p></div>
+      <div class="btnrow">
+        ${inProg ? `<button class="btn" data-ep="resume">Continue: question ${st.i+1}/${st.list.length}${st.round===2?" (round 2)":""}</button>` : ""}
+        <button class="btn${inProg ? " alt" : ""}" data-ep="full">${inProg || (st && st.last) ? "Start over (all " + p.questions.length + ")" : "Start the quiz (" + p.questions.length + " questions)"}</button>
+        ${wrongN ? `<button class="btn alt" data-ep="round2">Second round: only my ${wrongN} wrong</button>` : ""}</div>
+      ${epSheet(p)}
+      <h2>Topics</h2><div class="ep-topics">${topics}</div>
+      <p class="note">Your exam-prep score is kept separately; it does not change your topic-quiz progress.</p>`;
+  }
+  function epQuestion(c, p, st){
+    const id = st.list[st.i], q = epQ(p, id), r = st.res[id], t = epTopic(p, q.tp), n = st.list.length;
+    const done = !!r, next = `<div class="btnrow"><button class="btn" data-ep="next">${st.i+1 < n ? "Next question →" : "See my score"}</button></div>`;
+    const learn = `<div class="ep-box"><b class="ep-h">💡 Why</b><p>${esc(q.e)}</p></div>
+      <div class="ep-box"><b class="ep-h">☕ Everyday example</b><p>${esc(q.ex)}</p></div>
+      <div class="ep-box tip"><b class="ep-h">📝 Exam tip for a long answer</b><p>${esc(q.tip)}</p></div>
+      ${q.chk ? `<p class="note"><span class="pill chk">Needs checking</span> ${esc(q.chk)}</p>` : ""}`;
+    let body = "";
+    if (q.k === "short"){
+      const draft = done ? (r.d || "") : epUI.draft;
+      body = `<label class="note" for="ep-draft">Write your answer (aim for the course words):</label>
+        <textarea id="ep-draft" placeholder="Start with: I assume that … / … means … / For example …" ${done ? "readonly" : ""}>${esc(draft)}</textarea>`;
+      if (!epUI.revealed && !done) body += `<div class="btnrow"><button class="btn" data-ep="reveal">Check my answer</button></div>`;
+      else {
+        const items = q.kp.map(k => { const hit = epMentioned(k, draft); return `<li class="${hit.length?"hit":"miss"}"><span class="mk">${hit.length?"✓":"○"}</span><span>${esc(k.p)}${hit.length?` <span class="mk-n">you wrote: ${esc(hit.slice(0,3).join(", "))}</span>`:""}</span></li>`; }).join("");
+        const hits = q.kp.filter(k => epMentioned(k, draft).length).length;
+        body += `<div class="feedback neutral"><strong>Key points (${hits}/${q.kp.length} found in your text)</strong><ul class="ep-kp">${items}</ul>
+            <p class="note">The check looks for key words only. You decide if your answer covers the point.</p></div>
+          <div class="model"><strong>Model answer</strong><p>${esc(q.m)}</p></div>`;
+        body += done ? `<div class="feedback ${r.ok?"ok":"bad"}"><strong>${r.ok ? "✅ You marked this as right" : "❌ You marked this for review"}</strong></div>${learn}${next}`
+          : `<p class="note">Compare with the key points. Did you get the main ideas?</p><div class="btnrow"><button class="btn" data-ep="self1">✅ I got it right</button><button class="btn alt" data-ep="self0">❌ Not yet</button></div>`;
+      }
+    } else {
+      const opts = q.o.map((o, oi) => { let cls = "opt"; if (done){ if (oi === q.a) cls += " right"; else if (oi === r.c) cls += " wrong"; }
+        return `<button class="${cls}" data-epopt="${oi}" ${done?"disabled":""}><span class="key">${String.fromCharCode(65+oi)}</span><span>${esc(o)}</span></button>`; }).join("");
+      body = `<div class="opts" role="group" aria-label="Answer options">${opts}</div>`;
+      body += done ? `<div class="feedback ${r.ok?"ok":"bad"}"><strong>${r.ok ? "✅ Right!" : "❌ Not quite"}</strong>${r.ok ? "" : `<p>Correct answer: <b>${String.fromCharCode(65+q.a)}) ${esc(q.o[q.a])}</b></p>`}</div>${learn}${next}`
+        : `<p class="note">Tip: press A–${String.fromCharCode(64+q.o.length)} or 1–${q.o.length} on a keyboard.</p>`;
+    }
+    app.innerHTML = `${nav([{label:"Home",h:""},{label:c.code,h:slug(c.code)},{label:"Exam prep",h:slug(c.code)+"-examprep"}], slug(c.code)+"-examprep")}
+      <div class="progress"><span>Exam prep${st.round===2?" · round 2":""}</span><div class="bar"><i style="width:${st.i/n*100}%"></i></div><span>${st.i+1}/${n}</span></div>
+      <article class="qcard"><div class="qmeta"><span class="pill">${t.icon} ${esc(t.label)}</span><span class="pill ghost ep-lvl">${EP_LVL[q.lvl]}</span><span class="pill ghost">${EP_TYPE[q.k]}</span></div>
+        <p class="qtext">${esc(q.q)}</p>${q.tbl ? epTable(p, q.tbl, q.hl, done) : ""}${body}</article>`;
+  }
+  function epResult(c, p, st){
+    const s = epScore(p, st), pct = s.n ? Math.round(s.ok/s.n*100) : 0, party = pct >= 80;
+    const verdict = pct >= 90 ? "🏆 Excellent! You are ready for Thursday." : pct >= 75 ? "🎉 Great work. A quick look at the topics below and you're set." : pct >= 50 ? "👍 Good base. Review the topics below, then take the second round." : "💪 Keep going. Review the topics below; the second round only has your wrong ones.";
+    const rows = p.topics.filter(t => s.by[t.id].n).map(t => { const b = s.by[t.id], tp = Math.round(b.ok/b.n*100);
+      return `<div class="ep-topic"><span class="ep-tn">${t.icon} ${esc(t.label)}</span><span><b>${b.ok}/${b.n}</b> <span class="muted">· ${tp}%</span></span><div class="ep-meter ${tp>=75?"high":tp>=50?"mid":"low"}"><i style="width:${tp}%"></i></div></div>`; }).join("");
+    const review = p.topics.filter(t => s.by[t.id].n && s.by[t.id].ok/s.by[t.id].n < 0.75);
+    const revHTML = review.length ? review.map(t => { const wq = s.wrong.map(id => epQ(p, id)).filter(q => q.tp === t.id);
+      return `<div class="ep-review"><h3>${t.icon} ${esc(t.label)}</h3>${wq.map(q => `<div class="rev"><span>${esc(q.q)}</span><span class="ans">${q.k==="short" ? "See the key points and model answer in round 2" : esc(String.fromCharCode(65+q.a) + ") " + q.o[q.a])}</span><span class="note">📝 ${esc(q.tip)}</span></div>`).join("")}</div>`; }).join("")
+      : `<div class="empty">No topic under 75%. Nice! ${s.wrong.length ? "You can still redo the few you missed." : ""}</div>`;
+    app.innerHTML = `${party ? confetti() : ""}${nav([{label:"Home",h:""},{label:c.code,h:slug(c.code)},{label:"Exam prep",h:slug(c.code)+"-examprep"}], slug(c.code)+"-examprep")}
+      <section class="card${party ? " party" : ""}"><span class="eyebrow">Exam prep${st.round===2?" · round 2":""} finished</span>
+        <div class="countdown"><span class="score">${s.ok}/${s.n}</span><span class="muted">${pct}%</span></div><p>${verdict}</p>
+        <div class="btnrow">${s.wrong.length ? `<button class="btn" data-ep="round2">🔁 Second round: only the ${s.wrong.length} I got wrong</button>` : ""}
+          <button class="btn${s.wrong.length ? " alt" : ""}" data-ep="full">Start over (all ${p.questions.length})</button>
+          <button class="btn alt" data-ep="sheet">📖 Study sheet</button>
+          <button class="btn alt" data-go="${slug(c.code)}">Back to ${esc(c.code)}</button></div></section>
+      <h2>My score per topic</h2><div class="ep-topics">${rows}</div>
+      <h2>Topics to review</h2>${revHTML}`;
+  }
+  function renderPrep(c){
+    setTheme(c.color);
+    const p = epOf(c), st = epState(c);
+    if (!epPlaying || !st || !st.list.length) return epHome(c, p);
+    return st.done ? epResult(c, p, st) : epQuestion(c, p, st);
+  }
+  function epAnswer(c, ok, extra){
+    const p = epOf(c), st = epState(c); if (!st || st.done) return;
+    const id = st.list[st.i]; if (st.res[id]) return;
+    st.res[id] = Object.assign({ ok }, extra); save(); render();
+  }
+  function epAct(c, act){
+    const p = epOf(c); if (!p) return;
+    const st = epState(c);
+    if (act === "full") return epStart(c, p.questions.map(q => q.id), 1);
+    if (act === "round2"){ const w = st && (st.done ? epScore(p, st).wrong : st.last ? st.last.wrong : []); if (w && w.length) epStart(c, w.slice(), 2); return; }
+    if (act === "sheet"){ epPlaying = false; epSheetOpen = true; render(); const el = document.getElementById("ep-sheet"); if (el) el.scrollIntoView({ block:"start" }); return; }
+    if (act === "resume"){ epPlaying = true; epUI = { revealed:false, draft:"" }; render(); window.scrollTo(0,0); return; }
+    if (!st) return;
+    const ta = document.getElementById("ep-draft"); if (ta && !ta.readOnly) epUI.draft = ta.value;
+    if (act === "reveal"){ epUI.revealed = true; render(); return; }
+    if (act === "self1" || act === "self0"){ epAnswer(c, act === "self1", { d: epUI.draft }); return; }
+    if (act === "next"){
+      st.i++; epUI = { revealed:false, draft:"" };
+      if (st.i >= st.list.length){ st.i = st.list.length - 1; st.done = true;
+        const s = epScore(p, st); st.last = { ok:s.ok, n:s.n, wrong:s.wrong, by:s.by, round:st.round };
+        if (st.round === 1) st.best = Math.max(st.best || 0, s.ok); }
+      save(); render(); window.scrollTo(0,0);
+    }
+  }
+  function epOnRoute(){ const h = location.hash.slice(1).toLowerCase(); return /-examprep$/.test(h); }
+
   /* ---------- router ---------- */
   function render(){
     const h = decodeURIComponent(location.hash.slice(1)).toLowerCase();
@@ -4686,6 +5292,7 @@ const STUDYMAP = {
     const [code, topicId] = h.split(/-(.+)/);
     const c = courseBy(code);
     if (!c || c.status === "soon"){ renderHome(); return; }
+    if (topicId === "examprep" && epOf(c)) return renderPrep(c);
     if (session && session.code === c.code){
       if (session.done) return renderResult(c);
       return session.mode === "quiz" ? renderQuiz(c) : renderFlash(c);
@@ -4731,6 +5338,8 @@ const STUDYMAP = {
       return;
     }
     if (d.jump){ const el2 = document.getElementById(d.jump); if (el2) el2.scrollIntoView({ behavior:"smooth", block:"start" }); return; }
+    if (d.ep){ epAct(currentCourse().c, d.ep); return; }
+    if (d.epopt !== undefined){ const ec = currentCourse().c, eq = epQ(epOf(ec), epState(ec).list[epState(ec).i]); const oi = Number(d.epopt); epAnswer(ec, oi === eq.a, { c: oi }); return; }
     const { c, t } = currentCourse();
     if (d.tstart){ const dir = d.tstart, scope = d.tscope; session = null; startTermSession(c, t, dir, scope); return; }
     if (d.start){
@@ -4760,7 +5369,7 @@ const STUDYMAP = {
       r.readAsText(e.target.files[0]);
     }
   });
-  app.addEventListener("input", e => { if (e.target.id === "essay-draft" && session) session.draft = e.target.value; });
+  app.addEventListener("input", e => { if (e.target.id === "essay-draft" && session) session.draft = e.target.value; if (e.target.id === "ep-draft") epUI.draft = e.target.value; });
   document.addEventListener("keydown", e => {
     const vp = e.target.closest && e.target.closest(".vp");
     if (vp && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); showPart(vp); return; }
@@ -4768,6 +5377,14 @@ const STUDYMAP = {
     if (sm && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); const key = sm.dataset.sm;
       if (key.startsWith("n:") && e.key === "Enter"){ const mc = courseBy(key.slice(2)); if (mc && mc.status !== "soon"){ go(slug(mc.code)); return; } }
       smShow(key, true); return; }
+    if (epPlaying && epOnRoute() && e.target.tagName !== "TEXTAREA" && !e.ctrlKey && !e.metaKey && !e.altKey){
+      const ec = currentCourse().c, ep = epOf(ec), est = ec && epState(ec);
+      if (ep && est && !est.done){ const eq = epQ(ep, est.list[est.i]), answered = !!est.res[eq.id];
+        if (!answered && eq.o){ const k = e.key.toLowerCase(); let oi = /^[1-9]$/.test(k) ? Number(k)-1 : /^[a-d]$/.test(k) ? k.charCodeAt(0)-97 : -1;
+          if (oi >= 0 && oi < eq.o.length){ epAnswer(ec, oi === eq.a, { c: oi }); return; } }
+        else if (answered && e.key === "Enter" && !(e.target.closest && e.target.closest("button"))){ e.preventDefault(); epAct(ec, "next"); return; } }
+      return;
+    }
     if (!session || session.done || session.mode !== "quiz" || e.target.tagName === "TEXTAREA") return;
     const q = curQ();
     if (!session.answered && q.o && /^[1-9]$/.test(e.key)){ const pos = Number(e.key)-1; if (pos < session.order.length) answer(session.order[pos]); }
